@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiohttp import web
 
 # Вставьте сюда ВАШ НОВЫЙ ТОКЕН
-TOKEN = "8564511758:AAEyFFeixZql9tIRKj4Bv1w4ONiafJDHqrQ"
+TOKEN = os.environ.get("TOKEN")
 PORT = int(os.environ.get("PORT", 8080))
 
 bot = Bot(token=TOKEN)
