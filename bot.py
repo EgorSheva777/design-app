@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiohttp import web
 
 # Твой токен
-TOKEN = "8564511758:AAEZxs5ZGfRBBi29bUtV-QVD0rLZ5oPeRSU"
+TOKEN = "8564511758:AAEZXs5ZGfRBBi29bUtv-QVD0rLZ5oPeRSU"
 # Порт, который дает Render
 PORT = int(os.environ.get("PORT", 8080))
 
