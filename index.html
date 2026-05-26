@@ -3,144 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Design Studio Mini App</title>
+    <title>Design Studio App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --bg-color: #12121a;
-            --card-bg: #1c1c27;
-            --accent-purple: #7b2cbf;
-            --accent-pink: #ff007f;
-            --text-main: #ffffff;
-            --text-muted: #8e8e9f;
-        }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0; padding: 16px;
-            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #131419;
+            color: #ffffff;
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .header { text-align: center; margin-bottom: 24px; }
-        .header h1 {
-            font-size: 26px; font-weight: 800; margin: 0 0 6px 0;
-            background: linear-gradient(45deg, var(--accent-pink), var(--accent-purple));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+        .container {
+            width: 100%;
+            max-width: 400px;
         }
-        .header p { color: var(--text-muted); font-size: 14px; margin: 0; }
-        
-        .section-title {
-            font-size: 13px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.8px; color: var(--text-muted); margin: 20px 0 10px 0;
+
+        h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #f5f5f7;
         }
-        
-        /* Сетка тарифов */
-        .tariffs-container { display: grid; gap: 12px; }
+
+        /* Карточки тарифов */
         .tariff-card {
-            background: var(--card-bg); border-radius: 14px; padding: 16px;
-            border: 2px solid transparent; cursor: pointer; transition: all 0.2s ease;
-            display: flex; justify-content: space-between; align-items: center;
+            background-color: #1c1d24;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
         }
+
+        /* Стиль для выбранной карточки */
         .tariff-card.selected {
-            border-color: var(--accent-pink);
-            box-shadow: 0 0 15px rgba(255, 0, 127, 0.25);
-            background: #221a2b;
+            border-color: #ff2d55;
+            background-color: #221a24;
         }
-        .tariff-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-        .tariff-desc { font-size: 12px; color: var(--text-muted); }
-        .tariff-price { font-size: 18px; font-weight: 800; color: #00ffcc; }
+
+        .tariff-info h3 {
+            margin: 0 0 6px 0;
+            font-size: 18px;
+        }
+
+        .tariff-info p {
+            margin: 0;
+            font-size: 13px;
+            color: #a1a1a6;
+            line-height: 1.4;
+        }
+
+        .tariff-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00eaab;
+            white-space: nowrap;
+            margin-left: 12px;
+        }
 
         /* Поля ввода */
-        .input-box {
-            width: 100%; padding: 14px; background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px;
-            color: var(--text-main); font-size: 14px; box-sizing: border-box;
-            outline: none; transition: border 0.2s; margin-bottom: 14px;
-        }
-        .input-box:focus { border-color: var(--accent-purple); }
-        textarea.input-box { height: 90px; resize: none; }
-        
-        /* Кнопка отправки */
-        .btn-send {
-            width: 100%; padding: 16px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-            border: none; border-radius: 14px; color: white; font-size: 16px; font-weight: 700;
-            cursor: pointer; box-shadow: 0 4px 20px rgba(123, 44, 191, 0.35); margin-top: 10px;
-        }
-        .btn-send:active { transform: scale(0.98); }
-    </style>
-</head>
-<body>
-
-    <div class="header">
-        <h1>Design_studAI</h1>
-        <p>Интерактивная панель заказа дизайна</p>
-    </div>
-
-    <div class="section-title">1. Выберите тариф</div>
-    <div class="tariffs-container">
-        <div class="tariff-card selected" onclick="selectTariff(this, '🌱 Бюджетный', 'от 590₽')">
-            <div>
-                <div class="tariff-title">🌱 Бюджетный</div>
-                <div class="tariff-desc">Дёшево, стильно, свежо — не отличить от премиум дизайна.</div>
-            </div>
-            <div class="tariff-price">от 590₽</div>
-        </div>
-        <div class="tariff-card" onclick="selectTariff(this, '⚡ Средний', 'от 1090₽')">
-            <div>
-                <div class="tariff-title">⚡ Средний</div>
-                <div class="tariff-desc">Отличный вкус без переплаты — идеальный баланс цены.</div>
-            </div>
-            <div class="tariff-price">от 1090₽</div>
-        </div>
-        <div class="tariff-card" onclick="selectTariff(this, '👑 Профессиональный', 'от 1590₽')">
-            <div>
-                <div class="tariff-title">👑 Профессиональный</div>
-                <div class="tariff-desc">Лучший в мире результат без компромиссов.</div>
-            </div>
-            <div class="tariff-price">от 1590₽</div>
-        </div>
-    </div>
-
-    <div class="section-title">2. Техническое задание (ТЗ)</div>
-    <textarea id="taskInput" class="input-box" placeholder="Опишите ваши пожелания, цвета, текст на картинке..."></textarea>
-
-    <div class="section-title">3. Сроки выполнения</div>
-    <input type="text" id="deadlineInput" class="input-box" placeholder="Например: 1-2 дня / сделать к пятнице">
-
-    <button class="btn-send" onclick="submitOrder()">Оформить заказ</button>
-
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand(); // Раскрываем окно на максимум вверх при открытии
-
-        let chosenTariff = "🌱 Бюджетный (590₽)";
-
-        function selectTariff(element, name, price) {
-            document.querySelectorAll('.tariff-card').forEach(c => c.classList.remove('selected'));
-            element.classList.add('selected');
-            chosenTariff = `${name} (${price})`;
+        .form-group {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
-        function submitOrder() {
-            const taskText = document.getElementById('taskInput').value.trim();
-            const deadlineText = document.getElementById('deadlineInput').value.trim();
-
-            if (!taskText || !deadlineText) {
-                tg.showAlert("Пожалуйста, заполните ТЗ и укажите сроки!");
-                return;
-            }
-
-            // Собираем данные в удобный пакет
-            const dataToBot = {
-                tariff: chosenTariff,
-                task: taskText,
-                deadline: deadlineText
-            };
-
-            // Передаем данные обратно в чат боту в виде строки JSON
-            tg.sendData(JSON.stringify(dataToBot));
-            tg.close(); // Закрываем Mini App
-        }
-    </script>
-</body>
-</html>
+        label {
+            font-size: 14px;
+            color: #a1a1a6;
+            margin-
