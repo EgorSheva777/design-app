@@ -15,6 +15,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-x: hidden;
         }
 
         .container {
@@ -28,24 +29,49 @@
             color: #f5f5f7;
         }
 
-        /* Карточки тарифов */
+        /* --- АНИМАЦИЯ ПЛАВАНИЯ КАРТОЧЕК --- */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Базовые карточки тарифов */
         .tariff-card {
             background-color: #1c1d24;
             border: 2px solid transparent;
             border-radius: 16px;
             padding: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.2s ease;
+            position: relative;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            
+            /* Включаем эффект плавного покачивания */
+            animation: float 4s ease-in-out infinite;
         }
 
-        /* Стиль для выбранной карточки */
+        /* Немного смещаем время анимации для каждой карточки, чтобы они плавали не одновременно */
+        .tariff-card:nth-child(2) { animation-delay: 0.5s; }
+        .tariff-card:nth-child(3) { animation-delay: 1s; }
+        .tariff-card:nth-child(4) { animation-delay: 1.5s; }
+
+        /* --- АНИМАЦИЯ ПЕРЕЛИВАНИЯ ЦВЕТА (ГРАДИЕНТ) --- */
+        @keyframes gradient-border {
+            0% { border-color: #ff2d55; box-shadow: 0 0 10px rgba(255, 45, 85, 0.2); }
+            33% { border-color: #00eaab; box-shadow: 0 0 10px rgba(0, 234, 171, 0.2); }
+            66% { border-color: #007aff; box-shadow: 0 0 10px rgba(0, 122, 255, 0.2); }
+            100% { border-color: #ff2d55; box-shadow: 0 0 10px rgba(255, 45, 85, 0.2); }
+        }
+
+        /* Стиль для выбранной карточки с переливающимся контуром */
         .tariff-card.selected {
-            border-color: #ff2d55;
-            background-color: #221a24;
+            background-color: #171821;
+            /* Запускаем бесконечный перелив контура за 4 секунды */
+            animation: float 4s ease-in-out infinite, gradient-border 4s linear infinite;
         }
 
         .tariff-info h3 {
@@ -66,6 +92,11 @@
             color: #00eaab;
             white-space: nowrap;
             margin-left: 12px;
+            transition: color 0.3s ease;
+        }
+        
+        .tariff-card.selected .tariff-price {
+            color: #ffffff; /* При выборе цена становится белой, чтобы не спорить с контуром */
         }
 
         /* Поля ввода */
@@ -166,25 +197,18 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Раскрываем окно на максимум вверх при открытии
+        tg.expand();
 
-        // Переменная для хранения выбранного тарифа (по умолчанию первый)
         let chosenTariff = "🌱 Бюджетный (от 590₽)";
 
-        // Функция переключения карточек
         function selectTariff(element, name, price) {
-            // Снимаем выделение со всех карточек
             document.querySelectorAll('.tariff-card').forEach(card => {
                 card.classList.remove('selected');
             });
-            // Добавляем выделение текущей
             element.classList.add('selected');
-            
-            // Запоминаем выбор для отправки в бот
             chosenTariff = `${name} (${price})`;
         }
 
-        // Функция отправки данных в Telegram-бот
         function submitOrder() {
             const taskText = document.getElementById('taskInput').value.trim();
             const deadlineText = document.getElementById('deadlineInput').value.trim();
@@ -194,14 +218,12 @@
                 return;
             }
 
-            // Собираем данные в удобный пакет
             const dataToBot = {
                 tariff: chosenTariff,
                 deadline: deadlineText,
                 task: taskText
             };
 
-            // Отправляем данные роботу и закрываем мини-приложение
             tg.sendData(JSON.stringify(dataToBot));
             tg.close();
         }
