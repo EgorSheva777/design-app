@@ -281,8 +281,103 @@
                         <span class="review-stars">⭐⭐⭐⭐⭐</span>
                     </div>
                     <div class="review-content">
-                        Обложка WB просто космос 🥺 За такую цену ожидала обычный шаблон, а получила полноценный уникальный арт. Спасибо!
+                        Обложка для товара WB  просто космос 🥺 За такую цену ожила обычный шаблон, а получила полноценный уникальный арт. Спасибо!
                     </div>
                 </div>
 
-                <div class="review-item" onclick="toggleReview(
+                <div class="review-item" onclick="toggleReview(this)">
+                    <div class="review-header">
+                        <span class="review-client">Максим (Бизнес)</span>
+                        <span class="review-stars">⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <div class="review-content">
+                        Брали тариф Профи для оформления бренда. Результат превзошел ожидания, правок почти не потребовалось. Настоящие мастера.
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="collab-card">
+                <h3>🤝 Сотрудничество</h3>
+                <p>Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше портфолио нашему менеджеру!</p>
+                <a href="https://t.me/MartOkkks" class="link-btn collab-btn" target="_blank">🚀 Стать частью команды</a>
+            </div>
+
+            <div class="contacts-footer">
+                <p>При возникновении любых вопросов:</p>
+                <a href="https://t.me/MartOkkks" target="_blank">💬 @MartOkkks</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bottom-nav">
+        <div id="tabOrder" class="nav-item active" onclick="switchPage('order')">
+            <span class="icon">🔮</span>
+            <span>Заказ</span>
+        </div>
+        <div id="tabInfo" class="nav-item" onclick="switchPage('info')">
+            <span class="icon">✨</span>
+            <span>Инфо</span>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let chosenTariff = "🌱 Бюджетный (от 590₽)";
+
+        // Выбор тарифов
+        function selectTariff(element, name, price) {
+            const cards = document.querySelectorAll('.tariff-card');
+            cards.forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            chosenTariff = `${name} (${price})`;
+        }
+
+        // Логика переключения вкладок
+        function switchPage(pageName) {
+            document.getElementById('orderPage').classList.remove('active');
+            document.getElementById('infoPage').classList.remove('active');
+            document.getElementById('tabOrder').classList.remove('active');
+            document.getElementById('tabInfo').classList.remove('active');
+
+            if (pageName === 'order') {
+                document.getElementById('orderPage').classList.add('active');
+                document.getElementById('tabOrder').classList.add('active');
+            } else if (pageName === 'info') {
+                document.getElementById('infoPage').classList.add('active');
+                document.getElementById('tabInfo').classList.add('active');
+            }
+        }
+
+        // Логика раскрытия плашек с отзывами
+        function toggleReview(element) {
+            element.classList.toggle('open');
+        }
+
+        // Отправка формы боту
+        function submitOrder() {
+            const taskText = document.getElementById('taskInput').value.trim();
+            const deadlineText = document.getElementById('deadlineInput').value.trim();
+
+            if (!taskText || !deadlineText) {
+                tg.showAlert("Пожалуйста, заполните ТЗ и укажите сроки!");
+                return;
+            }
+
+            const dataToBot = {
+                tariff: chosenTariff,
+                deadline: deadlineText,
+                task: taskText
+            };
+
+            tg.sendData(JSON.stringify(dataToBot));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
