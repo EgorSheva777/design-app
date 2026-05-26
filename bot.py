@@ -1,29 +1,21 @@
 import asyncio
-import os
-from aiogram import Bot, Dispatcher
-from aiohttp import web
+from aiogram import Bot, Dispatcher, types
+from aiogram.filters import Command
 
-# Вставьте сюда ВАШ НОВЫЙ ТОКЕН
-TOKEN = os.environ.get("TOKEN")
-PORT = int(os.environ.get("PORT", 8080))
+# Ваш токен (или os.environ.get("TOKEN"))
+TOKEN = "8564511758:AAEyFFeixZql9tIRKj4Bv1w4ONiafJDHqrQ"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-async def handle(request):
-    return web.Response(text="Бот работает")
+# Обработчик команды /start
+@dp.message(Command("start"))
+async def cmd_start(message: types.Message):
+    await message.answer("Привет! Я работаю! Вы успешно запустили бота в облаке.")
 
 async def main():
-    app = web.Application()
-    app.router.add_get('/', handle)
-    runner = web.AppRunner(app)
-    await runner.setup()
-    site = web.TCPSite(runner, '0.0.0.0', PORT)
-    await site.start()
-
-    # Очистка старых обновлений, чтобы бот не "спотыкался"
-    await bot.delete_webhook(drop_pending_updates=True)
     print("Бот успешно запущен!")
+    await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
