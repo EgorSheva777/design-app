@@ -4,28 +4,24 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiohttp import web
 
-# Твой токен
-TOKEN = "8564511758:AAEZxs5ZGfRBBi29bUtV-QVD0rLZ5oPeRSU"
+# Сюда вставь токен, который скопировал из BotFather
+TOKEN = "8564511758:AAEZXs5ZGfRBBi29bUtv-QVD0rLZ5oPeRSU"
 PORT = int(os.environ.get("PORT", 8080))
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# Этот кусок нужен для того, чтобы Render считал сервис "живым"
+# Веб-заглушка для Render
 async def handle(request):
     return web.Response(text="Бот работает!")
 
-# Твой код бота:
+# Твой обработчик команд
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
-    await message.answer("Привет! Я работаю на Render!")
-
-@dp.message()
-async def echo(message: types.Message):
-    await message.answer(f"Ты написал: {message.text}")
+    await message.answer("Привет! Бот успешно запущен на Render.")
 
 async def main():
-    # Запуск веб-сервера для Render
+    # Запуск веб-сервера
     app = web.Application()
     app.router.add_get('/', handle)
     runner = web.AppRunner(app)
@@ -33,8 +29,6 @@ async def main():
     site = web.TCPSite(runner, '0.0.0.0', PORT)
     await site.start()
 
-    print("Бот и веб-сервер запущены!")
-    
     # Запуск бота
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
