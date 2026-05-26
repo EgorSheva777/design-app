@@ -78,4 +78,133 @@
         label {
             font-size: 14px;
             color: #a1a1a6;
-            margin-
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        input, textarea {
+            background-color: #1c1d24;
+            border: 1px solid #2c2d35;
+            border-radius: 12px;
+            color: #ffffff;
+            padding: 12px;
+            font-size: 15px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #ff2d55;
+        }
+
+        textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        /* Кнопка отправки */
+        .submit-btn {
+            background-color: #ff2d55;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 45, 85, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🔮 Выберите тариф</h2>
+
+        <div class="tariff-card selected" onclick="selectTariff(this, '🌱 Бюджетный', 'от 590₽')">
+            <div class="tariff-info">
+                <h3>🌱 Бюджетный</h3>
+                <p>Дёшево, стильно, свежо — не отличить от премиум дизайна.</p>
+            </div>
+            <div class="tariff-price">от 590₽</div>
+        </div>
+
+        <div class="tariff-card" onclick="selectTariff(this, '⚡ Средний', 'от 1090₽')">
+            <div class="tariff-info">
+                <h3>⚡ Средний</h3>
+                <p>Отличный вкус без переплаты — идеальный баланс цены.</p>
+            </div>
+            <div class="tariff-price">от 1090₽</div>
+        </div>
+
+        <div class="tariff-card" onclick="selectTariff(this, '👑 Профи', 'от 1590₽')">
+            <div class="tariff-info">
+                <h3>👑 Профи</h3>
+                <p>Лучший в мире результат без компромиссов.</p>
+            </div>
+            <div class="tariff-price">от 1590₽</div>
+        </div>
+
+        <div class="form-group">
+            <label for="deadlineInput">📅 Желаемые сроки (например: 2 дня, срочно)</label>
+            <input type="text" id="deadlineInput" placeholder="Введите сроки...">
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+            <label for="taskInput">📝 Краткое ТЗ / Что нужно сделать?</label>
+            <textarea id="taskInput" placeholder="Опишите вашу задачу подробно..."></textarea>
+        </div>
+
+        <button class="submit-btn" onclick="submitOrder()">🔮 Подтвердить заказ</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Раскрываем окно на максимум вверх при открытии
+
+        // Переменная для хранения выбранного тарифа (по умолчанию первый)
+        let chosenTariff = "🌱 Бюджетный (от 590₽)";
+
+        // Функция переключения карточек
+        function selectTariff(element, name, price) {
+            // Снимаем выделение со всех карточек
+            document.querySelectorAll('.tariff-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            // Добавляем выделение текущей
+            element.classList.add('selected');
+            
+            // Запоминаем выбор для отправки в бот
+            chosenTariff = `${name} (${price})`;
+        }
+
+        // Функция отправки данных в Telegram-бот
+        function submitOrder() {
+            const taskText = document.getElementById('taskInput').value.trim();
+            const deadlineText = document.getElementById('deadlineInput').value.trim();
+
+            if (!taskText || !deadlineText) {
+                tg.showAlert("Пожалуйста, заполните ТЗ и укажите сроки!");
+                return;
+            }
+
+            // Собираем данные в удобный пакет
+            const dataToBot = {
+                tariff: chosenTariff,
+                deadline: deadlineText,
+                task: taskText
+            };
+
+            // Отправляем данные роботу и закрываем мини-приложение
+            tg.sendData(JSON.stringify(dataToBot));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
