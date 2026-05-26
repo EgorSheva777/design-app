@@ -11,7 +11,7 @@
             background-color: #131419;
             color: #ffffff;
             margin: 0;
-            padding: 16px;
+            padding: 16px 16px 90px 16px; /* Отступ снизу под меню */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -29,14 +29,27 @@
             color: #f5f5f7;
         }
 
-        /* --- АНИМАЦИЯ ПЛАВАНИЯ КАРТОЧЕК --- */
+        h3 {
+            margin-top: 0;
+            color: #ffffff;
+        }
+
+        /* --- ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ --- */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+
+        /* --- АНИМАЦИЯ ПЛАВАНИЯ --- */
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-4px); }
             100% { transform: translateY(0px); }
         }
 
-        /* Базовые карточки тарифов */
+        /* Карточки тарифов */
         .tariff-card {
             background-color: #1c1d24;
             border: 2px solid transparent;
@@ -47,19 +60,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            
-            /* Включаем эффект плавного покачивания */
             animation: float 4s ease-in-out infinite;
+            transition: background-color 0.3s ease;
         }
 
-        /* Немного смещаем время анимации для каждой карточки, чтобы они плавали не одновременно */
         .tariff-card:nth-child(2) { animation-delay: 0.5s; }
         .tariff-card:nth-child(3) { animation-delay: 1s; }
-        .tariff-card:nth-child(4) { animation-delay: 1.5s; }
 
-        /* --- АНИМАЦИЯ ПЕРЕЛИВАНИЯ ЦВЕТА (ГРАДИЕНТ) --- */
         @keyframes gradient-border {
             0% { border-color: #ff2d55; box-shadow: 0 0 10px rgba(255, 45, 85, 0.2); }
             33% { border-color: #00eaab; box-shadow: 0 0 10px rgba(0, 234, 171, 0.2); }
@@ -67,166 +74,227 @@
             100% { border-color: #ff2d55; box-shadow: 0 0 10px rgba(255, 45, 85, 0.2); }
         }
 
-        /* Стиль для выбранной карточки с переливающимся контуром */
         .tariff-card.selected {
             background-color: #171821;
-            /* Запускаем бесконечный перелив контура за 4 секунды */
             animation: float 4s ease-in-out infinite, gradient-border 4s linear infinite;
         }
 
-        .tariff-info h3 {
-            margin: 0 0 6px 0;
-            font-size: 18px;
-        }
-
-        .tariff-info p {
-            margin: 0;
-            font-size: 13px;
-            color: #a1a1a6;
-            line-height: 1.4;
-        }
-
-        .tariff-price {
-            font-size: 20px;
-            font-weight: bold;
-            color: #00eaab;
-            white-space: nowrap;
-            margin-left: 12px;
-            transition: color 0.3s ease;
-        }
-        
-        .tariff-card.selected .tariff-price {
-            color: #ffffff; /* При выборе цена становится белой, чтобы не спорить с контуром */
-        }
+        .tariff-info h3 { margin: 0 0 6px 0; font-size: 18px; }
+        .tariff-info p { margin: 0; font-size: 13px; color: #a1a1a6; line-height: 1.4; }
+        .tariff-price { font-size: 20px; font-weight: bold; color: #00eaab; margin-left: 12px; }
+        .tariff-card.selected .tariff-price { color: #ffffff; }
 
         /* Поля ввода */
-        .form-group {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-size: 14px;
-            color: #a1a1a6;
-            margin-bottom: 8px;
-            padding-left: 4px;
-        }
-
+        .form-group { margin-top: 20px; display: flex; flex-direction: column; }
+        label { font-size: 14px; color: #a1a1a6; margin-bottom: 8px; padding-left: 4px; }
         input, textarea {
+            background-color: #1c1d24; border: 1px solid #2c2d35; border-radius: 12px;
+            color: #ffffff; padding: 12px; font-size: 15px; outline: none; font-family: inherit;
+        }
+        input:focus, textarea:focus { border-color: #ff2d55; }
+        textarea { resize: none; height: 100px; }
+
+        .submit-btn, .link-btn {
+            background-color: #ff2d55; color: #ffffff; border: none; border-radius: 12px;
+            padding: 14px; font-size: 16px; font-weight: bold; width: 100%; margin-top: 24px;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(255, 45, 85, 0.3); text-align: center;
+            text-decoration: none; display: block; box-sizing: border-box;
+        }
+        .submit-btn:active, .link-btn:active { transform: scale(0.98); }
+
+        /* --- 1 РАЗДЕЛ: ОТЗЫВЫ (РАСКРЫВАЮЩИЕСЯ) --- */
+        .reviews-section {
+            margin-top: 10px;
+        }
+        .review-item {
             background-color: #1c1d24;
-            border: 1px solid #2c2d35;
-            border-radius: 12px;
-            color: #ffffff;
-            padding: 12px;
-            font-size: 15px;
-            outline: none;
-            font-family: inherit;
-        }
-
-        input:focus, textarea:focus {
-            border-color: #ff2d55;
-        }
-
-        textarea {
-            resize: none;
-            height: 100px;
-        }
-
-        /* Кнопка отправки */
-        .submit-btn {
-            background-color: #ff2d55;
-            color: #ffffff;
-            border: none;
             border-radius: 12px;
             padding: 14px;
-            font-size: 16px;
-            font-weight: bold;
-            width: 100%;
-            margin-top: 24px;
+            margin-bottom: 10px;
+            border: 1px solid #2c2d35;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(255, 45, 85, 0.3);
+            transition: all 0.2s ease;
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .review-client {
+            font-weight: bold;
+            font-size: 15px;
+        }
+        .review-stars {
+            color: #ffcc00;
+            font-size: 14px;
+        }
+        .review-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, margin-top 0.3s ease;
+            color: #a1a1a6;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        /* Класс, который будет добавляться через JS для раскрытия */
+        .review-item.open .review-content {
+            max-height: 100px;
+            margin-top: 10px;
         }
 
-        .submit-btn:active {
-            transform: scale(0.98);
+        /* --- 2 РАЗДЕЛ: СОТРУДНИЧЕСТВО --- */
+        .collab-card {
+            background-color: #1c1d24;
+            border: 1px solid #2c2d35;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 30px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
+        .collab-card h3 {
+            color: #00eaab;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .collab-card p {
+            font-size: 14px;
+            color: #e1e1e6;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .collab-btn {
+            background-color: transparent;
+            border: 2px solid #00eaab;
+            color: #00eaab;
+            box-shadow: 0 0 10px rgba(0, 234, 171, 0.1);
+            margin-top: 16px;
+        }
+
+        /* --- 3 РАЗДЕЛ: КОНТАКТЫ (ВНИЗУ) --- */
+        .contacts-footer {
+            margin-top: 40px;
+            text-align: center;
+            background-color: #17181f;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #22232a;
+        }
+        .contacts-footer p {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: #a1a1a6;
+        }
+        .contacts-footer a {
+            color: #ff2d55;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: opacity 0.2s;
+        }
+        .contacts-footer a:active { opacity: 0.7; }
+
+        /* --- МЕНЮ НАВИГАЦИИ (ТАБ-БАР) --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
+            background-color: #1c1d24; border-top: 1px solid #2c2d35;
+            display: flex; justify-content: space-around; align-items: center; z-index: 999;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: #7a7a85; cursor: pointer; font-size: 12px; font-weight: 500;
+            transition: color 0.3s ease; width: 50%; height: 100%; justify-content: center;
+        }
+        .nav-item .icon { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: #ff2d55; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>🔮 Выберите тариф</h2>
+        
+        <div id="orderPage" class="page active">
+            <h2>🔮 Выберите тариф</h2>
 
-        <div class="tariff-card selected" onclick="selectTariff(this, '🌱 Бюджетный', 'от 590₽')">
-            <div class="tariff-info">
-                <h3>🌱 Бюджетный</h3>
-                <p>Дёшево, стильно, свежо — не отличить от премиум дизайна.</p>
+            <div class="tariff-card selected" onclick="selectTariff(this, '🌱 Бюджетный', 'от 590₽')">
+                <div class="tariff-info">
+                    <h3>🌱 Бюджетный</h3>
+                    <p>Дёшево, стильно, свежо — не отличить от премиум дизайна.</p>
+                </div>
+                <div class="tariff-price">от 590₽</div>
             </div>
-            <div class="tariff-price">от 590₽</div>
-        </div>
 
-        <div class="tariff-card" onclick="selectTariff(this, '⚡ Средний', 'от 1090₽')">
-            <div class="tariff-info">
-                <h3>⚡ Средний</h3>
-                <p>Отличный вкус без переплаты — идеальный баланс цены.</p>
+            <div class="tariff-card" onclick="selectTariff(this, '⚡ Средний', 'от 1090₽')">
+                <div class="tariff-info">
+                    <h3>⚡ Средний</h3>
+                    <p>Отличный вкус без переплаты — идеальный баланс цены.</p>
+                </div>
+                <div class="tariff-price">от 1090₽</div>
             </div>
-            <div class="tariff-price">от 1090₽</div>
-        </div>
 
-        <div class="tariff-card" onclick="selectTariff(this, '👑 Профи', 'от 1590₽')">
-            <div class="tariff-info">
-                <h3>👑 Профи</h3>
-                <p>Лучший в мире результат без компромиссов.</p>
+            <div class="tariff-card" onclick="selectTariff(this, '👑 Профи', 'от 1590₽')">
+                <div class="tariff-info">
+                    <h3>👑 Профи</h3>
+                    <p>Лучший в мире результат без компромиссов.</p>
+                </div>
+                <div class="tariff-price">от 1590₽</div>
             </div>
-            <div class="tariff-price">от 1590₽</div>
+
+            <div class="form-group">
+                <label for="deadlineInput">📅 Желаемые сроки (например: 2 дня, срочно)</label>
+                <input type="text" id="deadlineInput" placeholder="Введите сроки...">
+            </div>
+
+            <div class="form-group" style="margin-top: 16px;">
+                <label for="taskInput">📝 Краткое ТЗ / Что нужно сделать?</label>
+                <textarea id="taskInput" placeholder="Опишите вашу задачу подробно..."></textarea>
+            </div>
+
+            <button class="submit-btn" onclick="submitOrder()">🔮 Подтвердить заказ</button>
         </div>
 
-        <div class="form-group">
-            <label for="deadlineInput">📅 Желаемые сроки (например: 2 дня, срочно)</label>
-            <input type="text" id="deadlineInput" placeholder="Введите сроки...">
-        </div>
 
-        <div class="form-group" style="margin-top: 16px;">
-            <label for="taskInput">📝 Краткое ТЗ / Что нужно сделать?</label>
-            <textarea id="taskInput" placeholder="Опишите вашу задачу подробно..."></textarea>
-        </div>
+        <div id="infoPage" class="page">
+            <h2>✨ Информация</h2>
+            
+            <h3>💬 Отзывы покупателей</h3>
+            <div class="reviews-section">
+                <div class="review-item" onclick="toggleReview(this)">
+                    <div class="review-header">
+                        <span class="review-client">Александр (Ютубер)</span>
+                        <span class="review-stars">⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <div class="review-content">
+                        Заказывал превью для видео. Сделали за сутки, сочно, кликабельность выросла в два раза! Буду брать еще на средний тариф.
+                    </div>
+                </div>
+                <div class="review-item" onclick="toggleReview(this)">
+                    <div class="review-header">
+                        <span class="review-client">Кристина (ТГ-канал)</span>
+                        <span class="review-stars">⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <div class="review-content">
+                        Аватарка просто космос 🥺 За такую цену ожидала обычный шаблон, а получила полноценный уникальный арт. Спасибо!
+                    </div>
+                </div>
+                <div class="review-item" onclick="toggleReview(this)">
+                    <div class="review-header">
+                        <span class="review-client">Максим (Бизнес)</span>
+                        <span class="review-stars">⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <div class="review-content">
+                        Брали тариф Профи для оформления бренда. Результат превзошел ожидания, правок почти не потребовалось. Настоящие мастера.
+                    </div>
+                </div>
+            </div>
 
-        <button class="submit-btn" onclick="submitOrder()">🔮 Подтвердить заказ</button>
-    </div>
+            <div class="collab-card">
+                <h3>🤝 Сотрудничество</h3>
+                <p>Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше портфолио нашему менеджеру!</p>
+                <a href="https://t.me/MartOkkks" class="link-btn collab-btn">🚀 Стать частью команды</a>
+            </div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        let chosenTariff = "🌱 Бюджетный (от 590₽)";
-
-        function selectTariff(element, name, price) {
-            document.querySelectorAll('.tariff-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            element.classList.add('selected');
-            chosenTariff = `${name} (${price})`;
-        }
-
-        function submitOrder() {
-            const taskText = document.getElementById('taskInput').value.trim();
-            const deadlineText = document.getElementById('deadlineInput').value.trim();
-
-            if (!taskText || !deadlineText) {
-                tg.showAlert("Пожалуйста, заполните ТЗ и укажите сроки!");
-                return;
-            }
-
-            const dataToBot = {
-                tariff: chosenTariff,
-                deadline: deadlineText,
-                task: taskText
-            };
-
-            tg.sendData(JSON.stringify(dataToBot));
-            tg.close();
-        }
-    </script>
-</body>
-</html>
+            <div class="contacts-footer">
+                <p>При возникновении любых вопросов или предложений:</p>
+                <a href="https://t.me/MartOkkks" target="_blank">💬 Связаться: @MartOkkks</a>
+            </div>
