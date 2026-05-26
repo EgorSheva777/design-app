@@ -1,17 +1,25 @@
 import asyncio
+import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
+from dotenv import load_dotenv
 
-# Ваш токен (или os.environ.get("TOKEN"))
-TOKEN = "8564511758:AAEyFFeixZql9tIRKj4Bv1w4ONiafJDHqrQ"
+# Загружаем данные из того самого секретного файла .env
+load_dotenv()
+
+TOKEN = os.getenv("TOKEN")
+ADMIN_ID = os.getenv("ADMIN_ID")
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# Обработчик команды /start
 @dp.message(Command("start"))
-async def cmd_start(message: types.Message):
-    await message.answer("Привет! Я работаю! Вы успешно запустили бота в облаке.")
+async def start_handler(message: types.Message):
+    # Бот отвечает только вам, если ID совпадает
+    if str(message.from_user.id) == str(ADMIN_ID):
+        await message.answer("Привет, хозяин! Я успешно запущен через Secret Files!")
+    else:
+        await message.answer("Привет! Бот успешно работает в облаке.")
 
 async def main():
     print("Бот успешно запущен!")
