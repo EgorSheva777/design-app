@@ -6,33 +6,55 @@
     <title>Design Studio</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* Мягкий минималистичный динамический фон */
         body {
-            background: linear-gradient(135deg, #0f1014, #1a1b26);
-            color: white; font-family: sans-serif; margin: 0; padding: 20px;
-            min-height: 100vh; animation: bgShift 10s infinite alternate;
+            background: linear-gradient(125deg, #0f1014, #1c1c2e, #14141a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0; padding: 20px;
+            min-height: 100vh;
         }
-        @keyframes bgShift { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(30deg); } }
-        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Карточки с котиками */
         .card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px; padding: 20px; margin-bottom: 15px;
-            position: relative; overflow: hidden;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            backdrop-filter: blur(10px);
         }
-        .card::after {
-            content: "🐱"; position: absolute; right: 10px; top: 10px; font-size: 24px; opacity: 0.5;
+
+        /* Котики на рамках */
+        .card::before {
+            content: "🐱";
+            position: absolute;
+            top: -12px;
+            right: 15px;
+            font-size: 20px;
         }
-        h2 { text-align: center; color: #ff2d55; }
+
+        h2 { margin-top: 0; color: #ff2d55; }
+        .tariff-price { color: #00eaab; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="card">
         <h2>🔮 Тарифы</h2>
-        <p>Выберите стиль для проекта</p>
+        <p>🌱 Бюджетный <span class="tariff-price">590₽</span></p>
+        <p>⚡ Средний <span class="tariff-price">1090₽</span></p>
     </div>
     <div class="card">
         <h2>✨ Информация</h2>
-        <p>Наши котики-дизайнеры ждут ТЗ!</p>
+        <p>Наши котики-дизайнеры уже готовы приступить к выполнению вашего заказа!</p>
     </div>
     <script>window.Telegram.WebApp.expand();</script>
 </body>
