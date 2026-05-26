@@ -4,21 +4,23 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiohttp import web
 
-# Сюда вставь токен, который скопировал из BotFather
+# СЮДА ВСТАВЬТЕ ТОЛЬКО ВАШ ТОКЕН ИЗ BOTFATHER
 TOKEN = "8564511758:AAEZXs5ZGfRBBi29bUtv-QVD0rLZ5oPeRSU"
+
+# Настройка порта для Render
 PORT = int(os.environ.get("PORT", 8080))
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# Веб-заглушка для Render
+# Заглушка для веб-сервера, чтобы Render не считал бота зависшим
 async def handle(request):
-    return web.Response(text="Бот работает!")
+    return web.Response(text="Бот активен")
 
-# Твой обработчик команд
+# Обработка команды /start
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
-    await message.answer("Привет! Бот успешно запущен на Render.")
+    await message.answer("Бот успешно запущен и работает!")
 
 async def main():
     # Запуск веб-сервера
@@ -29,7 +31,9 @@ async def main():
     site = web.TCPSite(runner, '0.0.0.0', PORT)
     await site.start()
 
-    # Запуск бота
+    print("Сервис и бот запущены!")
+    
+    # Удаляем вебхук, чтобы polling работал корректно
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
