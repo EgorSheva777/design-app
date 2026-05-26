@@ -42,7 +42,7 @@
             display: block;
         }
 
-        /* --- АНИМАЦИЯ ПЛАВАНИЯ --- */
+        /* --- АНИМАЦИЯ ПЛАВАНИЯ КАРТОЧЕК --- */
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-4px); }
@@ -102,7 +102,7 @@
         }
         .submit-btn:active, .link-btn:active { transform: scale(0.98); }
 
-        /* --- 1 РАЗДЕЛ: ОТЗЫВЫ (РАСКРЫВАЮЩИЕСЯ) --- */
+        /* --- 1 РАЗДЕЛ: ОТЗЫВЫ (АККОРДЕОН) --- */
         .reviews-section {
             margin-top: 10px;
         }
@@ -136,7 +136,6 @@
             font-size: 13px;
             line-height: 1.4;
         }
-        /* Класс, который будет добавляться через JS для раскрытия */
         .review-item.open .review-content {
             max-height: 100px;
             margin-top: 10px;
@@ -265,7 +264,7 @@
                         <span class="review-stars">⭐⭐⭐⭐⭐</span>
                     </div>
                     <div class="review-content">
-                        Заказывал превью для видео. Сделали за сутки, сочно, кликабельность выросла в два раза! Буду брать еще на средний тариф.
+                        Заказывал превью для видео. Сделали за сутки, сочно, кликабельность выросла в два раза! Буду брать еще.
                     </div>
                 </div>
                 <div class="review-item" onclick="toggleReview(this)">
@@ -274,7 +273,7 @@
                         <span class="review-stars">⭐⭐⭐⭐⭐</span>
                     </div>
                     <div class="review-content">
-                        Аватарка просто космос 🥺 За такую цену ожидала обычный шаблон, а получила полноценный уникальный арт. Спасибо!
+                        Аватарка просто космос 🥺 За такую цену ожила обычный шаблон, а получила полноценный уникальный арт. Спасибо!
                     </div>
                 </div>
                 <div class="review-item" onclick="toggleReview(this)">
@@ -295,6 +294,77 @@
             </div>
 
             <div class="contacts-footer">
-                <p>При возникновении любых вопросов или предложений:</p>
-                <a href="https://t.me/MartOkkks" target="_blank">💬 Связаться: @MartOkkks</a>
+                <p>При возникновении любых вопросов:</p>
+                <a href="https://t.me/MartOkkks" target="_blank">💬 @MartOkkks</a>
             </div>
+        </div>
+
+    </div>
+
+    <div class="bottom-nav">
+        <div id="tabOrder" class="nav-item active" onclick="switchPage('order')">
+            <span class="icon">🔮</span>
+            <span>Заказ</span>
+        </div>
+        <div id="tabInfo" class="nav-item" onclick="switchPage('info')">
+            <span class="icon">✨</span>
+            <span>Инфо</span>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let chosenTariff = "🌱 Бюджетный (от 590₽)";
+
+        // --- ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК ---
+        function switchPage(pageName) {
+            document.getElementById('orderPage').classList.remove('active');
+            document.getElementById('infoPage').classList.remove('active');
+            document.getElementById('tabOrder').classList.remove('active');
+            document.getElementById('tabInfo').classList.remove('active');
+
+            if (pageName === 'order') {
+                document.getElementById('orderPage').classList.add('active');
+                document.getElementById('tabOrder').classList.add('active');
+            } else if (pageName === 'info') {
+                document.getElementById('infoPage').classList.add('active');
+                document.getElementById('tabInfo').classList.add('active');
+            }
+        }
+
+        // --- АНИМАЦИЯ РАСКРЫТИЯ ОТЗЫВОВ ---
+        function toggleReview(element) {
+            element.classList.toggle('open');
+        }
+
+        function selectTariff(element, name, price) {
+            document.querySelectorAll('.tariff-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            chosenTariff = `${name} (${price})`;
+        }
+
+        function submitOrder() {
+            const taskText = document.getElementById('taskInput').value.trim();
+            const deadlineText = document.getElementById('deadlineInput').value.trim();
+
+            if (!taskText || !deadlineText) {
+                tg.showAlert("Пожалуйста, заполните ТЗ и укажите сроки!");
+                return;
+            }
+
+            const dataToBot = {
+                tariff: chosenTariff,
+                deadline: deadlineText,
+                task: taskText
+            };
+
+            tg.sendData(JSON.stringify(dataToBot));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
