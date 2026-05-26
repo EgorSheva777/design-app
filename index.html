@@ -61,14 +61,13 @@
             justify-content: space-between;
             align-items: center;
             animation: float 4s ease-in-out infinite;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        /* Небольшое смещение волны плавания для естественности */
         .tariff-card:nth-child(2) { animation-delay: 0.5s; }
         .tariff-card:nth-child(3) { animation-delay: 1s; }
 
-        /* Градиентный перелив для рамки */
+        /* Градиентный перелив для активной рамки */
         @keyframes gradient-border {
             0% { border-color: #ff2d55; box-shadow: 0 0 10px rgba(255, 45, 85, 0.2); }
             33% { border-color: #00eaab; box-shadow: 0 0 10px rgba(0, 234, 171, 0.2); }
@@ -141,7 +140,6 @@
             font-size: 13px;
             line-height: 1.4;
         }
-        /* Класс для плавного открытия кликнутого отзыва */
         .review-item.open {
             border-color: #ff2d55;
         }
@@ -283,5 +281,8 @@
                         <span class="review-stars">⭐⭐⭐⭐⭐</span>
                     </div>
                     <div class="review-content">
-                        Аватарка просто космос 🥺 За такую цену ожидала обычный шаблон, а получила полноценный уникальный арт. Спасибо!
+                        Обложка WB просто космос 🥺 За такую цену ожидала обычный шаблон, а получила полноценный уникальный арт. Спасибо!
                     </div>
+                </div>
+
+                <div class="review-item" onclick="toggleReview(
