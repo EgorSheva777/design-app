@@ -3,7 +3,7 @@ import os
 from aiogram import Bot, Dispatcher
 from aiohttp import web
 
-# Сюда вставь токен, который ты получил в BotFather
+# Вставьте сюда ВАШ НОВЫЙ ТОКЕН
 TOKEN = "8564511758:AAEyFFeixZql9tIRKj4Bv1w4ONiafJDHqrQ"
 PORT = int(os.environ.get("PORT", 8080))
 
@@ -21,7 +21,9 @@ async def main():
     site = web.TCPSite(runner, '0.0.0.0', PORT)
     await site.start()
 
+    # Очистка старых обновлений, чтобы бот не "спотыкался"
     await bot.delete_webhook(drop_pending_updates=True)
+    print("Бот успешно запущен!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
