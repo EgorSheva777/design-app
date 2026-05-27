@@ -10,8 +10,8 @@ from aiohttp import web
 # Включаем логирование
 logging.basicConfig(level=logging.INFO)
 
-TOKEN = "8564511758:AAEZxs5ZGfRBBi29bUtV-QVD0rLZ5oPeRSU"
-ADMIN_ID = 8564511758  
+TOKEN = "8564511758:AAH2DP__xRoNMOgJtMvnk8cMT5ABwXKOSz4"
+ADMIN_ID = 5995218415  
 RENDER_URL = "https://design-app-kohf.onrender.com"
 
 bot = Bot(token=TOKEN)
