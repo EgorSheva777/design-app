@@ -7,48 +7,47 @@ from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
 from aiohttp import web
 
-# Логирование
 logging.basicConfig(level=logging.INFO)
 
 TOKEN = "8564511758:AAH2DP__xRoNMOgJtMvnk8cMT5ABwXKOSz4"
-ADMIN_ID = 5995218415  
-RENDER_URL = "https://design-app-kohf.onrender.com"
+
+# !!! СЮДА ВСТАВЬ СВОЙ РЕАЛЬНЫЙ ID ИЗ @userinfobot (БЕЗ КАВЫЧЕК, ПРОСТО ЧИСЛО) !!!
+ADMIN_ID = 5995218415  # Замени XXXXXXXXX на твой настоящий ID
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def start_handler(message: types.Message):
-    # !!! ТВОЯ ССЫЛКА НА MINI APP !!!
+    # Твоя ссылка на Mini App
     mini_app_url = "https://egorsheva777.github.io/design-app/" 
     
-    # 1. Кнопка под сообщением (Inline)
-    inline_keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[[
-            InlineKeyboardButton(text="Открыть Mini App 🚀", web_app=WebAppInfo(url=mini_app_url))
-        ]]
-    )
-    
-    # 2. Нижняя текстовая кнопка (ОБЯЗАТЕЛЬНО для работы простого message.web_app_data)
-    # Через неё данные гарантированно прилетят в бота при закрытии
     reply_keyboard = ReplyKeyboardMarkup(
         keyboard=[[
-            KeyboardButton(text="Заказать дизайн 🚀", web_app=WebAppInfo(url=mini_app_url))
+            KeyboardButton(text="Заказать дизайн 🔮", web_app=WebAppInfo(url=mini_app_url))
         ]],
         resize_keyboard=True
     )
     
     await message.answer(
-        "Привет! У нас появилось приложение MiniApp. Нажми на кнопку ниже, чтобы открыть и оформить заказ: 👇", 
-        reply_markup=reply_keyboard # Показываем нижнюю кнопку по умолчанию
+        "Привет! Нажми на кнопку ниже, чтобы открыть каталог и оформить заказ: 👇", 
+        reply_markup=reply_keyboard
     )
 
-# ОБРАБОТЧИК ДАННЫХ ИЗ MINI APP
+# ОБРАБОТЧИК ЗАЯВОК (Срабатывает для ВСЕХ клиентов)
 @dp.message(F.web_app_data)
 async def web_app_data_handler(message: types.Message):
-    logging.info(f"=== УРА, ДАННЫЕ ПРИШЛИ: {message.web_app_data.data} ===")
+    logging.info(f"=== ДАННЫЕ УСПЕШНО ПОЙМАНЫ ОТ ПОЛЬЗОВАТЕЛЯ {message.from_user.id} ===")
+    
     raw_data = message.web_app_data.data
-    text = "🔔 **Новая заявка из Mini App!**\n\n"
+    
+    # Собираем красивую карточку с данными о клиенте
+    text = f"🔔 **НОВАЯ ЗАЯВКА ИЗ MINI APP!**\n\n"
+    text += f"👤 **Клиент:** {message.from_user.full_name}\n"
+    if message.from_user.username:
+        text += f"🔗 **Юзернейм:** @{message.from_user.username}\n"
+    text += f"🆔 **ID клиента:** `{message.from_user.id}`\n"
+    text += f"----------------------------------\n\n"
     
     try:
         order_info = json.loads(raw_data)
@@ -56,20 +55,19 @@ async def web_app_data_handler(message: types.Message):
             for key, value in order_info.items():
                 text += f"🔹 **{key}:** {value}\n"
         else:
-            text += f"📝 **Данные заказа:** {order_info}"
+            text += f"📝 **Данные:** {order_info}"
     except Exception:
-        text += f"📝 **Данные заказа (строка):** {raw_data}"
+        text += f"📝 **Данные (строка):** {raw_data}"
 
-    # Отправка администратору
+    # ОТПРАВЛЯЕМ НА ТВОЙ НАСТОЯЩИЙ АККАУНТ
     await bot.send_message(chat_id=ADMIN_ID, text=text)
-    # Ответ пользователю
-    await message.answer("Спасибо! Твоя заявка успешно получена и отправлена администратору! ✅")
+    
+    # Отвечаем самому клиенту в его чат с ботом
+    await message.answer("Спасибо! Ваша заявка успешно отправлена администратору! ✅")
 
-# Ответ для Render (GET/HEAD)
 async def index_handle(request):
     return web.Response(text="Bot is running smoothly!", content_type="text/plain")
 
-# Прием вебхуков
 async def tg_webhook_handle(request):
     try:
         body = await request.json()
@@ -80,8 +78,7 @@ async def tg_webhook_handle(request):
     return web.Response(text="OK")
 
 async def on_startup(app):
-    # ВНИМАНИЕ: убрали drop_pending_updates=True, теперь сообщения не сгорают!
-    await bot.set_webhook(f"{RENDER_URL}/webhook")
+    await bot.set_webhook(f"https://design-app-kohf.onrender.com/webhook")
     logging.info("Вебхук успешно инициализирован.")
 
 async def on_shutdown(app):
