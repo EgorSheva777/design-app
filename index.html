@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Design App Mini App</title>
+  <!-- Подключаем скрипт Телеграма и иконки FontAwesome для динамичных элементов -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
@@ -130,13 +131,14 @@
       box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
     }
 
-    /* СТИЛИ ВКЛАДКИ 2: ИНФОРМАЦИЯ И ОТЗЫВЫ */
+    /* СТИЛИ ВКЛАДКИ 2: ИНФОРМАЦИЯ И ОБНОВЛЕННЫЕ ОТЗЫВЫ */
     @keyframes gradientMovement {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
+    /* Заголовок с минималистичным переливом */
     .gradient-text {
       text-align: center;
       font-size: 24px;
@@ -168,6 +170,7 @@
       transition: transform 0.3s ease, border-color 0.3s ease;
     }
 
+    /* Плавное приподнимание карточки отзыва при наведении */
     .review-card:hover {
       transform: translateY(-3px);
       border-color: rgba(0, 255, 204, 0.2);
@@ -183,6 +186,7 @@
       font-size: 12px;
     }
 
+    /* Карточка сотрудничества с мягким свечением */
     .coop-card {
       background: #1b1f26;
       border-radius: 18px;
@@ -214,12 +218,12 @@
       margin-bottom: 20px;
     }
 
-    /* Кнопка с переливом */
+    /* Интерактивная кнопка с переливающейся рамкой */
     .btn-animate {
       position: relative;
       display: block;
       text-decoration: none;
-      padding: 2px;
+      padding: 2px; /* Толщина рамки */
       border-radius: 14px;
       background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
       background-size: 300% 300%;
@@ -268,6 +272,11 @@
       text-decoration: none;
       font-weight: 600;
       font-size: 15px;
+      transition: opacity 0.2s ease;
+    }
+
+    .manager-link:hover {
+      opacity: 0.8;
     }
   </style>
 </head>
@@ -275,6 +284,7 @@
 
   <div class="app-container">
     
+    <!-- ВКЛАДКА 1: ОРИГИНАЛЬНАЯ ФОРМА ЗАКАЗА -->
     <div id="order-tab" class="tab-content active">
       <h2 class="form-title">🚀 Оформить заказ</h2>
       
@@ -299,6 +309,7 @@
       <button class="submit-btn" onclick="sendOrderData()">Отправить заказ</button>
     </div>
 
+    <!-- ВКЛАДКА 2: ОБНОВЛЕННАЯ ИНФОРМАЦИЯ С АНИМАЦИЯМИ -->
     <div id="info-tab" class="tab-content">
       <h2 class="gradient-text"><i class="fa-solid fa-wand-magic-sparkles"></i> Информация</h2>
 
@@ -326,9 +337,10 @@
           <i class="fa-solid fa-handshake"></i> Сотрудничество
         </div>
         <p class="coop-text">
-          Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше портфолио нашему менеджеру!
+          Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше portfolio нашему менеджеру!
         </p>
         
+        <!-- Кнопка ведет напрямую в ТГ, работает при клике -->
         <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
           <span>🚀 Стать частью команды</span>
         </a>
@@ -344,6 +356,7 @@
 
   </div>
 
+  <!-- НИЖНЕЕ МЕНЮ (НАВИГАЦИЯ МЕЖДУ ВКЛАДКАМИ) -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('order-tab', this)">
       <i class="fa-solid fa-cart-shopping"></i>
@@ -389,9 +402,9 @@
 
       // Создаем объект данных для передачи в бот
       const orderData = {
-        "Тариф": tariff,
-        "Дедлайн": deadline,
-        "Задача": task
+        "tariff": tariff,
+        "deadline": deadline,
+        "task": task
       };
 
       // Отправляем JSON-строку боту и закрываем Mini App
