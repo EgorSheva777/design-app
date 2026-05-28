@@ -1,215 +1,403 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design App Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    /* ОБЩИЕ СТИЛИ (ТЕМНАЯ ТЕМА) */
+    body {
+      background-color: #0d0f12;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<div class="info-container">
-  <h2 class="gradient-text"><i class="fa-solid fa-wand-magic-sparkles"></i> Информация</h2>
+    .app-container {
+      max-width: 450px;
+      margin: 0 auto;
+      padding: 15px;
+      padding-bottom: 80px; /* Отступ снизу для меню */
+    }
 
-  <div class="reviews-section">
-    <h3><i class="fa-regular fa-comments"></i> Отзывы покупателей</h3>
+    /* ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (НАВИГАЦИЯ) */
+    .tab-content {
+      display: none; /* По умолчанию скрываем всё */
+    }
+    .tab-content.active {
+      display: block; /* Показываем только активную вкладку */
+    }
+
+    /* НИЖНЕЕ МЕНЮ (НАВИГАЦИЯ) */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 450px;
+      background: #13161a;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      z-index: 1000;
+    }
+
+    .nav-item {
+      background: none;
+      border: none;
+      color: #8a99ad;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .nav-item i {
+      font-size: 18px;
+    }
+
+    .nav-item.active {
+      color: #00ffcc; /* Активный цвет вкладки */
+    }
+
+    /* СТИЛИ ВКЛАДКИ 1: ФОРМА ЗАКАЗА */
+    .form-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      color: #8a99ad;
+      margin-bottom: 8px;
+    }
+
+    .form-control {
+      width: 100%;
+      background: #1b1f26;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 14px;
+      color: #ffffff;
+      font-size: 14px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #00ffcc;
+    }
+
+    select.form-control {
+      cursor: pointer;
+    }
+
+    /* Кнопка отправки формы */
+    .submit-btn {
+      width: 100%;
+      background: #00ffcc;
+      color: #0d0f12;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      transform: scale(1.01);
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+    }
+
+    /* СТИЛИ ВКЛАДКИ 2: ИНФОРМАЦИЯ И ОТЗЫВЫ */
+    @keyframes gradientMovement {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .gradient-text {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 25px;
+      background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMovement 6s ease infinite;
+    }
+
+    .reviews-section h3 {
+      font-size: 16px;
+      color: #8a99ad;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .review-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1b1f26;
+      padding: 14px 18px;
+      border-radius: 14px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .review-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0, 255, 204, 0.2);
+    }
+
+    .reviewer-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .stars {
+      letter-spacing: 2px;
+      font-size: 12px;
+    }
+
+    .coop-card {
+      background: #1b1f26;
+      border-radius: 18px;
+      padding: 20px;
+      margin-top: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 20px rgba(0, 119, 255, 0.05);
+      transition: box-shadow 0.4s ease;
+    }
+
+    .coop-card:hover {
+      box-shadow: 0 0 25px rgba(0, 255, 204, 0.1);
+    }
+
+    .coop-badge {
+      color: #00ffcc;
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .coop-text {
+      color: #8a99ad;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    /* Кнопка с переливом */
+    .btn-animate {
+      position: relative;
+      display: block;
+      text-decoration: none;
+      padding: 2px;
+      border-radius: 14px;
+      background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
+      background-size: 300% 300%;
+      animation: gradientMovement 4s ease infinite;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-animate span {
+      display: block;
+      background: #1b1f26;
+      color: #00ffcc;
+      text-align: center;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-animate:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+    }
+
+    .btn-animate:hover span {
+      background: transparent;
+      color: #ffffff;
+    }
+
+    .info-footer {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .info-footer p {
+      font-size: 12px;
+      color: #56667a;
+      margin-bottom: 8px;
+    }
+
+    .manager-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #ff3b57;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
     
-    <div class="review-card">
-      <span class="reviewer-name">Александр (Ютубер)</span>
-      <div class="stars">⭐⭐⭐⭐⭐</div>
+    <div id="order-tab" class="tab-content active">
+      <h2 class="form-title">🚀 Оформить заказ</h2>
+      
+      <div class="form-group">
+        <label for="tariff">Выберите тариф:</label>
+        <select id="tariff" class="form-control">
+          <option value="👑 Профи (от 1590₽)">👑 Профи (от 1590₽)</option>
+          <option value="🌱 Бюджетный (от 590₽)">🌱 Бюджетный (от 590₽)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="deadline">Желаемый дедлайн (срок):</label>
+        <input type="text" id="deadline" class="form-control" placeholder="Например: 2 дня / Срочно">
+      </div>
+
+      <div class="form-group">
+        <label for="task">Что нужно сделать? (Описание задачи):</label>
+        <textarea id="task" class="form-control" rows="4" placeholder="Опишите, какой дизайн вам требуется..."></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="sendOrderData()">Отправить заказ</button>
     </div>
-    
-    <div class="review-card">
-      <span class="reviewer-name">Кристина (Маркетплейс)</span>
-      <div class="stars">⭐⭐⭐⭐⭐</div>
+
+    <div id="info-tab" class="tab-content">
+      <h2 class="gradient-text"><i class="fa-solid fa-wand-magic-sparkles"></i> Информация</h2>
+
+      <div class="reviews-section">
+        <h3><i class="fa-regular fa-comments"></i> Отзывы покупателей</h3>
+        
+        <div class="review-card">
+          <span class="reviewer-name">Александр (Ютубер)</span>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+        
+        <div class="review-card">
+          <span class="reviewer-name">Кристина (Маркетплейс)</span>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+        
+        <div class="review-card">
+          <span class="reviewer-name">Максим (Бизнес)</span>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+
+      <div class="coop-card">
+        <div class="coop-badge">
+          <i class="fa-solid fa-handshake"></i> Сотрудничество
+        </div>
+        <p class="coop-text">
+          Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше портфолио нашему менеджеру!
+        </p>
+        
+        <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
+          <span>🚀 Стать частью команды</span>
+        </a>
+      </div>
+
+      <div class="info-footer">
+        <p>При возникновении любых вопросов:</p>
+        <a href="https://t.me/MartOkkks" class="manager-link" target="_blank">
+          <i class="fa-regular fa-comment-dots"></i> @MartOkkks
+        </a>
+      </div>
     </div>
-    
-    <div class="review-card">
-      <span class="reviewer-name">Максим (Бизнес)</span>
-      <div class="stars">⭐⭐⭐⭐⭐</div>
-    </div>
+
   </div>
 
-  <div class="coop-card">
-    <div class="coop-badge">
-      <i class="fa-solid fa-handshake"></i> Сотрудничество
-    </div>
-    <p class="coop-text">
-      Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше портфолио нашему менеджеру!
-    </p>
-    
-    <a href="#" class="btn-animate">
-      <span>🚀 Стать частью команды</span>
-    </a>
-  </div>
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('order-tab', this)">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span>Заказ</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('info-tab', this)">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Информация</span>
+    </button>
+  </nav>
 
-  <div class="info-footer">
-    <p>При возникновении любых вопросов:</p>
-    <a href="https://t.me/MartOkkks" class="manager-link">
-      <i class="fa-regular fa-comment-dots"></i> @MartOkkks
-    </a>
-  </div>
-</div>
+  <script>
+    // Инициализация Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Разворачиваем приложение во весь экран
 
-<style>
-/* ОСНОВНЫЕ СТИЛИ КОНТЕЙНЕРА */
-body {
-  background-color: #0d0f12; /* Глубокий темный фон как на скрине */
-  font-family: 'Segoe UI', Roboto, sans-serif;
-  color: #ffffff;
-}
+    // Функция переключения вкладок
+    function switchTab(tabId, button) {
+      // Скрываем все вкладки
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      // Снимаем активный класс со всех кнопок меню
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('active');
+      });
 
-.info-container {
-  max-width: 450px;
-  margin: 0 auto;
-  padding: 20px;
-  background: #13161a;
-  border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
+      // Показываем нужную вкладку и делаем кнопку активной
+      document.getElementById(tabId).classList.add('active');
+      button.classList.add('active');
+    }
 
-/* АНИМАЦИЯ ПЕРЕЛИВА ЦВЕТОВ */
-@keyframes gradientMovement {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+    // Функция отправки данных формы в Telegram-бота
+    function sendOrderData() {
+      const tariff = document.getElementById('tariff').value;
+      const deadline = document.getElementById('deadline').value.trim();
+      const task = document.getElementById('task').value.trim();
 
-/* ЗАГОЛОВОК С ПЕРЕЛИВОМ */
-.gradient-text {
-  text-align: center;
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 25px;
-  background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradientMovement 6s ease infinite;
-}
+      if (!deadline || !task) {
+        alert("Пожалуйста, заполните дедлайн и описание задачи!");
+        return;
+      }
 
-/* СТИЛИ ОТЗЫВОВ */
-.reviews-section h3 {
-  font-size: 16px;
-  color: #8a99ad;
-  margin-bottom: 12px;
-  font-weight: 500;
-}
+      // Создаем объект данных для передачи в бот
+      const orderData = {
+        "Тариф": tariff,
+        "Дедлайн": deadline,
+        "Задача": task
+      };
 
-.review-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #1b1f26;
-  padding: 14px 18px;
-  border-radius: 14px;
-  margin-bottom: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  transition: transform 0.3s ease, border-color 0.3s ease;
-}
-
-/* Динамика при наведении на отзыв */
-.review-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(0, 255, 204, 0.2);
-}
-
-.reviewer-name {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.stars {
-  letter-spacing: 2px;
-  font-size: 12px;
-}
-
-/* КАРТОЧКА СОТРУДНИЧЕСТВА */
-.coop-card {
-  background: #1b1f26;
-  border-radius: 18px;
-  padding: 20px;
-  margin-top: 25px;
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 20px rgba(0, 119, 255, 0.05);
-  transition: box-shadow 0.4s ease;
-}
-
-.coop-card:hover {
-  /* Мягкое неоновое свечение всей карточки при наведении */
-  box-shadow: 0 0 25px rgba(0, 255, 204, 0.1);
-}
-
-.coop-badge {
-  color: #00ffcc;
-  font-weight: 600;
-  font-size: 15px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.coop-text {
-  color: #8a99ad;
-  font-size: 13px;
-  line-height: 1.5;
-  margin-bottom: 20px;
-}
-
-/* ТЕХНОЛОГИЧНАЯ КНОПКА С ПЕРЕЛИВАЮЩЕЙСЯ РАМКОЙ */
-.btn-animate {
-  position: relative;
-  display: block;
-  text-decoration: none;
-  padding: 2px; /* Толщина рамки */
-  border-radius: 14px;
-  background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
-  background-size: 300% 300%;
-  animation: gradientMovement 4s ease infinite;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
-}
-
-.btn-animate span {
-  display: block;
-  background: #1b1f26;
-  color: #00ffcc;
-  text-align: center;
-  padding: 14px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-/* Эффекты кнопки при наведении */
-.btn-animate:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
-}
-
-.btn-animate:hover span {
-  background: transparent; /* Кнопка заливается градиентом целиком */
-  color: #ffffff;
-}
-
-/* ФУТЕР БЛОКА */
-.info-footer {
-  text-align: center;
-  margin-top: 30px;
-}
-
-.info-footer p {
-  font-size: 12px;
-  color: #56667a;
-  margin-bottom: 8px;
-}
-
-.manager-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #ff3b57; /* Розово-красный акцент как на макете */
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 15px;
-  transition: opacity 0.2s ease;
-}
-
-.manager-link:hover {
-  opacity: 0.8;
-}
-</style>
+      // Отправляем JSON-строку боту и закрываем Mini App
+      tg.sendData(JSON.stringify(orderData));
+      tg.close();
+    }
+  </script>
+</body>
+</html>
