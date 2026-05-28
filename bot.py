@@ -4,21 +4,25 @@ import json
 import logging
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiohttp import web
 
+# Настройка логирования
 logging.basicConfig(level=logging.INFO)
 
 TOKEN = "8564511758:AAH2DP__xRoNMOgJtMvnk8cMT5ABwXKOSz4"
 
-# Твой ID (укажи число вместо 0)
+# !!! ТВОЙ ID ИЗ @userinfobot (ЧИСЛО) !!!
 ADMIN_ID = 5995218415  
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
+# Обработчик команды /start
 @dp.message(Command("start"))
 async def start_handler(message: types.Message):
+    # УКАЖИ СВОЮ ССЫЛКУ НА MINI APP НИЖЕ
     mini_app_url = "https://egorsheva777.github.io/design-app/" 
     
     reply_keyboard = ReplyKeyboardMarkup(
@@ -33,12 +37,12 @@ async def start_handler(message: types.Message):
         reply_markup=reply_keyboard
     )
 
+# Обработчик данных из Mini App
 @dp.message(F.web_app_data)
 async def web_app_data_handler(message: types.Message):
     raw_data = message.web_app_data.data
     logging.info(f"=== ДАННЫЕ ПРИШЛИ: {raw_data} ===")
     
-    # Форматируем текст (используем HTML, так как он надежнее Markdown)
     text = f"🔔 <b>НОВАЯ ЗАЯВКА ИЗ MINI APP!</b>\n\n"
     text += f"👤 <b>Клиент:</b> {message.from_user.full_name}\n"
     if message.from_user.username:
@@ -58,7 +62,6 @@ async def web_app_data_handler(message: types.Message):
 
     if ADMIN_ID != 0:
         try:
-            # Добавлен параметр parse_mode="HTML" для отображения жирного шрифта
             await bot.send_message(chat_id=ADMIN_ID, text=text, parse_mode="HTML")
             logging.info("Заявка успешно переслана админу.")
         except Exception as admin_err:
@@ -69,37 +72,34 @@ async def web_app_data_handler(message: types.Message):
     except Exception as e:
         logging.error(f"Ошибка отправки ответа клиенту: {e}")
 
+# Хендлер для пингатора (отвечает 200 OK на главную страницу)
 async def index_handle(request):
     return web.Response(text="Bot is running smoothly!", content_type="text/plain")
 
-async def tg_webhook_handle(request):
-    try:
-        body = await request.json()
-        updater = types.Update.model_validate(body, context={"bot": bot})
-        await dp.feed_update(bot, updater)
-    except Exception as e:
-        logging.error(f"Ошибка в вебхуке: {e}")
-    return web.Response(text="OK")
-
-async def on_startup(app):
-    await bot.set_webhook(f"https://design-app-kohf.onrender.com/webhook")
-    logging.info("Вебхук успешно инициализирован.")
-
-async def on_shutdown(app):
-    logging.info("Очистка сессий...")
-    try:
-        await bot.delete_webhook()
-        await bot.session.close()
-    except Exception as e:
-        logging.error(f"Ошибка при закрытии сессии: {e}")
+# Функция, которая сработает строго в момент старта приложения
+async def on_startup(bot: Bot):
+    logging.info("Устанавливаем чистый вебхук...")
+    await bot.set_webhook(
+        url="https://design-app-test.onrender.com/webhook", # Твой актуальный вебхук URL
+        drop_pending_updates=True # Сбрасываем зависшие старые апдейты, чтобы бот не тупил
+    )
 
 def main():
     app = web.Application()
-    app.router.add_route('*', '/', index_handle)
-    app.router.add_post('/webhook', tg_webhook_handle)
     
-    app.on_startup.append(on_startup)
-    app.on_shutdown.append(on_shutdown)
+    # Главная страница для cron-job.org
+    app.router.add_route('*', '/', index_handle)
+    
+    # Родной aiogram-обработчик вебхуков (автоматически закроет старые сессии)
+    webhook_requests_handler = SimpleRequestHandler(
+        dispatcher=dp,
+        bot=bot
+    )
+    webhook_requests_handler.register(app, path="/webhook")
+    
+    # Привязываем правильный startup/shutdown жизненный цикл
+    dp.startup.register(on_startup)
+    setup_application(app, dp, bot=bot)
     
     port = int(os.environ.get('PORT', 10000))
     web.run_app(app, host='0.0.0.0', port=port)
