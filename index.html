@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
   <style>
-    /* ОБЩИЕ СТИЛИ (ГЛУБОКИЙ ТЕМНЫЙ ФОН) */
+    /* ОБЩИЕ СТИЛИ */
     body {
       background-color: #0b0d10;
       font-family: 'Segoe UI', Roboto, sans-serif;
@@ -22,17 +22,15 @@
       max-width: 450px;
       margin: 0 auto;
       padding: 20px 15px;
-      padding-bottom: 95px; /* Отступ для меню */
+      padding-bottom: 95px;
     }
 
-    /* АНИМАЦИЯ ПЛАВНОГО ПЕРЕЛИВА ГРАДИЕНТА */
     @keyframes gradientMovement {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    /* ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК */
     .tab-content {
       display: none;
     }
@@ -40,7 +38,6 @@
       display: block;
     }
 
-    /* ДИНАМИЧНЫЕ ЗАГОЛОВКИ С ПЕРЕЛИВОМ */
     .page-title, .gradient-text {
       text-align: center;
       font-size: 24px;
@@ -57,7 +54,7 @@
       gap: 10px;
     }
 
-    /* СПИСОК ТАРИФОВ */
+    /* 1 СТРАНИЦА: ТАРИФЫ */
     .tariffs-list {
       display: flex;
       flex-direction: column;
@@ -65,16 +62,14 @@
       margin-bottom: 25px;
     }
 
-    /* ГРАДИЕНТНАЯ ЖИВАЯ ОБВЕРТКА ДЛЯ КАРТОЧЕК */
     .tariff-wrapper {
       position: relative;
-      padding: 2px; /* Толщина градиентной рамки */
+      padding: 2px;
       border-radius: 18px;
-      background: rgba(255, 255, 255, 0.04); /* В обычном состоянии рамка тусклая */
+      background: rgba(255, 255, 255, 0.04);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    /* Когда тариф выбран — рамка начинает переливаться неоном */
     .tariff-wrapper.selected {
       background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
       background-size: 300% 300%;
@@ -83,7 +78,6 @@
       transform: translateY(-2px);
     }
 
-    /* Внутреннее тело карточки */
     .tariff-card {
       background: #12161c;
       border-radius: 16px;
@@ -109,7 +103,6 @@
       gap: 8px;
     }
 
-    /* Кастомные неоновые цвета для иконок */
     .tariff-name .fa-seedling { color: #00ffcc; }
     .tariff-name .fa-bolt { color: #ffcc00; }
     .tariff-name .fa-crown { color: #ff3b57; }
@@ -139,12 +132,11 @@
       transition: color 0.3s ease;
     }
     
-    /* Подсветка цены выбранного тарифа */
     .tariff-wrapper.selected .price-value {
       color: #00ffcc;
     }
 
-    /* МИНИМАЛИСТИЧНЫЕ ПОЛЯ ВВОДА */
+    /* ПОЛЯ ВВОДА */
     .form-group {
       margin-bottom: 20px;
     }
@@ -175,21 +167,15 @@
       box-shadow: 0 0 10px rgba(0, 255, 204, 0.05);
     }
 
-    /* ГРАДИЕНТНАЯ КНОПКА ОТПРАВКИ */
+    /* НЕВЗРАЧНАЯ ДИНАМИЧЕСКАЯ КНОПКА ОТПРАВКИ */
     .submit-btn-wrapper {
       position: relative;
       padding: 2px;
       border-radius: 16px;
-      background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
-      background-size: 300% 300%;
-      animation: gradientMovement 4s ease infinite;
+      /* Изначально рамка просто бирюзовая, аккуратная */
+      background: #00ffcc; 
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
-    }
-
-    .submit-btn-wrapper:hover {
-      transform: scale(1.01);
-      box-shadow: 0 0 20px rgba(0, 255, 204, 0.25);
+      transition: background 0.4s ease, transform 0.2s ease, box-shadow 0.4s ease;
     }
 
     .submit-btn-wrapper button {
@@ -202,48 +188,83 @@
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      transition: background 0.3s ease, color 0.3s ease;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    /* Эффект аккуратного динамического наведения */
+    .submit-btn-wrapper:hover {
+      /* Включается плавный перелив градиента на рамке */
+      background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
+      background-size: 300% 300%;
+      animation: gradientMovement 4s ease infinite;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(0, 255, 204, 0.12);
     }
 
     .submit-btn-wrapper:hover button {
-      background: transparent;
+      /* Внутренняя часть плавно темнеет под градиент, текст белеет */
+      background: rgba(18, 22, 28, 0.85);
       color: #ffffff;
     }
 
-    /* СТИЛИ СТРАНИЦЫ ИНФОРМАЦИИ (ВКЛАДКА 2) */
+    /* 2 СТРАНИЦА: ИНФОРМАЦИЯ */
     .reviews-section h3 {
       font-size: 15px;
       color: #8a99ad;
       margin-bottom: 14px;
       font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .review-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .review-item {
       background: #12161c;
-      padding: 16px;
       border-radius: 14px;
       margin-bottom: 12px;
       border: 1px solid rgba(255, 255, 255, 0.03);
-      transition: transform 0.3s ease, border-color 0.3s ease;
+      overflow: hidden;
+      transition: border-color 0.3s ease;
     }
 
-    .review-card:hover {
-      transform: translateY(-2px);
+    .review-item:hover {
       border-color: rgba(0, 255, 204, 0.15);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      cursor: pointer;
+      user-select: none;
     }
 
     .reviewer-name {
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .stars {
       letter-spacing: 2px;
       font-size: 11px;
       color: #ffcc00;
+    }
+
+    .review-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, padding 0.3s ease;
+      font-size: 13px;
+      color: #8a99ad;
+      line-height: 1.5;
+      background: rgba(255, 255, 255, 0.01);
+      padding: 0 16px;
+    }
+
+    .review-item.expanded .review-content {
+      max-height: 200px;
+      padding: 0 16px 16px 16px;
     }
 
     .coop-card {
@@ -271,7 +292,78 @@
       margin-bottom: 20px;
     }
 
-    /* НИЖНЕЕ МЕНЮ (НАВИГАЦИЯ) */
+    .btn-animate {
+      position: relative;
+      display: block;
+      text-decoration: none;
+      padding: 2px;
+      border-radius: 16px;
+      background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
+      background-size: 300% 300%;
+      animation: gradientMovement 4s ease infinite;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-animate span {
+      display: block;
+      background: #12161c;
+      color: #00ffcc;
+      text-align: center;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-animate:hover {
+      transform: scale(1.01);
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.25);
+    }
+
+    .btn-animate:hover span {
+      background: transparent;
+      color: #ffffff;
+    }
+
+    .info-footer {
+      background: #12161c;
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+      margin-top: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .info-footer p {
+      font-size: 13px;
+      color: #8a99ad;
+      margin: 0 0 12px 0;
+    }
+
+    .manager-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(0, 255, 204, 0.07);
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 204, 0.15);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .manager-link:hover {
+      background: #00ffcc;
+      color: #0b0d10;
+      transform: translateY(-1px);
+    }
+
+    /* НАВИГАЦИЯ */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -307,39 +399,17 @@
     .nav-item.active {
       color: #00ffcc;
     }
-
-    .info-footer {
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    .info-footer p {
-      font-size: 12px;
-      color: #56667a;
-      margin-bottom: 8px;
-    }
-
-    .manager-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: #ff3b57;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 15px;
-    }
   </style>
 </head>
 <body>
 
   <div class="app-container">
     
-    <!-- ВКЛАДКА 1: ДИНАМИЧНЫЙ ЗАКАЗ (ГРАДИЕНТНЫЕ ПЕРЕЛИВЫ) -->
+    <!-- СТРАНИЦА 1: ЗАКАЗ -->
     <div id="order-tab" class="tab-content active">
       <h2 class="page-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Выберите тариф</h2>
       
       <div class="tariffs-list">
-        <!-- Бюджетный -->
         <div class="tariff-wrapper selected" onclick="selectTariff('🌱 Бюджетный', this)">
           <div class="tariff-card">
             <div class="tariff-info">
@@ -353,7 +423,6 @@
           </div>
         </div>
 
-        <!-- Средний -->
         <div class="tariff-wrapper" onclick="selectTariff('⚡ Средний', this)">
           <div class="tariff-card">
             <div class="tariff-info">
@@ -367,7 +436,6 @@
           </div>
         </div>
 
-        <!-- Профи -->
         <div class="tariff-wrapper" onclick="selectTariff('👑 Профи', this)">
           <div class="tariff-card">
             <div class="tariff-info">
@@ -382,7 +450,6 @@
         </div>
       </div>
 
-      <!-- Поля ввода -->
       <div class="form-group">
         <label><i class="fa-regular fa-calendar-days"></i> Желаемые сроки (например: 2 дня, срочно)</label>
         <input type="text" id="deadline" class="form-control" placeholder="Введите сроки...">
@@ -393,32 +460,47 @@
         <textarea id="task" class="form-control" rows="4" placeholder="Опишите вашу задачу подробно..."></textarea>
       </div>
 
-      <!-- Кнопка отправки с переливом -->
+      <!-- Кнопка со сдержанным динамическим ховером -->
       <div class="submit-btn-wrapper" onclick="sendOrderData()">
         <button>Отправить заказ</button>
       </div>
     </div>
 
-    <!-- ВКЛАДКА 2: ИНФОРМАЦИЯ -->
+    <!-- СТРАНИЦА 2: ИНФОРМАЦИЯ -->
     <div id="info-tab" class="tab-content">
       <h2 class="gradient-text"><i class="fa-solid fa-circle-info"></i> Информация</h2>
 
       <div class="reviews-section">
         <h3><i class="fa-regular fa-comments"></i> Отзывы покупателей</h3>
         
-        <div class="review-card">
-          <span class="reviewer-name">Александр (Ютубер)</span>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+        <div class="review-item" onclick="toggleReview(this)">
+          <div class="review-header">
+            <span class="reviewer-name">Александр (Ютубер)</span>
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+          </div>
+          <div class="review-content">
+            Заказывал оформление для игрового YouTube-канала. Работа выполнена невероятно сочно, превьюшки кликаются на ура, баннер встал идеально. Рекомендую!
+          </div>
         </div>
         
-        <div class="review-card">
-          <span class="reviewer-name">Кристина (Маркетплейс)</span>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+        <div class="review-item" onclick="toggleReview(this)">
+          <div class="review-header">
+            <span class="reviewer-name">Кристина (Маркетплейс)</span>
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+          </div>
+          <div class="review-content">
+            Делали карточки товаров для Wildberries. Продажи выросли благодаря крутой инфографике. Всё чётко по ТЗ и сдали даже раньше срока!
+          </div>
         </div>
         
-        <div class="review-card">
-          <span class="reviewer-name">Максим (Бизнес)</span>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+        <div class="review-item" onclick="toggleReview(this)">
+          <div class="review-header">
+            <span class="reviewer-name">Максим (Бизнес)</span>
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+          </div>
+          <div class="review-content">
+            Разрабатывали логотип и фирменный стиль для кофейни. Дизайнер уловил атмосферу с первого слова, правок почти не потребовалось. Высший пилотаж.
+          </div>
         </div>
       </div>
 
@@ -438,7 +520,7 @@
       <div class="info-footer">
         <p>При возникновении любых вопросов:</p>
         <a href="https://t.me/MartOkkks" class="manager-link" target="_blank">
-          <i class="fa-regular fa-comment-dots"></i> @MartOkkks
+          <i class="fa-regular fa-comment-dots"></i> Связаться с менеджером
         </a>
       </div>
     </div>
@@ -463,7 +545,6 @@
 
     let selectedTariffValue = "🌱 Бюджетный";
 
-    // Функция динамического выбора тарифа
     function selectTariff(tariffName, wrapperElement) {
       document.querySelectorAll('.tariff-wrapper').forEach(wrap => {
         wrap.classList.remove('selected');
@@ -472,7 +553,6 @@
       selectedTariffValue = tariffName;
     }
 
-    // Переключение вкладок
     function switchTab(tabId, button) {
       document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
@@ -484,7 +564,16 @@
       button.classList.add('active');
     }
 
-    // Сбор и отправка JSON в бот
+    function toggleReview(element) {
+      const isExpanded = element.classList.contains('expanded');
+      document.querySelectorAll('.review-item').forEach(item => {
+        item.classList.remove('expanded');
+      });
+      if (!isExpanded) {
+        element.classList.add('expanded');
+      }
+    }
+
     function sendOrderData() {
       const deadline = document.getElementById('deadline').value.trim();
       const task = document.getElementById('task').value.trim();
