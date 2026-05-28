@@ -5,24 +5,24 @@ import logging
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
-from aiogram.client.session.aiohttp import AiohttpSession
 from aiohttp import web
 
-# Логирование в панель Render
+# Настройка логирования для панели Render
 logging.basicConfig(level=logging.INFO)
 
 TOKEN = "8564511758:AAH2DP__xRoNMOgJtMvnk8cMT5ABwXKOSz4"
 
-# !!! ВСТАВЬ СВОЙ ID ИЗ @userinfobot (ЧИСЛО БЕЗ КАВЫЧЕК) !!!
+# !!! ВСТАВЬ СВОЙ РЕАЛЬНЫЙ ТЕЛЕГРАМ ID ИЗ @userinfobot (ЧИСЛО БЕЗ КАВЫЧЕК) !!!
 ADMIN_ID = 5995218415  
 
-# Инициализируем бота и диспетчер правильно
+# Инициализируем бота и диспетчер апдейтов
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
+# Обработчик команды /start
 @dp.message(Command("start"))
 async def start_handler(message: types.Message):
-    # Укажи ссылку на свой Mini App
+    # УКАЖИ СВОЮ ССЫЛКУ НА MINI APP НИЖЕ
     mini_app_url = "https://egorsheva777.github.io/design-app/" 
     
     reply_keyboard = ReplyKeyboardMarkup(
@@ -37,12 +37,13 @@ async def start_handler(message: types.Message):
         reply_markup=reply_keyboard
     )
 
-# Обработчик данных из Mini App
+# Обработчик успешного получения данных из Mini App (tg.sendData)
 @dp.message(F.web_app_data)
 async def web_app_data_handler(message: types.Message):
     raw_data = message.web_app_data.data
     logging.info(f"=== ДАННЫЕ ПРИШЛИ: {raw_data} ===")
     
+    # Формируем красивый текст карточки заказа для админа
     text = f"🔔 **НОВАЯ ЗАЯВКА ИЗ MINI APP!**\n\n"
     text += f"👤 **Клиент:** {message.from_user.full_name}\n"
     if message.from_user.username:
@@ -60,48 +61,56 @@ async def web_app_data_handler(message: types.Message):
     except Exception:
         text += f"📝 **Данные (строка):** {raw_data}"
 
-    # Безопасная отправка администратору
+    # Безопасная пересылка заявки тебе в ЛС (с защитой от зависания сессии)
     if ADMIN_ID != 0:
         try:
             await bot.send_message(chat_id=ADMIN_ID, text=text)
-            logging.info("Заявка переслана админу.")
+            logging.info("Заявка успешно переслана админу.")
         except Exception as admin_err:
-            logging.error(f"Ошибка отправки админу: {admin_err}")
+            logging.error(f"Не удалось отправить сообщение админу на ID {ADMIN_ID}. Ошибка: {admin_err}")
+    else:
+        logging.warning("ADMIN_ID равен 0. Заявка не переслана админу, настройте ваш реальный ID.")
 
-    # Ответ клиенту
+    # Обязательный ответ клиенту в чат (уйдет в любом случае)
     try:
         await message.answer("Спасибо! Ваша заявка успешно отправлена администратору! ✅")
     except Exception as e:
-        logging.error(f"Ошибка ответа клиенту: {e}")
+        logging.error(f"Ошибка отправки ответа клиенту: {e}")
 
-# Ответ для Health Check проверяльщика Render
+# Обработка запросов на главную страницу (для пингатора cron-job)
 async def index_handle(request):
     return web.Response(text="Bot is running smoothly!", content_type="text/plain")
 
-# Обработка вебхука от Telegram
+# Приём вебхуков от Telegram
 async def tg_webhook_handle(request):
     try:
         body = await request.json()
         updater = types.Update.model_validate(body, context={"bot": bot})
         await dp.feed_update(bot, updater)
     except Exception as e:
-        logging.error(f"Ошибка обработки вебхука: {e}")
+        logging.error(f"Ошибка в вебхуке: {e}")
     return web.Response(text="OK")
 
-# Правильный запуск вебхука при старте сервера
+# Действия при запуске сервера
 async def on_startup(app):
     await bot.set_webhook(f"https://design-app-kohf.onrender.com/webhook")
     logging.info("Вебхук успешно инициализирован.")
 
-# КРИТИЧЕСКИ ВАЖНО: Чистим сессии при остановке/перезапуске, чтобы не вешать asyncio
+# КРИТИЧЕСКИ ВАЖНО: Железно чистим коннекторы при перезапуске, чтобы не вешать asyncio
 async def on_shutdown(app):
-    logging.info("Закрываем сессии бота...")
-    await bot.delete_webhook()
-    await bot.session.close()  # Закрываем сессию aiohttp железно!
+    logging.info("Очистка запущенных процессов и закрытие сессий...")
+    try:
+        await bot.delete_webhook()
+        await bot.session.close()
+        logging.info("Все сессии бота успешно закрыты.")
+    except Exception as e:
+        logging.error(f"Ошибка при закрытии сессии бота: {e}")
 
 def main():
     app = web.Application()
+    # Главная страница возвращает статус 200 OK для cron-job.org
     app.router.add_route('*', '/', index_handle)
+    # Сюда Telegram шлет сообщения пользователей
     app.router.add_post('/webhook', tg_webhook_handle)
     
     app.on_startup.append(on_startup)
