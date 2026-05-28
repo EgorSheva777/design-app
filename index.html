@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Design App Mini App</title>
-  <!-- Подключаем скрипт Телеграма и иконки FontAwesome для динамичных элементов -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
@@ -23,15 +22,15 @@
       max-width: 450px;
       margin: 0 auto;
       padding: 15px;
-      padding-bottom: 80px; /* Отступ снизу для меню */
+      padding-bottom: 90px; /* Отступ снизу для меню */
     }
 
-    /* ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (НАВИГАЦИЯ) */
+    /* ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК */
     .tab-content {
-      display: none; /* По умолчанию скрываем всё */
+      display: none;
     }
     .tab-content.active {
-      display: block; /* Показываем только активную вкладку */
+      display: block;
     }
 
     /* НИЖНЕЕ МЕНЮ (НАВИГАЦИЯ) */
@@ -68,17 +67,102 @@
     }
 
     .nav-item.active {
-      color: #00ffcc; /* Активный цвет вкладки */
+      color: #00ffcc;
     }
 
-    /* СТИЛИ ВКЛАДКИ 1: ФОРМА ЗАКАЗА */
-    .form-title {
-      font-size: 22px;
+    /* СТИЛИ ДЛЯ КРАСИВОЙ ПЕРВОЙ СТРАНИЦЫ (КАК НА МАКЕТЕ) */
+    .page-title {
+      text-align: center;
+      font-size: 20px;
       font-weight: 700;
       margin-bottom: 20px;
-      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
+    /* Контейнер списка тарифов */
+    .tariffs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    /* Стиль карточки тарифа */
+    .tariff-card {
+      background: #1b1f26;
+      border: 2px solid transparent;
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+
+    .tariff-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Состояние, когда тариф выбран */
+    .tariff-card.selected {
+      background: rgba(0, 255, 204, 0.04);
+      border-color: #00ffcc;
+    }
+
+    .tariff-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 70%;
+    }
+
+    .tariff-name {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Цвета иконок для тарифов */
+    .tariff-name .fa-seedling { color: #00ffcc; }
+    .tariff-name .fa-bolt { color: #ffcc00; }
+    .tariff-name .fa-crown { color: #ff3b57; }
+
+    .tariff-desc {
+      font-size: 12px;
+      color: #8a99ad;
+      line-height: 1.4;
+    }
+
+    .tariff-price {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .price-label {
+      font-size: 11px;
+      color: #8a99ad;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .price-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    
+    .tariff-card.selected .price-value {
+      color: #00ffcc;
+    }
+
+    /* Поля ввода дедлайна и ТЗ */
     .form-group {
       margin-bottom: 18px;
     }
@@ -107,11 +191,7 @@
       border-color: #00ffcc;
     }
 
-    select.form-control {
-      cursor: pointer;
-    }
-
-    /* Кнопка отправки формы */
+    /* Кнопка отправки */
     .submit-btn {
       width: 100%;
       background: #00ffcc;
@@ -131,14 +211,13 @@
       box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
     }
 
-    /* СТИЛИ ВКЛАДКИ 2: ИНФОРМАЦИЯ И ОБНОВЛЕННЫЕ ОТЗЫВЫ */
+    /* СТИЛИ СТРАНИЦЫ ИНФОРМАЦИИ */
     @keyframes gradientMovement {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    /* Заголовок с минималистичным переливом */
     .gradient-text {
       text-align: center;
       font-size: 24px;
@@ -170,7 +249,6 @@
       transition: transform 0.3s ease, border-color 0.3s ease;
     }
 
-    /* Плавное приподнимание карточки отзыва при наведении */
     .review-card:hover {
       transform: translateY(-3px);
       border-color: rgba(0, 255, 204, 0.2);
@@ -184,9 +262,9 @@
     .stars {
       letter-spacing: 2px;
       font-size: 12px;
+      color: #ffcc00;
     }
 
-    /* Карточка сотрудничества с мягким свечением */
     .coop-card {
       background: #1b1f26;
       border-radius: 18px;
@@ -194,11 +272,6 @@
       margin-top: 25px;
       border: 1px solid rgba(255, 255, 255, 0.05);
       box-shadow: 0 0 20px rgba(0, 119, 255, 0.05);
-      transition: box-shadow 0.4s ease;
-    }
-
-    .coop-card:hover {
-      box-shadow: 0 0 25px rgba(0, 255, 204, 0.1);
     }
 
     .coop-badge {
@@ -218,12 +291,11 @@
       margin-bottom: 20px;
     }
 
-    /* Интерактивная кнопка с переливающейся рамкой */
     .btn-animate {
       position: relative;
       display: block;
       text-decoration: none;
-      padding: 2px; /* Толщина рамки */
+      padding: 2px;
       border-radius: 14px;
       background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
       background-size: 300% 300%;
@@ -272,11 +344,6 @@
       text-decoration: none;
       font-weight: 600;
       font-size: 15px;
-      transition: opacity 0.2s ease;
-    }
-
-    .manager-link:hover {
-      opacity: 0.8;
     }
   </style>
 </head>
@@ -284,32 +351,57 @@
 
   <div class="app-container">
     
-    <!-- ВКЛАДКА 1: ОРИГИНАЛЬНАЯ ФОРМА ЗАКАЗА -->
     <div id="order-tab" class="tab-content active">
-      <h2 class="form-title">🚀 Оформить заказ</h2>
+      <h2 class="page-title">🔮 Выберите тариф</h2>
       
-      <div class="form-group">
-        <label for="tariff">Выберите тариф:</label>
-        <select id="tariff" class="form-control">
-          <option value="👑 Профи (от 1590₽)">👑 Профи (от 1590₽)</option>
-          <option value="🌱 Бюджетный (от 590₽)">🌱 Бюджетный (от 590₽)</option>
-        </select>
+      <div class="tariffs-list">
+        <div class="tariff-card selected" onclick="selectTariff('🌱 Бюджетный', this)">
+          <div class="tariff-info">
+            <span class="tariff-name"><i class="fa-solid fa-seedling"></i> Бюджетный</span>
+            <span class="tariff-desc">Дешево, стильно, свежо — не отличить от премиум дизайна.</span>
+          </div>
+          <div class="tariff-price">
+            <span class="price-label">от</span>
+            <span class="price-value">590₽</span>
+          </div>
+        </div>
+
+        <div class="tariff-card" onclick="selectTariff('⚡ Средний', this)">
+          <div class="tariff-info">
+            <span class="tariff-name"><i class="fa-solid fa-bolt"></i> Средний</span>
+            <span class="tariff-desc">Отличный вкус без переплаты — идеальный баланс цены.</span>
+          </div>
+          <div class="tariff-price">
+            <span class="price-label">от</span>
+            <span class="price-value">1090₽</span>
+          </div>
+        </div>
+
+        <div class="tariff-card" onclick="selectTariff('👑 Профи', this)">
+          <div class="tariff-info">
+            <span class="tariff-name"><i class="fa-solid fa-crown"></i> Профи</span>
+            <span class="tariff-desc">Лучший в мире результат без компромиссов.</span>
+          </div>
+          <div class="tariff-price">
+            <span class="price-label">от</span>
+            <span class="price-value">1590₽</span>
+          </div>
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="deadline">Желаемый дедлайн (срок):</label>
-        <input type="text" id="deadline" class="form-control" placeholder="Например: 2 дня / Срочно">
+        <label><i class="fa-regular fa-calendar-days"></i> Желаемые сроки (например: 2 дня, срочно)</label>
+        <input type="text" id="deadline" class="form-control" placeholder="Введите сроки...">
       </div>
 
       <div class="form-group">
-        <label for="task">Что нужно сделать? (Описание задачи):</label>
-        <textarea id="task" class="form-control" rows="4" placeholder="Опишите, какой дизайн вам требуется..."></textarea>
+        <label><i class="fa-regular fa-file-lines"></i> Краткое ТЗ / Что нужно сделать?</label>
+        <textarea id="task" class="form-control" rows="4" placeholder="Опишите вашу задачу подробно..."></textarea>
       </div>
 
       <button class="submit-btn" onclick="sendOrderData()">Отправить заказ</button>
     </div>
 
-    <!-- ВКЛАДКА 2: ОБНОВЛЕННАЯ ИНФОРМАЦИЯ С АНИМАЦИЯМИ -->
     <div id="info-tab" class="tab-content">
       <h2 class="gradient-text"><i class="fa-solid fa-wand-magic-sparkles"></i> Информация</h2>
 
@@ -337,10 +429,9 @@
           <i class="fa-solid fa-handshake"></i> Сотрудничество
         </div>
         <p class="coop-text">
-          Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше portfolio нашему менеджеру!
+          Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше портфолио нашему менеджеру!
         </p>
         
-        <!-- Кнопка ведет напрямую в ТГ, работает при клике -->
         <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
           <span>🚀 Стать частью команды</span>
         </a>
@@ -356,7 +447,6 @@
 
   </div>
 
-  <!-- НИЖНЕЕ МЕНЮ (НАВИГАЦИЯ МЕЖДУ ВКЛАДКАМИ) -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('order-tab', this)">
       <i class="fa-solid fa-cart-shopping"></i>
@@ -369,29 +459,38 @@
   </nav>
 
   <script>
-    // Инициализация Telegram WebApp
     const tg = window.Telegram.WebApp;
-    tg.expand(); // Разворачиваем приложение во весь экран
+    tg.expand();
 
-    // Функция переключения вкладок
+    // Переменная для хранения выбранного тарифа (по умолчанию Бюджетный)
+    let selectedTariffValue = "🌱 Бюджетный";
+
+    // Функция выбора тарифа по клику на карточку
+    function selectTariff(tariffName, cardElement) {
+      // Снимаем выделение со всех карточек
+      document.querySelectorAll('.tariff-card').forEach(card => {
+        card.classList.remove('selected');
+      });
+      // Выделяем текущую
+      cardElement.classList.add('selected');
+      // Запоминаем значение
+      selectedTariffValue = tariffName;
+    }
+
+    // Переключение вкладок
     function switchTab(tabId, button) {
-      // Скрываем все вкладки
       document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
       });
-      // Снимаем активный класс со всех кнопок меню
       document.querySelectorAll('.nav-item').forEach(btn => {
         btn.classList.remove('active');
       });
-
-      // Показываем нужную вкладку и делаем кнопку активной
       document.getElementById(tabId).classList.add('active');
       button.classList.add('active');
     }
 
-    // Функция отправки данных формы в Telegram-бота
+    // Сбор данных и отправка боту
     function sendOrderData() {
-      const tariff = document.getElementById('tariff').value;
       const deadline = document.getElementById('deadline').value.trim();
       const task = document.getElementById('task').value.trim();
 
@@ -400,14 +499,12 @@
         return;
       }
 
-      // Создаем объект данных для передачи в бот
       const orderData = {
-        "tariff": tariff,
+        "tariff": selectedTariffValue,
         "deadline": deadline,
         "task": task
       };
 
-      // Отправляем JSON-строку боту и закрываем Mini App
       tg.sendData(JSON.stringify(orderData));
       tg.close();
     }
