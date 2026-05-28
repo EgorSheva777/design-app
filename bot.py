@@ -20,7 +20,7 @@ dp = Dispatcher()
 @dp.message(Command("start"))
 async def start_handler(message: types.Message):
     # !!! ТВОЯ ССЫЛКА НА MINI APP !!!
-    mini_app_url = "https://github.com/EgorSheva777/design-app" 
+    mini_app_url = "https://egorsheva777.github.io/design-app/" 
     
     # 1. Кнопка под сообщением (Inline)
     inline_keyboard = InlineKeyboardMarkup(
@@ -33,13 +33,13 @@ async def start_handler(message: types.Message):
     # Через неё данные гарантированно прилетят в бота при закрытии
     reply_keyboard = ReplyKeyboardMarkup(
         keyboard=[[
-            KeyboardButton(text="Заказать через приложение 📦", web_app=WebAppInfo(url=mini_app_url))
+            KeyboardButton(text="Заказать дизайн 🚀", web_app=WebAppInfo(url=mini_app_url))
         ]],
         resize_keyboard=True
     )
     
     await message.answer(
-        "Привет! Нажми на любую удобную кнопку ниже, чтобы открыть Mini App и оформить заказ: 👇", 
+        "Привет! У нас появилось приложение MiniApp. Нажми на кнопку ниже, чтобы открыть и оформить заказ: 👇", 
         reply_markup=reply_keyboard # Показываем нижнюю кнопку по умолчанию
     )
 
