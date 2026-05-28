@@ -7,12 +7,13 @@ from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
 from aiohttp import web
 
+# Логирование
 logging.basicConfig(level=logging.INFO)
 
 TOKEN = "8564511758:AAH2DP__xRoNMOgJtMvnk8cMT5ABwXKOSz4"
 
-# !!! СЮДА ВСТАВЬ СВОЙ РЕАЛЬНЫЙ ID ИЗ @userinfobot (Например: 512345678, без кавычек) !!!
-# Если сомневаешься в ID, пока оставь 0, бот хотя бы не будет зависать у клиентов
+# !!! ВНИМАНИЕ: СЮДА ВСТАВЬ СВОЙ РЕАЛЬНЫЙ ТЕЛЕГРАМ ID (БЕЗ КАВЫЧЕК, ЧИСЛО) !!!
+# Узнать его можно в боте @userinfobot. Пока здесь 0, бот будет работать только для клиента
 ADMIN_ID = 5995218415  
 
 bot = Bot(token=TOKEN)
@@ -20,7 +21,7 @@ dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def start_handler(message: types.Message):
-    # Укажи точную ссылку на свой Mini App (вместо примера ниже)
+    # Твоя ссылка на Mini App
     mini_app_url = "https://egorsheva777.github.io/design-app/" 
     
     reply_keyboard = ReplyKeyboardMarkup(
@@ -35,12 +36,13 @@ async def start_handler(message: types.Message):
         reply_markup=reply_keyboard
     )
 
+# ОБРАБОТЧИК ЗАЯВОК (Ловит данные из Mini App)
 @dp.message(F.web_app_data)
 async def web_app_data_handler(message: types.Message):
     raw_data = message.web_app_data.data
     logging.info(f"=== УРА, ДАННЫЕ ПРИШЛИ: {raw_data} ===")
     
-    # Формируем текст для тебя
+    # Формируем красивую карточку с данными о клиенте
     text = f"🔔 **НОВАЯ ЗАЯВКА ИЗ MINI APP!**\n\n"
     text += f"👤 **Клиент:** {message.from_user.full_name}\n"
     if message.from_user.username:
@@ -58,18 +60,17 @@ async def web_app_data_handler(message: types.Message):
     except Exception:
         text += f"📝 **Данные (строка):** {raw_data}"
 
-    # БЕЗОПАСНАЯ ОТПРАВКА АДМИНИСТРАТОРУ
+    # БЕЗОПАСНАЯ ОТПРАВКА АДМИНИСТРАТОРУ (Защита от падения бота)
     if ADMIN_ID != 0:
         try:
             await bot.send_message(chat_id=ADMIN_ID, text=text)
             logging.info("Заявка успешно переслана админу в ЛС!")
         except Exception as admin_err:
-            logging.error(f"Не удалось отправить сообщение админу на ID {ADMIN_ID}. Ошибка: {admin_err}")
-            logging.error("Убедитесь, что ваш личный ID верный и вы запустили бота @userinfobot для проверки!")
+            logging.error(f"Ошибка отправки админу на ID {ADMIN_ID}: {admin_err}")
     else:
-        logging.warning("ADMIN_ID равен 0. Заявка никуда не отправлена, настройте ваш реальный Telegram ID!")
+        logging.warning("ADMIN_ID равен 0. Заявка не переслана, настройте ваш реальный ID.")
 
-    # Этот ответ клиенту уйдет в любом случае, бот больше НЕ ЗАВИСНЕТ
+    # Ответ клиенту (Уйдет в любом случае, бот больше НЕ ЗАВИСНЕТ)
     try:
         await message.answer("Спасибо! Ваша заявка успешно отправлена администратору! ✅")
     except Exception as e:
