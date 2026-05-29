@@ -54,7 +54,7 @@
       gap: 10px;
     }
 
-    /* 1 СТРАНИЦА: ТАРИФЫ */
+    /* ТАРИФЫ */
     .tariffs-list {
       display: flex;
       flex-direction: column;
@@ -167,12 +167,11 @@
       box-shadow: 0 0 10px rgba(0, 255, 204, 0.05);
     }
 
-    /* НЕВЗРАЧНАЯ ДИНАМИЧЕСКАЯ КНОПКА ОТПРАВКИ */
+    /* ДИНАМИЧЕСКАЯ КНОПКА ОТПРАВКИ */
     .submit-btn-wrapper {
       position: relative;
       padding: 2px;
       border-radius: 16px;
-      /* Изначально рамка просто бирюзовая, аккуратная */
       background: #00ffcc; 
       cursor: pointer;
       transition: background 0.4s ease, transform 0.2s ease, box-shadow 0.4s ease;
@@ -191,9 +190,7 @@
       transition: background 0.4s ease, color 0.4s ease;
     }
 
-    /* Эффект аккуратного динамического наведения */
     .submit-btn-wrapper:hover {
-      /* Включается плавный перелив градиента на рамке */
       background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
       background-size: 300% 300%;
       animation: gradientMovement 4s ease infinite;
@@ -202,12 +199,11 @@
     }
 
     .submit-btn-wrapper:hover button {
-      /* Внутренняя часть плавно темнеет под градиент, текст белеет */
       background: rgba(18, 22, 28, 0.85);
       color: #ffffff;
     }
 
-    /* 2 СТРАНИЦА: ИНФОРМАЦИЯ */
+    /* СТРАНИЦА ИНФОРМАЦИИ */
     .reviews-section h3 {
       font-size: 15px;
       color: #8a99ad;
@@ -237,7 +233,6 @@
       align-items: center;
       padding: 16px;
       cursor: pointer;
-      user-select: none;
     }
 
     .reviewer-name {
@@ -246,7 +241,6 @@
     }
 
     .stars {
-      letter-spacing: 2px;
       font-size: 11px;
       color: #ffcc00;
     }
@@ -258,7 +252,6 @@
       font-size: 13px;
       color: #8a99ad;
       line-height: 1.5;
-      background: rgba(255, 255, 255, 0.01);
       padding: 0 16px;
     }
 
@@ -460,7 +453,6 @@
         <textarea id="task" class="form-control" rows="4" placeholder="Опишите вашу задачу подробно..."></textarea>
       </div>
 
-      <!-- Кнопка со сдержанным динамическим ховером -->
       <div class="submit-btn-wrapper" onclick="sendOrderData()">
         <button>Отправить заказ</button>
       </div>
@@ -541,6 +533,8 @@
 
   <script>
     const tg = window.Telegram.WebApp;
+    // Принудительно инициализируем и расширяем окно на весь экран
+    tg.ready();
     tg.expand();
 
     let selectedTariffValue = "🌱 Бюджетный";
