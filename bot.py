@@ -23,7 +23,7 @@ dp = Dispatcher()
 @dp.message(Command("start"))
 async def start_handler(message: types.Message):
     # Твоя ссылка на Mini App на Render
-    mini_app_url = "https://egorsheva777.github.io/design-app/#" 
+    mini_app_url = "https://egorsheva77.github.io/design-app/?v=4" 
     
     reply_keyboard = ReplyKeyboardMarkup(
         keyboard=[[
