@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Design App Mini App</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -25,7 +25,7 @@
       max-width: 450px;
       margin: 0 auto;
       padding: 20px 15px;
-      padding-bottom: 95px;
+      padding-bottom: 105px; /* Запас снизу, чтобы контент не перекрывался меню */
     }
 
     /* ВИДЖЕТ С ВЫГЛЯДЫВАЮЩИМ CSS-КОТИКОМ (ДЛЯ ПЕРВОЙ СТРАНИЦЫ) */
@@ -185,7 +185,7 @@
       66% { transform: rotate(10deg); }
     }
 
-    /* Табличка */
+    /* Табличка приветствия */
     .cat-signboard {
       background: linear-gradient(135deg, #141619, #1c1f24);
       border: 1px solid rgba(255, 0, 127, 0.25);
@@ -194,6 +194,7 @@
       width: 100%;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 0, 127, 0.05);
       position: relative;
+      box-sizing: border-box;
     }
 
     .cat-signboard::before {
@@ -225,7 +226,7 @@
       text-shadow: 0 0 8px rgba(255, 102, 204, 0.2);
     }
 
-    /* СТИЛИ ОСТАЛЬНЫХ ЭЛЕМЕНТОВ */
+    /* АНИМАЦИИ И ГРАДИЕНТЫ ТЕКСТА */
     @keyframes gradientMovement {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -262,6 +263,7 @@
       gap: 10px;
     }
 
+    /* СПИСОК ТАРИФОВ */
     .tariffs-list, .reviews-list {
       display: flex;
       flex-direction: column;
@@ -354,6 +356,7 @@
       text-shadow: 0 0 10px rgba(255, 102, 204, 0.3);
     }
 
+    /* ФОРМА ЗАКАЗА */
     .form-group {
       margin-bottom: 20px;
     }
@@ -392,6 +395,7 @@
       box-shadow: 0 0 15px rgba(255, 0, 127, 0.1);
     }
 
+    /* КНОПКИ С АНИМАЦИЕЙ */
     .submit-btn-wrapper, .btn-animate {
       position: relative;
       padding: 2px;
@@ -431,6 +435,7 @@
       color: #ffffff;
     }
 
+    /* ОТЗЫВЫ (СТРАНИЦА ИНФОРМАЦИИ) */
     .review-header {
       display: flex;
       justify-content: space-between;
@@ -493,7 +498,7 @@
       margin: 0 0 16px 0;
     }
 
-    /* МЕНЮ НАВИГАЦИИ (ПЕРЕДЕЛАНО ПОД 3 СТРАНИЦЫ) */
+    /* НИЖНЕЕ МЕНЮ НАВИГАЦИИ */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -533,7 +538,7 @@
       text-shadow: 0 0 10px rgba(255, 102, 204, 0.2);
     }
 
-    /* СТИЛИ ДЛЯ СТРАНИЦЫ ИГРЫ */
+    /* СТИЛИ ДЛЯ ОБНОВЛЕННОЙ ИГРЫ КЛИКЕРА */
     .game-card {
       background: #141619;
       border-radius: 24px;
@@ -557,20 +562,39 @@
     }
 
     .stat-box {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       color: #94a3b8;
     }
 
     .stat-box span {
       color: #ffffff;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
+    }
+
+    /* Виджет Комбо */
+    #combo-badge {
+      background: linear-gradient(90deg, #ff007f, #7000ff);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      display: none;
+      text-transform: uppercase;
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+      animation: pulse 0.5s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.08); }
     }
 
     /* Шкала сытости */
     .progress-container {
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       text-align: left;
     }
 
@@ -597,24 +621,52 @@
       height: 100%;
       background: linear-gradient(90deg, #ff007f, #ff66cc);
       border-radius: 10px;
-      transition: width 0.2s ease;
+      transition: width 0.1s ease;
       box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
     }
 
-    /* Игровой кликабельный контейнер котика */
+    /* Кликабельный контейнер котика */
     .game-click-area {
       position: relative;
-      width: 160px;
-      height: 180px;
-      margin: 0 auto 25px auto;
+      width: 170px;
+      height: 190px;
+      margin: 0 auto 20px auto;
       cursor: pointer;
+    }
+
+    /* Диалоговое облако котика */
+    .cat-bubble {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%) scale(0);
+      background: #ffffff;
+      color: #141619;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 50;
+    }
+    .cat-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px 6px 0;
+      border-style: solid;
+      border-color: #ffffff transparent;
     }
 
     /* Увеличенный игровой котик */
     .game-cat-body {
       position: absolute;
       bottom: 0;
-      left: 25px;
+      left: 30px;
       width: 110px;
       height: 130px;
       background: linear-gradient(135deg, #6e5242 25%, #423127 25%, #423127 50%, #6e5242 50%, #6e5242 75%, #423127 75%);
@@ -637,7 +689,7 @@
     .game-cat-head {
       position: absolute;
       top: 10px;
-      left: 15px;
+      left: 20px;
       width: 130px;
       height: 110px;
       background: linear-gradient(to bottom, #6e5242, #543d31);
@@ -694,8 +746,8 @@
       background: #423127;
       border-radius: 30% 70% 30% 30%;
     }
-    .game-cat-ear.left { left: 10px; transform: rotate(-15deg); }
-    .game-cat-ear.right { right: 10px; transform: rotate(15deg) scaleX(-1); }
+    .game-cat-ear.left { left: 15px; transform: rotate(-15deg); }
+    .game-cat-ear.right { right: 15px; transform: rotate(15deg) scaleX(-1); }
     .game-cat-ear::after {
       content: '';
       position: absolute;
@@ -705,6 +757,16 @@
       height: 26px;
       background: #ffb5cc;
       border-radius: 30% 70% 30% 30%;
+    }
+
+    /* Больше ярости кота во время комбо */
+    .game-click-area.frenzy .game-cat-head {
+      animation: jitter 0.1s infinite alternate;
+    }
+
+    @keyframes jitter {
+      from { transform: translate(-1px, 0); }
+      to { transform: translate(1px, 1px); }
     }
 
     /* Лапка для тапа */
@@ -742,19 +804,18 @@
       transform: rotate(-35deg) translateY(5px);
     }
 
-    /* Вылетающие сердечки */
-    .floating-heart {
+    /* Вылетающие частицы */
+    .floating-particle {
       position: absolute;
-      color: #ff007f;
       font-size: 24px;
       pointer-events: none;
-      animation: floatUp 0.8s ease-out forwards;
+      animation: floatUpAndAway 0.7s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
       z-index: 100;
     }
 
-    @keyframes floatUp {
-      0% { opacity: 1; transform: translateY(0) scale(0.8); }
-      100% { opacity: 0; transform: translateY(-100px) scale(1.3) rotate(15deg); }
+    @keyframes floatUpAndAway {
+      0% { opacity: 1; transform: translateY(0) scale(0.7); }
+      100% { opacity: 0; transform: translateY(-110px) translateX(var(--random-x, 0px)) scale(1.4) rotate(var(--random-rot, 20deg)); }
     }
 
     .game-tip {
@@ -768,7 +829,6 @@
 
   <div class="app-container">
     
-    <!-- СТРАНИЦА 1: ЗАКАЗ -->
     <div id="order-tab" class="tab-content active">
       <div class="cat-welcome-container">
         <div class="css-cat">
@@ -851,7 +911,6 @@
       </div>
     </div>
 
-    <!-- СТРАНИЦА 2: ИНФОРМАЦИЯ -->
     <div id="info-tab" class="tab-content">
       <h2 class="gradient-text"><i class="fa-solid fa-circle-info"></i> Информация</h2>
 
@@ -914,7 +973,7 @@
         <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
           <span>
             <i class="fa-regular fa-comment-dots"></i> 
-            Связаться с менеджром 
+            Связаться с менеджером 
             <strong style="
               font-family: 'Courier New', Courier, monospace; 
               background: rgba(255, 102, 204, 0.12); 
@@ -932,13 +991,13 @@
       </div>
     </div>
 
-    <!-- СТРАНИЦА 3: ИГРА С КОТИКОМ -->
     <div id="game-tab" class="tab-content">
-      <h2 class="gradient-text"><i class="fa-solid fa-gamepad"></i> Накорми Котика</h2>
+      <h2 class="gradient-text"><i class="fa-solid fa-gamepad"></i> Безумный Клик-Мяу</h2>
       
       <div class="game-card">
         <div class="game-stats">
           <div class="stat-box">Уровень: <span id="cat-level">1</span></div>
+          <div id="combo-badge">Combo x1</div>
           <div class="stat-box">Всего кликов: <span id="cat-clicks">0</span></div>
         </div>
 
@@ -952,8 +1011,9 @@
           </div>
         </div>
 
-        <!-- Кликабельная зона с увеличенным кастомным CSS-котиком -->
-        <div class="game-click-area" id="cat-clicker" onclick="feedCat(event)">
+        <div class="game-click-area" id="cat-clicker" onclick="feedCatDynamic(event)">
+          <div class="cat-bubble" id="cat-dialog">Муррр?</div>
+          
           <div class="game-cat-ear left"></div>
           <div class="game-cat-ear right"></div>
           <div class="game-cat-body">
@@ -970,27 +1030,26 @@
         </div>
 
         <p class="game-tip">
-          Кликай на котика, чтобы покормить его! Повышай уровень. <br>
-          <span style="color: #64748b; font-size: 11px;">Внимание: когда ты не в игре, котик постепенно проголодается!</span>
+          Кликай быстрее, чтобы активировать **Комбо-Множитель**! 🔥<br>
+          <span style="color: #ff66cc; font-size: 12px; font-weight: bold;">Шанс на критический кусь рыбы (x3)! 🐟</span>
         </p>
       </div>
     </div>
 
   </div>
 
-  <!-- ОБНОВЛЕННОЕ МЕНЮ НАВИГАЦИИ (3 КНОПКИ) -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('order-tab', this)">
       <i class="fa-solid fa-cart-shopping"></i>
       <span>Заказ</span>
     </button>
-    <button class="nav-item" onclick="switchTab('game-tab', this)">
-      <i class="fa-solid fa-cat"></i>
-      <span>Игра</span>
-    </button>
     <button class="nav-item" onclick="switchTab('info-tab', this)">
       <i class="fa-solid fa-circle-info"></i>
       <span>Информация</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('game-tab', this)">
+      <i class="fa-solid fa-cat"></i>
+      <span>Игра</span>
     </button>
   </nav>
 
@@ -998,7 +1057,7 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // Функция динамического времени суток
+    // Функция приветствия по времени суток
     function initWelcome() {
       const now = new Date();
       const hours = now.getHours();
@@ -1018,121 +1077,160 @@
     }
     initWelcome();
 
-    // ЛОГИКА ТАРИФОВ И ВКЛАДОК
+    // ТАРИФЫ И ТАБЫ
     let selectedTariffValue = "🌱 Бюджетный";
 
     function selectTariff(tariffName, wrapperElement) {
-      document.querySelectorAll('.tariff-wrapper').forEach(wrap => {
-        wrap.classList.remove('selected');
-      });
+      document.querySelectorAll('.tariff-wrapper').forEach(wrap => wrap.classList.remove('selected'));
       wrapperElement.classList.add('selected');
       selectedTariffValue = tariffName;
     }
 
     function switchTab(tabId, button) {
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.classList.remove('active');
-      });
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       button.classList.add('active');
     }
 
     function toggleReview(element) {
       const isExpanded = element.classList.contains('expanded');
-      document.querySelectorAll('.review-item-wrapper').forEach(item => {
-        item.classList.remove('expanded');
-      });
+      document.querySelectorAll('.review-item-wrapper').forEach(item => item.classList.remove('expanded'));
       if (!isExpanded) {
         element.classList.add('expanded');
       }
     }
 
-    // МЕХАНИКА ИГРЫ «НАКОРМИ КОТИКА»
+    // ЛОГИКА ДИНАМИЧЕСКОГО КЛИКЕРА «БЕЗУМНЫЙ КЛИК-МЯУ»
     let satiety = 70; 
     let level = 1;
     let totalClicks = 0;
+    
+    // Комбо-механика
+    let lastClickTime = 0;
+    let comboCount = 0;
+    let comboMultiplier = 1;
 
-    function feedCat(event) {
+    const catPhrases = ["Муррр!", "Дай рыбов!", "Кусь!", "Тыкай сильнее!", "Ещё!", "Мяу!", "Ням-ням!", "Кайф..."];
+
+    function feedCatDynamic(event) {
+      const now = Date.now();
       totalClicks++;
-      satiety += 4; // При каждом тапе сытость растет на 4%
       
+      // Расчет комбо-множителя (клик в течение 400мс увеличивает комбо)
+      if (now - lastClickTime < 400) {
+        comboCount++;
+        if (comboCount > 25) comboMultiplier = 5;
+        else if (comboCount > 15) comboMultiplier = 3;
+        else if (comboCount > 5) comboMultiplier = 2;
+      } else {
+        comboCount = 1;
+        comboMultiplier = 1;
+      }
+      lastClickTime = now;
+
+      // Шанс на критический кусь (15% вероятность)
+      const isCrit = Math.random() < 0.15;
+      let addedSatiety = 3 * comboMultiplier;
+      if (isCrit) {
+        addedSatiety *= 3; // х3 за крит
+      }
+
+      satiety += addedSatiety;
+
+      // Рандомные фразы кота при клике
+      if (totalClicks % 6 === 0) {
+        showCatBubble();
+      }
+
+      // Проверка на левелап
       if (satiety >= 100) {
-        satiety = 10; // Сброс при левелапе
+        satiety = 15; // стартовый остаток
         level++;
-        // Эффект легкой вибрации Telegram при повышении уровня
+        showCatBubble("УРОВЕНЬ АП! 🎉");
         if (tg.HapticFeedback) {
           tg.HapticFeedback.notificationOccurred('success');
         }
       } else {
-        // Обычная легкая вибрация на каждый тап
         if (tg.HapticFeedback) {
-          tg.HapticFeedback.impactOccurred('light');
+          // Сила вибрации зависит от комбо-множителя
+          tg.HapticFeedback.impactOccurred(comboMultiplier > 2 ? 'medium' : 'light');
         }
       }
 
       updateGameUI();
-      createHeartEffect(event);
+      createParticleEffect(event, isCrit);
     }
 
     function updateGameUI() {
       document.getElementById('cat-clicks').innerText = totalClicks;
       document.getElementById('cat-level').innerText = level;
-      document.getElementById('satiety-percent').innerText = satiety + '%';
-      document.getElementById('satiety-bar').style.width = satiety + '%';
+      document.getElementById('satiety-percent').innerText = Math.min(satiety, 100) + '%';
+      document.getElementById('satiety-bar').style.width = Math.min(satiety, 100) + '%';
+
+      // Рендер бейджа комбо
+      const comboBadge = document.getElementById('combo-badge');
+      const clickArea = document.getElementById('cat-clicker');
+      if (comboMultiplier > 1) {
+        comboBadge.innerText = `Combo x${comboMultiplier} 🔥`;
+        comboBadge.style.display = "block";
+        clickArea.classList.add('frenzy');
+      } else {
+        comboBadge.style.display = "none";
+        clickArea.classList.remove('frenzy');
+      }
     }
 
-    // Создание вылетающего сердечка над котиком в месте клика
-    function createHeartEffect(event) {
+    function showCatBubble(customText = null) {
+      const bubble = document.getElementById('cat-dialog');
+      const text = customText || catPhrases[Math.floor(Math.random() * catPhrases.length)];
+      bubble.innerText = text;
+      bubble.style.transform = "translateX(-50%) scale(1)";
+      
+      setTimeout(() => {
+        bubble.style.transform = "translateX(-50%) scale(0)";
+      }, 1200);
+    }
+
+    function createParticleEffect(event, isCrit) {
       const clickArea = document.getElementById('cat-clicker');
       const rect = clickArea.getBoundingClientRect();
       
-      // Вычисляем координаты тапа относительно контейнера котика
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
 
-      const heart = document.createElement('div');
-      heart.className = 'floating-heart';
-      heart.innerHTML = '❤️';
-      heart.style.left = x + 'px';
-      heart.style.top = y + 'px';
+      const particle = document.createElement('div');
+      particle.className = 'floating-particle';
+      
+      // Если крит — летит еда, если обычный — сердечко
+      if (isCrit) {
+        const food = ['🐟', '🍗', '🍤', '🍖'];
+        particle.innerHTML = food[Math.floor(Math.random() * food.length)];
+      } else {
+        particle.innerHTML = '❤️';
+      }
 
-      clickArea.appendChild(heart);
+      // Рандомный разлет частиц влево-вправо
+      const randomX = (Math.random() - 0.5) * 80;
+      const randomRot = (Math.random() - 0.5) * 40;
+      particle.style.setProperty('--random-x', `${randomX}px`);
+      particle.style.setProperty('--random-rot', `${randomRot}deg`);
+      
+      particle.style.left = x + 'px';
+      particle.style.top = y + 'px';
 
-      // Удаляем элемент после завершения анимации
-      setTimeout(() => {
-        heart.remove();
-      }, 800);
+      clickArea.appendChild(particle);
+
+      setTimeout(() => { particle.remove(); }, 700);
     }
 
-    // Пассивное голодание котика (каждую секунду сытость падает на 1%)
+    // Сброс комбо, если игрок перестал кликать (таймаут 800мс)
     setInterval(() => {
-      if (satiety > 0) {
-        satiety--;
+      if (Date.now() - lastClickTime > 800 && comboMultiplier > 1) {
+        comboCount = 0;
+        comboMultiplier = 1;
         updateGameUI();
       }
-    }, 1000);
+    }, 200);
 
-    function sendOrderData() {
-      const deadline = document.getElementById('deadline').value.trim();
-      const task = document.getElementById('task').value.trim();
-
-      if (!deadline || !task) {
-        alert("Пожалуйста, заполните дедлайн и описание задачи!");
-        return;
-      }
-
-      const orderData = {
-        "tariff": selectedTariffValue,
-        "deadline": deadline,
-        "task": task
-      };
-
-      tg.sendData(JSON.stringify(orderData));
-      tg.close();
-    }
-  </script>
-</body>
-</html>
+    //
