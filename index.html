@@ -1,54 +1,597 @@
-const TelegramBot = require('node-telegram-bot-api');
-const express = require('express');
-const cors = require('cors');
-
-// Токен твоего бота и URL твоего красивого сайта на GitHub Pages
-const TOKEN = process.env.BOT_TOKEN || 'ТВОЙ_ТОКЕН_БОТА'; 
-const GITHUB_PAGES_URL = 'https://egorsheva77.github.io/design-app/';
-
-const bot = new TelegramBot(TOKEN, { polling: true });
-const app = express();
-
-app.use(express.json());
-app.use(cors());
-
-// Главный фокус: когда кнопка обращается к Render, мы мгновенно перекидываем её на GitHub Pages
-app.get('/', (req, res) => {
-    res.redirect(301, GITHUB_PAGES_URL);
-});
-
-// Логика кнопки /start в чате
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    bot.sendMessage(chatId, 'Привет! Нажми на кнопку ниже, чтобы открыть каталог и оформить заказ: 👇', {
-        reply_markup: {
-            keyboard: [
-                [{ text: 'Заказать дизайн 🚀', web_app: { url: GITHUB_PAGES_URL } }]
-            ],
-            resize_keyboard: true
-        }
-    });
-});
-
-// Прием данных из формы заказа обратно в бот
-app.post('/web-data', async (req, res) => {
-    const { queryId, products, totalPrice } = req.body;
-    try {
-        await bot.answerWebAppQuery(queryId, {
-            type: 'article',
-            id: queryId,
-            title: 'Успешная оплата',
-            input_message_content: {
-                message_text: `🎉 Заказ оформлен успешно!\nСумма заказа: ${totalPrice}₽`
-            }
-        });
-        return res.status(200).json({});
-    } catch (e) {
-        return res.status(500).json({});
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design App Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    /* ОБЩИЕ СТИЛИ */
+    body {
+      background-color: #0b0d10;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-});
 
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-    console.log('Сервер запущен на порту ' + PORT);
-});
+    .app-container {
+      max-width: 450px;
+      margin: 0 auto;
+      padding: 20px 15px;
+      padding-bottom: 95px;
+    }
+
+    @keyframes gradientMovement {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    .page-title, .gradient-text {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 25px;
+      background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMovement 6s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    /* 1 СТРАНИЦА: ТАРИФЫ */
+    .tariffs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 25px;
+    }
+
+    .tariff-wrapper {
+      position: relative;
+      padding: 2px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .tariff-wrapper.selected {
+      background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
+      background-size: 300% 300%;
+      animation: gradientMovement 4s ease infinite;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .tariff-card {
+      background: #12161c;
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .tariff-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      max-width: 75%;
+    }
+
+    .tariff-name {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tariff-name .fa-seedling { color: #00ffcc; }
+    .tariff-name .fa-bolt { color: #ffcc00; }
+    .tariff-name .fa-crown { color: #ff3b57; }
+
+    .tariff-desc {
+      font-size: 12px;
+      color: #8a99ad;
+      line-height: 1.4;
+    }
+
+    .tariff-price {
+      text-align: right;
+    }
+
+    .price-label {
+      font-size: 10px;
+      color: #64748b;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .price-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      transition: color 0.3s ease;
+    }
+    
+    .tariff-wrapper.selected .price-value {
+      color: #00ffcc;
+    }
+
+    /* ПОЛЯ ВВОДА */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #8a99ad;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      background: #12161c;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 16px;
+      color: #ffffff;
+      font-size: 14px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #00ffcc;
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.05);
+    }
+
+    /* НЕВЗРАЧНАЯ ДИНАМИЧЕСКАЯ КНОПКА ОТПРАВКИ */
+    .submit-btn-wrapper {
+      position: relative;
+      padding: 2px;
+      border-radius: 16px;
+      /* Изначально рамка просто бирюзовая, аккуратная */
+      background: #00ffcc; 
+      cursor: pointer;
+      transition: background 0.4s ease, transform 0.2s ease, box-shadow 0.4s ease;
+    }
+
+    .submit-btn-wrapper button {
+      width: 100%;
+      background: #12161c;
+      color: #00ffcc;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    /* Эффект аккуратного динамического наведения */
+    .submit-btn-wrapper:hover {
+      /* Включается плавный перелив градиента на рамке */
+      background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
+      background-size: 300% 300%;
+      animation: gradientMovement 4s ease infinite;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(0, 255, 204, 0.12);
+    }
+
+    .submit-btn-wrapper:hover button {
+      /* Внутренняя часть плавно темнеет под градиент, текст белеет */
+      background: rgba(18, 22, 28, 0.85);
+      color: #ffffff;
+    }
+
+    /* 2 СТРАНИЦА: ИНФОРМАЦИЯ */
+    .reviews-section h3 {
+      font-size: 15px;
+      color: #8a99ad;
+      margin-bottom: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .review-item {
+      background: #12161c;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+      transition: border-color 0.3s ease;
+    }
+
+    .review-item:hover {
+      border-color: rgba(0, 255, 204, 0.15);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .reviewer-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .stars {
+      letter-spacing: 2px;
+      font-size: 11px;
+      color: #ffcc00;
+    }
+
+    .review-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, padding 0.3s ease;
+      font-size: 13px;
+      color: #8a99ad;
+      line-height: 1.5;
+      background: rgba(255, 255, 255, 0.01);
+      padding: 0 16px;
+    }
+
+    .review-item.expanded .review-content {
+      max-height: 200px;
+      padding: 0 16px 16px 16px;
+    }
+
+    .coop-card {
+      background: #12161c;
+      border-radius: 18px;
+      padding: 20px;
+      margin-top: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .coop-badge {
+      color: #00ffcc;
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .coop-text {
+      color: #8a99ad;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .btn-animate {
+      position: relative;
+      display: block;
+      text-decoration: none;
+      padding: 2px;
+      border-radius: 16px;
+      background: linear-gradient(-45deg, #00ffcc, #0077ff, #7000ff, #00ffcc);
+      background-size: 300% 300%;
+      animation: gradientMovement 4s ease infinite;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-animate span {
+      display: block;
+      background: #12161c;
+      color: #00ffcc;
+      text-align: center;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-animate:hover {
+      transform: scale(1.01);
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.25);
+    }
+
+    .btn-animate:hover span {
+      background: transparent;
+      color: #ffffff;
+    }
+
+    .info-footer {
+      background: #12161c;
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+      margin-top: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .info-footer p {
+      font-size: 13px;
+      color: #8a99ad;
+      margin: 0 0 12px 0;
+    }
+
+    .manager-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(0, 255, 204, 0.07);
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 204, 0.15);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .manager-link:hover {
+      background: #00ffcc;
+      color: #0b0d10;
+      transform: translateY(-1px);
+    }
+
+    /* НАВИГАЦИЯ */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 450px;
+      background: #0f1216;
+      display: flex;
+      justify-content: space-around;
+      padding: 14px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      z-index: 1000;
+    }
+
+    .nav-item {
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .nav-item i {
+      font-size: 18px;
+    }
+
+    .nav-item.active {
+      color: #00ffcc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- СТРАНИЦА 1: ЗАКАЗ -->
+    <div id="order-tab" class="tab-content active">
+      <h2 class="page-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Выберите тариф</h2>
+      
+      <div class="tariffs-list">
+        <div class="tariff-wrapper selected" onclick="selectTariff('🌱 Бюджетный', this)">
+          <div class="tariff-card">
+            <div class="tariff-info">
+              <span class="tariff-name"><i class="fa-solid fa-seedling"></i> Бюджетный</span>
+              <span class="tariff-desc">Дешево, стильно, свежо — не отличить от премиум дизайна.</span>
+            </div>
+            <div class="tariff-price">
+              <span class="price-label">от</span>
+              <span class="price-value">590₽</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tariff-wrapper" onclick="selectTariff('⚡ Средний', this)">
+          <div class="tariff-card">
+            <div class="tariff-info">
+              <span class="tariff-name"><i class="fa-solid fa-bolt"></i> Средний</span>
+              <span class="tariff-desc">Отличный вкус без переплаты — идеальный баланс цены.</span>
+            </div>
+            <div class="tariff-price">
+              <span class="price-label">от</span>
+              <span class="price-value">1090₽</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tariff-wrapper" onclick="selectTariff('👑 Профи', this)">
+          <div class="tariff-card">
+            <div class="tariff-info">
+              <span class="tariff-name"><i class="fa-solid fa-crown"></i> Профи</span>
+              <span class="tariff-desc">Лучший результат без компромиссов.</span>
+            </div>
+            <div class="tariff-price">
+              <span class="price-label">от</span>
+              <span class="price-value">1590₽</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fa-regular fa-calendar-days"></i> Желаемые сроки (например: 2 дня, срочно)</label>
+        <input type="text" id="deadline" class="form-control" placeholder="Введите сроки...">
+      </div>
+
+      <div class="form-group">
+        <label><i class="fa-regular fa-file-lines"></i> Краткое ТЗ / Что нужно сделать?</label>
+        <textarea id="task" class="form-control" rows="4" placeholder="Опишите вашу задачу подробно..."></textarea>
+      </div>
+
+      <!-- Кнопка со сдержанным динамическим ховером -->
+      <div class="submit-btn-wrapper" onclick="sendOrderData()">
+        <button>Отправить заказ</button>
+      </div>
+    </div>
+
+    <!-- СТРАНИЦА 2: ИНФОРМАЦИЯ -->
+    <div id="info-tab" class="tab-content">
+      <h2 class="gradient-text"><i class="fa-solid fa-circle-info"></i> Информация</h2>
+
+      <div class="reviews-section">
+        <h3><i class="fa-regular fa-comments"></i> Отзывы покупателей</h3>
+        
+        <div class="review-item" onclick="toggleReview(this)">
+          <div class="review-header">
+            <span class="reviewer-name">Александр (Ютубер)</span>
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+          </div>
+          <div class="review-content">
+            Заказывал оформление для игрового YouTube-канала. Работа выполнена невероятно сочно, превьюшки кликаются на ура, баннер встал идеально. Рекомендую!
+          </div>
+        </div>
+        
+        <div class="review-item" onclick="toggleReview(this)">
+          <div class="review-header">
+            <span class="reviewer-name">Кристина (Маркетплейс)</span>
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+          </div>
+          <div class="review-content">
+            Делали карточки товаров для Wildberries. Продажи выросли благодаря крутой инфографике. Всё чётко по ТЗ и сдали даже раньше срока!
+          </div>
+        </div>
+        
+        <div class="review-item" onclick="toggleReview(this)">
+          <div class="review-header">
+            <span class="reviewer-name">Максим (Бизнес)</span>
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+          </div>
+          <div class="review-content">
+            Разрабатывали логотип и фирменный стиль для кофейни. Дизайнер уловил атмосферу с первого слова, правок почти не потребовалось. Высший пилотаж.
+          </div>
+        </div>
+      </div>
+
+      <div class="coop-card">
+        <div class="coop-badge">
+          <i class="fa-solid fa-handshake"></i> Сотрудничество
+        </div>
+        <p class="coop-text">
+          Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше портфолио нашему менеджеру!
+        </p>
+        
+        <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
+          <span>🚀 Стать частью команды</span>
+        </a>
+      </div>
+
+      <div class="info-footer">
+        <p>При возникновении любых вопросов:</p>
+        <a href="https://t.me/MartOkkks" class="manager-link" target="_blank">
+          <i class="fa-regular fa-comment-dots"></i> Связаться с менеджером
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- МЕНЮ НАВИГАЦИИ -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('order-tab', this)">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span>Заказ</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('info-tab', this)">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Информация</span>
+    </button>
+  </nav>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    let selectedTariffValue = "🌱 Бюджетный";
+
+    function selectTariff(tariffName, wrapperElement) {
+      document.querySelectorAll('.tariff-wrapper').forEach(wrap => {
+        wrap.classList.remove('selected');
+      });
+      wrapperElement.classList.add('selected');
+      selectedTariffValue = tariffName;
+    }
+
+    function switchTab(tabId, button) {
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.getElementById(tabId).classList.add('active');
+      button.classList.add('active');
+    }
+
+    function toggleReview(element) {
+      const isExpanded = element.classList.contains('expanded');
+      document.querySelectorAll('.review-item').forEach(item => {
+        item.classList.remove('expanded');
+      });
+      if (!isExpanded) {
+        element.classList.add('expanded');
+      }
+    }
+
+    function sendOrderData() {
+      const deadline = document.getElementById('deadline').value.trim();
+      const task = document.getElementById('task').value.trim();
+
+      if (!deadline || !task) {
+        alert("Пожалуйста, заполните дедлайн и описание задачи!");
+        return;
+      }
+
+      const orderData = {
+        "tariff": selectedTariffValue,
+        "deadline": deadline,
+        "task": task
+      };
+
+      tg.sendData(JSON.stringify(orderData));
+      tg.close();
+    }
+  </script>
+</body>
+</html>
