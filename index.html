@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Design App Mini App</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   
   <style>
     body {
@@ -127,6 +126,7 @@
       width: 100%;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
       position: relative;
+      box-sizing: border-box;
     }
 
     .cat-signboard h4 { margin: 0; font-size: 15px; font-weight: 700; color: #ffffff; }
@@ -145,41 +145,40 @@
       background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      display: inline-block;
+      width: 100%;
     }
 
     .tariffs-list, .reviews-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 25px; }
-    .tariff-wrapper, .review-item-wrapper { position: relative; padding: 2px; border-radius: 18px; background: rgba(255, 255, 255, 0.03); }
+    .tariff-wrapper, .review-item-wrapper { position: relative; padding: 2px; border-radius: 18px; background: rgba(255, 255, 255, 0.03); box-sizing: border-box; }
     .tariff-wrapper.selected { background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f); box-shadow: 0 0 25px rgba(255, 0, 127, 0.2); }
-    .tariff-card, .review-item { background: #141619; border-radius: 16px; padding: 16px 18px; cursor: pointer; }
+    .tariff-card, .review-item { background: #141619; border-radius: 16px; padding: 16px 18px; cursor: pointer; box-sizing: border-box; }
     .tariff-card { display: flex; justify-content: space-between; align-items: center; }
-    .tariff-info { display: flex; flex-direction: column; gap: 5px; max-width: 75%; }
-    .tariff-name, .reviewer-name { font-size: 16px; font-weight: 700; }
+    .tariff-info { display: flex; flex-direction: column; gap: 5px; max-width: 75%; text-align: left; }
+    .tariff-name, .reviewer-name { font-size: 16px; font-weight: 700; color: #ffffff; }
     .tariff-desc { font-size: 12px; color: #94a3b8; line-height: 1.4; }
     .tariff-price { text-align: right; }
     .price-label { font-size: 10px; color: #64748b; text-transform: uppercase; display: block; }
     .price-value { font-size: 18px; font-weight: 800; color: #ffffff; }
     .tariff-wrapper.selected .price-value { color: #ff66cc; }
 
-    .form-group { margin-bottom: 20px; }
+    .form-group { margin-bottom: 20px; text-align: left; }
     .form-group label, .reviews-section h3 { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 8px; font-weight: 500; }
 
     .form-control { width: 100%; background: #141619; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 14px; padding: 16px; color: #ffffff; font-size: 14px; box-sizing: border-box; outline: none; }
 
-    .submit-btn-wrapper, .btn-animate { position: relative; padding: 2px; border-radius: 16px; background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f); cursor: pointer; }
+    .submit-btn-wrapper, .btn-animate { position: relative; padding: 2px; border-radius: 16px; background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f); cursor: pointer; box-sizing: border-box; }
     .submit-btn-wrapper button, .btn-animate span { width: 100%; background: #141619; color: #ff66cc; border: none; border-radius: 14px; padding: 16px; font-size: 15px; font-weight: 700; text-align: center; box-sizing: border-box; display: block; }
 
     .review-header { display: flex; justify-content: space-between; align-items: center; }
     .stars { color: #ffcc00; font-size: 12px; }
-    .review-content { font-size: 13px; color: #94a3b8; line-height: 1.5; padding-top: 8px; }
+    .review-content { font-size: 13px; color: #94a3b8; line-height: 1.5; padding-top: 8px; text-align: left; }
 
-    .coop-card, .info-footer { background: #141619; border-radius: 18px; padding: 20px; margin-top: 25px; border: 1px solid rgba(255, 255, 255, 0.03); }
+    .coop-card, .info-footer { background: #141619; border-radius: 18px; padding: 20px; margin-top: 25px; border: 1px solid rgba(255, 255, 255, 0.03); text-align: left; }
     .coop-badge { color: #ff66cc; font-weight: 600; font-size: 15px; margin-bottom: 12px; }
     .coop-text, .info-footer p { color: #94a3b8; font-size: 13px; line-height: 1.5; margin-bottom: 20px; }
     .info-footer { text-align: center; margin-top: 20px; }
+    a { text-decoration: none; }
 
     /* НАВИГАЦИЯ */
     .bottom-nav {
@@ -197,88 +196,35 @@
       z-index: 1000;
     }
 
-    .nav-item { background: none; border: none; color: #64748b; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex: 1; }
+    .nav-item { background: none; border: none; color: #64748b; font-size: 14px; font-weight: 600; display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
     .nav-item.active { color: #ff66cc; }
 
     /* ИГРА */
-    .game-card {
-      background: #141619;
-      border-radius: 24px;
-      padding: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.02);
-    }
-
-    .game-stats {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
-      background: rgba(255, 255, 255, 0.02);
-      padding: 12px 16px;
-      border-radius: 14px;
-    }
-
+    .game-card { background: #141619; border-radius: 24px; padding: 16px; border: 1px solid rgba(255, 255, 255, 0.02); box-sizing: border-box; }
+    .game-stats { display: flex; justify-content: space-between; margin-bottom: 15px; background: rgba(255, 255, 255, 0.02); padding: 12px 16px; border-radius: 14px; }
     .stat-box { font-size: 14px; font-weight: 600; color: #94a3b8; }
     .stat-box span { color: #ffffff; font-size: 16px; font-weight: 800; }
-
     .progress-container { margin-bottom: 15px; }
     .progress-label { font-size: 12px; color: #ff66cc; font-weight: 700; margin-bottom: 6px; display: flex; justify-content: space-between; }
     .progress-bar-bg { width: 100%; height: 12px; background: #0b0c0e; border-radius: 10px; overflow: hidden; }
     .progress-bar-fill { width: 50%; height: 100%; background: linear-gradient(90deg, #ff007f, #ff66cc); border-radius: 10px; transition: width 0.1s linear; }
-
-    .game-viewport {
-      position: relative;
-      width: 100%;
-      height: 280px;
-      background: #0f1115;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 2px solid rgba(255, 102, 204, 0.15);
-      margin-bottom: 15px;
-    }
-
-    .falling-item {
-      position: absolute;
-      font-size: 26px;
-      user-select: none;
-    }
-
-    .game-player-cat {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      width: 60px;
-      height: 45px;
-      background: #6e5242;
-      border-radius: 15px 15px 10px 10px;
-      transform: translateX(-50%);
-    }
-
-    .game-controls {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      margin-bottom: 10px;
-    }
-
-    .control-btn {
-      flex: 1;
-      background: #1c1f26;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      color: #ffffff;
-      padding: 14px;
-      border-radius: 14px;
-      font-size: 20px;
-      cursor: pointer;
-    }
+    .game-viewport { position: relative; width: 100%; height: 280px; background: #0f1115; border-radius: 18px; overflow: hidden; border: 2px solid rgba(255, 102, 204, 0.15); margin-bottom: 15px; }
+    .falling-item { position: absolute; font-size: 26px; user-select: none; }
+    .game-player-cat { position: absolute; bottom: 10px; left: 50%; width: 60px; height: 45px; background: #6e5242; border-radius: 15px 15px 10px 10px; transform: translateX(-50%); }
+    .game-controls { display: flex; gap: 15px; justify-content: center; margin-bottom: 10px; }
+    .control-btn { flex: 1; background: #1c1f26; border: 1px solid rgba(255, 255, 255, 0.05); color: #ffffff; padding: 14px; border-radius: 14px; font-size: 20px; cursor: pointer; }
     .control-btn:active { background: #ff66cc; }
-
     .game-tip { font-size: 12px; color: #64748b; text-align: center; line-height: 1.4; }
   </style>
+
+  <!-- Загружаем скрипт Telegram в самом конце head -->
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
 </head>
 <body>
 
   <div class="app-container">
     
+    <!-- СТРАНИЦА 1: ЗАКАЗ ДИЗАЙНА -->
     <div id="order-tab" class="tab-content active">
       <div class="cat-welcome-container">
         <div class="css-cat">
@@ -293,3 +239,294 @@
         </div>
         
         <div class="cat-signboard">
+          <h4 id="welcome-title">Привет! 👋</h4>
+          <p>Ты можешь заказать у меня классный дизайн!</p>
+        </div>
+      </div>
+
+      <h2 class="page-title">Выбери тариф</h2>
+      
+      <div class="tariffs-list">
+        <div class="tariff-wrapper selected" onclick="selectTariff('🌱 Бюджетный', this)">
+          <div class="tariff-card">
+            <div class="tariff-info">
+              <span class="tariff-name">🌱 Бюджетный</span>
+              <span class="tariff-desc">Дешево, стильно, свежо — не отличить от премиума.</span>
+            </div>
+            <div class="tariff-price"><span class="price-label">от</span><span class="price-value">590₽</span></div>
+          </div>
+        </div>
+
+        <div class="tariff-wrapper" onclick="selectTariff('⚡ Средний', this)">
+          <div class="tariff-card">
+            <div class="tariff-info">
+              <span class="tariff-name">⚡ Средний</span>
+              <span class="tariff-desc">Отличный вкус без переплат — идеальный баланс.</span>
+            </div>
+            <div class="tariff-price"><span class="price-label">от</span><span class="price-value">1090₽</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Желаемые сроки</label>
+        <input type="text" id="deadline" class="form-control" placeholder="Например: 2 дня...">
+      </div>
+
+      <div class="form-group">
+        <label>Краткое ТЗ / Что нужно сделать?</label>
+        <textarea id="task" class="form-control" rows="4" placeholder="Опишите вашу задачу..."></textarea>
+      </div>
+
+      <div class="submit-btn-wrapper" onclick="sendOrderData()">
+        <button>Отправить заказ</button>
+      </div>
+    </div>
+
+    <!-- СТРАНИЦА 2: ИНФОРМАЦИЯ -->
+    <div id="info-tab" class="tab-content">
+      <h2 class="gradient-text">Информация</h2>
+
+      <div class="reviews-section">
+        <h3>Отзывы покупателей</h3>
+        <div class="reviews-list">
+          <div class="review-item">
+            <div class="review-header">
+              <span class="reviewer-name">Александр (Ютубер)</span>
+              <div class="stars">⭐⭐⭐⭐⭐</div>
+            </div>
+            <div class="review-content">Заказывал оформление канала. Превьюшки кликаются на ура!</div>
+          </div>
+          <div class="review-item">
+            <div class="review-header">
+              <span class="reviewer-name">Кристина (Маркетплейсы)</span>
+              <div class="stars">⭐⭐⭐⭐⭐</div>
+            </div>
+            <div class="review-content">Делали карточки для WB. Отличная инфографика!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="coop-card">
+        <div class="coop-badge">💼 Сотрудничество</div>
+        <p class="coop-text">Хочешь к нам в команду? Напиши менеджеру.</p>
+        <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank"><span>🚀 Написать</span></a>
+      </div>
+    </div>
+
+    <!-- СТРАНИЦА 3: ИГРА -->
+    <div id="game-tab" class="tab-content">
+      <h2 class="gradient-text">Рыбный Дождь 🐟</h2>
+      
+      <div class="game-card">
+        <div class="game-stats">
+          <div class="stat-box">Счет: <span id="game-score">0</span></div>
+          <div class="stat-box">Рекорд: <span id="game-high">0</span></div>
+        </div>
+
+        <div class="progress-container">
+          <div class="progress-label">
+            <span>Сытость котика:</span>
+            <span id="satiety-percent">50%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="satiety-bar" class="progress-bar-fill" style="width: 50%;"></div>
+          </div>
+        </div>
+
+        <div class="game-viewport" id="viewport">
+          <div class="game-player-cat" id="player"></div>
+        </div>
+
+        <div class="game-controls">
+          <button class="control-btn" id="btn-left">◀</button>
+          <button class="control-btn" id="btn-start">Старт 🎮</button>
+          <button class="control-btn" id="btn-right">▶</button>
+        </div>
+
+        <p class="game-tip">Лови рыбу (🐟, 🐠). Уворачивайся от бомб (💣)!</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- МЕНЮ НАВИГАЦИИ -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-order" onclick="switchTab('order-tab', this)">Заказ</button>
+    <button class="nav-item" id="nav-info" onclick="switchTab('info-tab', this)">Инфо</button>
+    <button class="nav-item" id="nav-game" onclick="switchTab('game-tab', this)">Игра</button>
+  </nav>
+
+  <script>
+    // Безопасное подключение к ТГ
+    document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(() => {
+        if (window.Telegram && window.Telegram.WebApp) {
+          const tg = window.Telegram.WebApp;
+          try {
+            tg.expand();
+            const user = tg.initDataUnsafe?.user;
+            if (user && user.first_name) {
+              document.getElementById('welcome-title').innerText = `Привет, ${user.first_name}! 👋`;
+            }
+          } catch (e) { console.log("ТГ еще не готов"); }
+        }
+      }, 200);
+    });
+
+    let selectedTariffValue = "🌱 Бюджетный";
+    function selectTariff(tariffName, wrapperElement) {
+      document.querySelectorAll('.tariff-wrapper').forEach(wrap => wrap.classList.remove('selected'));
+      wrapperElement.classList.add('selected');
+      selectedTariffValue = tariffName;
+    }
+
+    function switchTab(tabId, button) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      button.classList.add('active');
+      if (tabId !== 'game-tab' && isPlaying) stopGame();
+    }
+
+    /* ИГРОВОЙ ДВИЖОК */
+    const viewport = document.getElementById('viewport');
+    const player = document.getElementById('player');
+    const btnLeft = document.getElementById('btn-left');
+    const btnRight = document.getElementById('btn-right');
+    const btnStart = document.getElementById('btn-start');
+
+    let playerX = 50; 
+    let score = 0;
+    let highScore = localStorage.getItem('game_high_score') || 0;
+    let satiety = 50;
+    let isPlaying = false;
+    let gameInterval;
+    let itemSpawnInterval;
+    let fallingItems = [];
+
+    document.getElementById('game-high').innerText = highScore;
+
+    function moveLeft() { if (playerX > 10) { playerX -= 10; player.style.left = playerX + '%'; } }
+    function moveRight() { if (playerX < 90) { playerX += 10; player.style.left = playerX + '%'; } }
+
+    btnLeft.addEventListener('click', (e) => { e.preventDefault(); moveLeft(); });
+    btnRight.addEventListener('click', (e) => { e.preventDefault(); moveRight(); });
+    
+    viewport.addEventListener('click', (e) => {
+      const rect = viewport.getBoundingClientRect();
+      if ((e.clientX - rect.left) < rect.width / 2) moveLeft(); else moveRight();
+    });
+
+    btnStart.addEventListener('click', () => {
+      if (!isPlaying) startGame(); else stopGame();
+    });
+
+    function startGame() {
+      isPlaying = true;
+      score = 0;
+      satiety = 50;
+      fallingItems.forEach(item => item.el.remove());
+      fallingItems = [];
+      btnStart.innerText = "Пауза ⏸";
+      document.getElementById('game-score').innerText = score;
+      updateGameUI();
+      gameInterval = setInterval(updateGameFrame, 40);
+      itemSpawnInterval = setInterval(spawnItem, 1000);
+    }
+
+    function stopGame() {
+      isPlaying = false;
+      btnStart.innerText = "Старт 🎮";
+      clearInterval(gameInterval);
+      clearInterval(itemSpawnInterval);
+    }
+
+    function spawnItem() {
+      if (!isPlaying) return;
+      const types = [
+        { icon: '🐟', type: 'fish', points: 5 },
+        { icon: '🐠', type: 'rare', points: 10 },
+        { icon: '💣', type: 'bomb', points: -20 }
+      ];
+      const rand = Math.random();
+      let chosen = types[0];
+      if (rand > 0.6 && rand < 0.85) chosen = types[1];
+      if (rand >= 0.85) chosen = types[2];
+
+      const el = document.createElement('div');
+      el.className = 'falling-item';
+      el.innerHTML = chosen.icon;
+      el.style.top = '-30px';
+      const randomLeft = Math.floor(Math.random() * 80) + 10;
+      el.style.left = randomLeft + '%';
+      viewport.appendChild(el);
+
+      fallingItems.push({ el: el, top: -30, left: randomLeft, config: chosen });
+    }
+
+    function updateGameFrame() {
+      const pRect = player.getBoundingClientRect();
+      for (let i = fallingItems.length - 1; i >= 0; i--) {
+        let item = fallingItems[i];
+        item.top += 5;
+        item.el.style.top = item.top + 'px';
+
+        const iRect = item.el.getBoundingClientRect();
+        if (
+          iRect.bottom >= pRect.top &&
+          iRect.top <= pRect.bottom &&
+          iRect.right >= pRect.left &&
+          iRect.left <= pRect.right
+        ) {
+          if (item.config.type === 'bomb') {
+            satiety += item.config.points;
+          } else {
+            score += item.config.points;
+            satiety += 5;
+          }
+
+          if (satiety > 100) satiety = 100;
+          if (satiety < 0) satiety = 0;
+
+          document.getElementById('game-score').innerText = score;
+          if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('game_high_score', highScore);
+            document.getElementById('game-high').innerText = highScore;
+          }
+
+          updateGameUI();
+          item.el.remove();
+          fallingItems.splice(i, 1);
+          continue;
+        }
+
+        if (item.top > 280) {
+          item.el.remove();
+          fallingItems.splice(i, 1);
+        }
+      }
+    }
+
+    function updateGameUI() {
+      document.getElementById('satiety-percent').innerText = satiety + '%';
+      document.getElementById('satiety-bar').style.width = satiety + '%';
+    }
+
+    function sendOrderData() {
+      const deadline = document.getElementById('deadline').value.trim();
+      const task = document.getElementById('task').value.trim();
+      if (!deadline || !task) {
+        alert("Заполните поля!");
+        return;
+      }
+      if (window.Telegram && window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
+        tg.sendData(JSON.stringify({ "tariff": selectedTariffValue, "deadline": deadline, "task": task }));
+        tg.close();
+      }
+    }
+  </script>
+</body>
+</html>
