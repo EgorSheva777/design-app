@@ -10,13 +10,14 @@
   <style>
     /* ОБЩИЕ СТИЛИ (НЕЙТРАЛЬНЫЙ ТЕМНЫЙ + РОЗОВЫЕ АКЦЕНТЫ) */
     body {
-      background-color: #0b0c0e; /* Строгий нейтральный темный фон */
+      background-color: #0b0c0e;
       font-family: 'Segoe UI', Roboto, sans-serif;
       color: #ffffff;
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       overflow-x: hidden;
+      user-select: none;
     }
 
     .app-container {
@@ -26,7 +27,78 @@
       padding-bottom: 95px;
     }
 
-    /* АНИМАЦИЯ СДЕРЖАННОГО ГРАДИЕНТА */
+    /* АНИМИРОВАННЫЙ ВИДЖЕТ С ВЫГЛЯДЫВАЮЩИМ КОТИКОМ */
+    .cat-welcome-container {
+      position: relative;
+      margin-top: 10px;
+      margin-bottom: 30px;
+      padding-left: 65px; /* Освобождаем место слева для котика */
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Пушистый котик, выглядывающий из-за левого края */
+    .fluffy-cat {
+      position: absolute;
+      left: -15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 55px; /* Размер котика */
+      line-height: 1;
+      z-index: 10;
+      animation: catPeek 4s ease-in-out infinite;
+      cursor: pointer;
+    }
+
+    /* Табличка, которую "держит" котик */
+    .cat-signboard {
+      background: linear-gradient(135deg, #141619, #1c1f24);
+      border: 1px solid rgba(255, 0, 127, 0.25);
+      border-radius: 16px;
+      padding: 14px 16px;
+      width: 100%;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 0, 127, 0.05);
+      position: relative;
+    }
+
+    /* Маленький декоративный уголок-указатель от котика к табличке */
+    .cat-signboard::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 12px;
+      height: 12px;
+      background: #141619;
+      border-left: 1px solid rgba(255, 0, 127, 0.25);
+      border-bottom: 1px solid rgba(255, 0, 127, 0.25);
+    }
+
+    .cat-signboard h4 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .cat-signboard p {
+      margin: 4px 0 0 0;
+      font-size: 12px;
+      color: #ff66cc;
+      font-weight: 500;
+      line-height: 1.4;
+      text-shadow: 0 0 8px rgba(255, 102, 204, 0.2);
+    }
+
+    /* Анимация выглядывания и покачивания котика */
+    @keyframes catPeek {
+      0%, 100% { transform: translateY(-50%) rotate(-5deg) translateX(0); }
+      50% { transform: translateY(-50%) rotate(8deg) translateX(5px); }
+    }
+
+    /* АНИМАЦИИ ГРАДИЕНТА */
     @keyframes gradientMovement {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -46,7 +118,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ЗАГОЛОВКИ С ПЛАВНЫМ ПЕРЕЛИВОМ */
+    /* ЗАГОЛОВКИ */
     .page-title, .gradient-text {
       text-align: center;
       font-size: 24px;
@@ -80,14 +152,12 @@
       transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
     }
 
-    /* Мягкая подсветка при наведении */
     .tariff-wrapper:hover, .review-item-wrapper:hover {
       background: linear-gradient(-45deg, rgba(255, 0, 127, 0.3), rgba(112, 0, 255, 0.3));
       box-shadow: 0 6px 20px rgba(255, 0, 127, 0.08);
       transform: translateY(-2px);
     }
 
-    /* Активное выделение выбранного тарифа */
     .tariff-wrapper.selected {
       background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f);
       background-size: 300% 300%;
@@ -96,7 +166,6 @@
       transform: translateY(-2px);
     }
 
-    /* Нейтральный графитовый цвет для внутренностей карточек */
     .tariff-card, .review-item {
       background: #141619; 
       border-radius: 16px;
@@ -130,7 +199,6 @@
     .tariff-name .fa-bolt { color: #ffcc00; }
     .tariff-name .fa-crown { color: #ff3b57; }
 
-    /* Спокойный серый текст для описаний */
     .tariff-desc {
       font-size: 12px;
       color: #94a3b8;
@@ -182,7 +250,6 @@
       gap: 8px;
     }
 
-    /* Графитовое поле ввода */
     .form-control {
       width: 100%;
       background: #141619;
@@ -201,7 +268,7 @@
       box-shadow: 0 0 15px rgba(255, 0, 127, 0.1);
     }
 
-    /* КНОПКИ ОФОРМЛЕНИЯ / СВЯЗИ */
+    /* КНОПКИ */
     .submit-btn-wrapper, .btn-animate {
       position: relative;
       padding: 2px;
@@ -241,12 +308,86 @@
       color: #ffffff;
     }
 
+    /* ИГРОВАЯ КЛИК-ЗОНА */
+    .interactive-zone {
+      background: #141619;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .zone-title {
+      font-size: 14px;
+      color: #ff66cc;
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .click-cube-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 15px auto;
+      perspective: 400px;
+    }
+    .click-cube {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #ff007f, #7000ff);
+      border-radius: 18px;
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .click-cube:active {
+      transform: scale(0.9) rotate(5deg);
+    }
+    .xp-counter {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .xp-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .xp-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff007f, #ff66cc);
+      transition: width 0.3s ease;
+    }
+    .floating-text {
+      position: absolute;
+      color: #ff66cc;
+      font-weight: 800;
+      font-size: 16px;
+      pointer-events: none;
+      animation: floatUp 0.8s ease-out forwards;
+      text-shadow: 0 0 8px rgba(255,102,204,0.6);
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-40px) scale(0.8); }
+    }
+
     /* ОТЗЫВЫ */
     .review-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      user-select: none;
     }
 
     .stars {
@@ -278,11 +419,6 @@
       padding: 20px;
       margin-top: 25px;
       border: 1px solid rgba(255, 255, 255, 0.03);
-      transition: border-color 0.3s ease;
-    }
-
-    .coop-card:hover, .info-footer:hover {
-      border-color: rgba(255, 0, 127, 0.15);
     }
 
     .coop-badge {
@@ -311,7 +447,7 @@
       margin: 0 0 16px 0;
     }
 
-    /* НИЖНЯЯ НАВИГАЦИЯ (СТРОГИЙ ТЕМНЫЙ) */
+    /* НИЖНЯЯ НАВИГАЦИЯ */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -337,7 +473,7 @@
       align-items: center;
       gap: 6px;
       cursor: pointer;
-      transition: color 0.3s ease, transform 0.2s ease;
+      transition: color 0.3s ease;
     }
 
     .nav-item i {
@@ -349,15 +485,20 @@
       color: #ff66cc;
       text-shadow: 0 0 10px rgba(255, 102, 204, 0.2);
     }
-
-    .nav-item:hover i {
-      transform: scale(1.1);
-    }
   </style>
 </head>
 <body>
 
   <div class="app-container">
+    
+    <!-- НОВЫЙ ПУШИСТЫЙ КОТИК С НЕОНОВОЙ ТАБЛИЧКОЙ -->
+    <div class="cat-welcome-container">
+      <div class="fluffy-cat" id="cat-emoji" onclick="meowCat()">🐱</div>
+      <div class="cat-signboard">
+        <h4 id="welcome-title">Привет! 👋</h4>
+        <p>У меня можно заказать классный дизайн!</p>
+      </div>
+    </div>
     
     <!-- СТРАНИЦА 1: ЗАКАЗ -->
     <div id="order-tab" class="tab-content active">
@@ -423,6 +564,18 @@
     <div id="info-tab" class="tab-content">
       <h2 class="gradient-text"><i class="fa-solid fa-circle-info"></i> Информация</h2>
 
+      <!-- ИНТЕРАКТИВНАЯ КЛИК-ЗОНА -->
+      <div class="interactive-zone">
+        <div class="zone-title">Генератор Вдохновения ⚡</div>
+        <div class="click-cube-container" id="cube-container">
+          <div class="click-cube" id="game-cube" onclick="handleCubeClick(event)">💎</div>
+        </div>
+        <div class="xp-counter">Уровень дизайна: <span id="xp-display">0</span> XP</div>
+        <div class="xp-bar-bg">
+          <div class="xp-bar-fill" id="xp-bar"></div>
+        </div>
+      </div>
+
       <div class="reviews-section">
         <h3><i class="fa-regular fa-comments"></i> Отзывы покупателей</h3>
         
@@ -450,18 +603,6 @@
               </div>
             </div>
           </div>
-          
-          <div class="review-item-wrapper" onclick="toggleReview(this)">
-            <div class="review-item">
-              <div class="review-header">
-                <span class="reviewer-name">Максим (Бизнес)</span>
-                <div class="stars">⭐⭐⭐⭐⭐</div>
-              </div>
-              <div class="review-content">
-                Разрабатывали логотип и фирменный стиль для кофейни. Дизайнер уловил атмосферу с первого слова, правок почти не потребовалось. Высший пилотаж.
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -472,7 +613,6 @@
         <p class="coop-text">
           Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше портфолио нашему менеджеру!
         </p>
-        
         <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
           <span>🚀 Стать частью команды</span>
         </a>
@@ -519,6 +659,70 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
+    // Умное приветствие по времени суток с интеграцией Telegram имени
+    function initWelcome() {
+      const hours = new Date().getHours();
+      let greeting = "Привет";
+      if (hours >= 5 && hours < 12) greeting = "Доброе утро";
+      else if (hours >= 12 && hours < 18) greeting = "Добрый день";
+      else if (hours >= 18 && hours < 23) greeting = "Добрый вечер";
+      else greeting = "Доброй ночи";
+
+      const user = tg.initDataUnsafe?.user;
+      if (user && user.first_name) {
+        document.getElementById('welcome-title').innerText = `${greeting}, ${user.first_name}! 👋`;
+      } else {
+        document.getElementById('welcome-title').innerText = `${greeting}! 👋`;
+      }
+    }
+    initWelcome();
+
+    // Пасхалка: Клик на самого котика меняет эмодзи
+    function meowCat() {
+      const cat = document.getElementById('cat-emoji');
+      cat.innerText = "😸";
+      setTimeout(() => {
+        cat.innerText = "🐱";
+      }, 400);
+    }
+
+    // Механика кликера во вкладке Информация
+    let xp = parseInt(localStorage.getItem('design_xp')) || 0;
+    const xpDisplay = document.getElementById('xp-display');
+    const xpBar = document.getElementById('xp-bar');
+    
+    function updateXPUI() {
+      xpDisplay.innerText = xp;
+      let progress = (xp % 100);
+      xpBar.style.width = `${progress}%`;
+    }
+    updateXPUI();
+
+    function handleCubeClick(event) {
+      xp += 1;
+      localStorage.setItem('design_xp', xp);
+      updateXPUI();
+
+      const container = document.getElementById('cube-container');
+      const floating = document.createElement('div');
+      floating.className = 'floating-text';
+      floating.innerText = '+1 XP';
+      
+      const rect = container.getBoundingClientRect();
+      const x = event.clientX - rect.left - 15;
+      const y = event.clientY - rect.top - 15;
+      
+      floating.style.left = `${x}px`;
+      floating.style.top = `${y}px`;
+      
+      container.appendChild(floating);
+      
+      setTimeout(() => {
+        floating.remove();
+      }, 800);
+    }
+
+    // Вкладки и логика приложения
     let selectedTariffValue = "🌱 Бюджетный";
 
     function selectTariff(tariffName, wrapperElement) {
