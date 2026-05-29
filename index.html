@@ -2,13 +2,12 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Design App Mini App</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
   <style>
-    /* ОБЩИЕ СТИЛИ (НЕЙТРАЛЬНЫЙ ТЕМНЫЙ + РОЗОВЫЕ АКЦЕНТЫ) */
     body {
       background-color: #0b0c0e;
       font-family: 'Segoe UI', Roboto, sans-serif;
@@ -28,7 +27,7 @@
       padding-bottom: 95px;
     }
 
-    /* ВИДЖЕТ С ВЫГЛЯДЫВАЮЩИМ CSS-КОТИКОМ (ДЛЯ ПЕРВОЙ СТРАНИЦЫ) */
+    /* КОТИК НА ПЕРВОЙ СТРАНИЦЕ */
     .cat-welcome-container {
       position: relative;
       margin-top: 15px;
@@ -39,7 +38,6 @@
       align-items: center;
     }
 
-    /* Контейнер котика */
     .css-cat {
       position: absolute;
       left: -5px;
@@ -50,7 +48,6 @@
       z-index: 10;
     }
 
-    /* Тело котика */
     .cat-body {
       position: absolute;
       bottom: 0;
@@ -63,7 +60,6 @@
       box-shadow: inset -5px -5px 0px rgba(0,0,0,0.2);
     }
 
-    /* Грудка котика */
     .cat-breast {
       position: absolute;
       bottom: 0;
@@ -74,7 +70,6 @@
       border-radius: 50% 50% 30% 30%;
     }
 
-    /* Голова котика */
     .cat-head {
       position: absolute;
       top: 5px;
@@ -85,7 +80,6 @@
       border-radius: 50%;
     }
 
-    /* Мордочка и щечки */
     .cat-muzzle {
       position: absolute;
       bottom: 6px;
@@ -105,7 +99,6 @@
       border-radius: 50%;
     }
 
-    /* Глазки */
     .cat-eye {
       position: absolute;
       top: 15px;
@@ -127,7 +120,6 @@
       border-radius: 50%;
     }
 
-    /* Пушистые ушки */
     .cat-ear {
       position: absolute;
       top: -10px;
@@ -136,14 +128,8 @@
       background: #423127;
       border-radius: 30% 70% 30% 30%;
     }
-    .cat-ear.left {
-      left: 2px;
-      transform: rotate(-15deg);
-    }
-    .cat-ear.right {
-      right: 2px;
-      transform: rotate(15deg) scaleX(-1);
-    }
+    .cat-ear.left { left: 2px; transform: rotate(-15deg); }
+    .cat-ear.right { right: 2px; transform: rotate(15deg) scaleX(-1); }
     .cat-ear::after {
       content: '';
       position: absolute;
@@ -155,7 +141,6 @@
       border-radius: 30% 70% 30% 30%;
     }
 
-    /* Лапка, которая машет */
     .cat-paw-waving {
       position: absolute;
       top: -12px;
@@ -185,7 +170,6 @@
       66% { transform: rotate(10deg); }
     }
 
-    /* Табличка */
     .cat-signboard {
       background: linear-gradient(135deg, #141619, #1c1f24);
       border: 1px solid rgba(255, 0, 127, 0.25);
@@ -209,23 +193,9 @@
       border-bottom: 1px solid rgba(255, 0, 127, 0.25);
     }
 
-    .cat-signboard h4 {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 700;
-      color: #ffffff;
-    }
+    .cat-signboard h4 { margin: 0; font-size: 15px; font-weight: 700; color: #ffffff; }
+    .cat-signboard p { margin: 5px 0 0 0; font-size: 12px; color: #ff66cc; font-weight: 600; line-height: 1.4; text-shadow: 0 0 8px rgba(255, 102, 204, 0.2); }
 
-    .cat-signboard p {
-      margin: 5px 0 0 0;
-      font-size: 12px;
-      color: #ff66cc;
-      font-weight: 600;
-      line-height: 1.4;
-      text-shadow: 0 0 8px rgba(255, 102, 204, 0.2);
-    }
-
-    /* СТИЛИ ОСТАЛЬНЫХ ЭЛЕМЕНТОВ */
     @keyframes gradientMovement {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -236,9 +206,7 @@
       display: none;
       animation: fadeIn 0.4s ease-out;
     }
-    .tab-content.active {
-      display: block;
-    }
+    .tab-content.active { display: block; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
@@ -262,238 +230,44 @@
       gap: 10px;
     }
 
-    .tariffs-list, .reviews-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin-bottom: 25px;
-    }
-
-    .tariff-wrapper, .review-item-wrapper {
-      position: relative;
-      padding: 2px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.03);
-      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
-    }
-
-    .tariff-wrapper:hover, .review-item-wrapper:hover {
-      background: linear-gradient(-45deg, rgba(255, 0, 127, 0.3), rgba(112, 0, 255, 0.3));
-      box-shadow: 0 6px 20px rgba(255, 0, 127, 0.08);
-      transform: translateY(-2px);
-    }
-
-    .tariff-wrapper.selected {
-      background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f);
-      background-size: 300% 300%;
-      animation: gradientMovement 4s ease infinite;
-      box-shadow: 0 0 25px rgba(255, 0, 127, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .tariff-card, .review-item {
-      background: #141619; 
-      border-radius: 16px;
-      padding: 16px 18px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .tariff-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .tariff-info {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      max-width: 75%;
-    }
-
-    .tariff-name, .reviewer-name {
-      font-size: 16px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
+    /* ТАРИФЫ И ОТЗЫВЫ */
+    .tariffs-list, .reviews-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 25px; }
+    .tariff-wrapper, .review-item-wrapper { position: relative; padding: 2px; border-radius: 18px; background: rgba(255, 255, 255, 0.03); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .tariff-wrapper.selected { background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f); background-size: 300% 300%; animation: gradientMovement 4s ease infinite; box-shadow: 0 0 25px rgba(255, 0, 127, 0.2); }
+    .tariff-card, .review-item { background: #141619; border-radius: 16px; padding: 16px 18px; cursor: pointer; }
+    .tariff-card { display: flex; justify-content: space-between; align-items: center; }
+    .tariff-info { display: flex; flex-direction: column; gap: 5px; max-width: 75%; }
+    .tariff-name, .reviewer-name { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     .tariff-name .fa-seedling { color: #ff66cc; }
     .tariff-name .fa-bolt { color: #ffcc00; }
     .tariff-name .fa-crown { color: #ff3b57; }
+    .tariff-desc { font-size: 12px; color: #94a3b8; line-height: 1.4; }
+    .tariff-price { text-align: right; }
+    .price-label { font-size: 10px; color: #64748b; text-transform: uppercase; display: block; }
+    .price-value { font-size: 18px; font-weight: 800; color: #ffffff; }
+    .tariff-wrapper.selected .price-value { color: #ff66cc; text-shadow: 0 0 10px rgba(255, 102, 204, 0.3); }
 
-    .tariff-desc {
-      font-size: 12px;
-      color: #94a3b8;
-      line-height: 1.4;
-    }
+    .form-group { margin-bottom: 20px; }
+    .form-group label, .reviews-section h3 { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 8px; font-weight: 500; }
+    .reviews-section h3 { font-size: 15px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
 
-    .tariff-price {
-      text-align: right;
-    }
+    .form-control { width: 100%; background: #141619; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 14px; padding: 16px; color: #ffffff; font-size: 14px; box-sizing: border-box; outline: none; }
 
-    .price-label {
-      font-size: 10px;
-      color: #64748b;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 2px;
-    }
+    .submit-btn-wrapper, .btn-animate { position: relative; padding: 2px; border-radius: 16px; background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f); background-size: 300% 300%; animation: gradientMovement 5s ease infinite; cursor: pointer; }
+    .submit-btn-wrapper button, .btn-animate span { width: 100%; background: #141619; color: #ff66cc; border: none; border-radius: 14px; padding: 16px; font-size: 15px; font-weight: 700; text-align: center; box-sizing: border-box; display: block; }
 
-    .price-value {
-      font-size: 18px;
-      font-weight: 800;
-      color: #ffffff;
-      transition: color 0.3s ease;
-    }
-    
-    .tariff-wrapper.selected .price-value {
-      color: #ff66cc;
-      text-shadow: 0 0 10px rgba(255, 102, 204, 0.3);
-    }
+    .review-header { display: flex; justify-content: space-between; align-items: center; }
+    .stars { letter-spacing: 2px; font-size: 11px; color: #ffcc00; }
+    .review-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; font-size: 13px; color: #94a3b8; line-height: 1.5; padding: 0; }
+    .review-item-wrapper.expanded .review-content { max-height: 200px; padding-top: 12px; }
 
-    .form-group {
-      margin-bottom: 20px;
-    }
+    .coop-card, .info-footer { background: #141619; border-radius: 18px; padding: 20px; margin-top: 25px; border: 1px solid rgba(255, 255, 255, 0.03); }
+    .coop-badge { color: #ff66cc; font-weight: 600; font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .coop-text, .info-footer p { color: #94a3b8; font-size: 13px; line-height: 1.5; margin-bottom: 20px; }
+    .info-footer { text-align: center; margin-top: 20px; }
+    .info-footer p { margin: 0 0 16px 0; }
 
-    .form-group label, .reviews-section h3 {
-      display: block;
-      font-size: 13px;
-      color: #94a3b8;
-      margin-bottom: 8px;
-      font-weight: 500;
-    }
-
-    .reviews-section h3 {
-      font-size: 15px;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .form-control {
-      width: 100%;
-      background: #141619;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 14px;
-      padding: 16px;
-      color: #ffffff;
-      font-size: 14px;
-      box-sizing: border-box;
-      outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .form-control:focus {
-      border-color: #ff007f;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.1);
-    }
-
-    .submit-btn-wrapper, .btn-animate {
-      position: relative;
-      padding: 2px;
-      border-radius: 16px;
-      background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f);
-      background-size: 300% 300%;
-      animation: gradientMovement 5s ease infinite;
-      cursor: pointer;
-      display: block;
-      text-decoration: none;
-      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
-    }
-
-    .submit-btn-wrapper button, .btn-animate span {
-      width: 100%;
-      background: #141619;
-      color: #ff66cc;
-      border: none;
-      border-radius: 14px;
-      padding: 16px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      box-sizing: border-box;
-      display: block;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-
-    .submit-btn-wrapper:hover, .btn-animate:hover {
-      transform: translateY(-2px) scale(1.01);
-      box-shadow: 0 8px 25px rgba(255, 0, 127, 0.25);
-    }
-
-    .submit-btn-wrapper:hover button, .btn-animate:hover span {
-      background: transparent;
-      color: #ffffff;
-    }
-
-    .review-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .stars {
-      letter-spacing: 2px;
-      font-size: 11px;
-      color: #ffcc00;
-    }
-
-    .review-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), padding 0.3s ease;
-      font-size: 13px;
-      color: #94a3b8;
-      line-height: 1.5;
-      padding: 0;
-    }
-
-    .review-item-wrapper.expanded .review-content {
-      max-height: 200px;
-      padding-top: 12px;
-      transition: max-height 0.3s ease-in-out, padding 0.3s ease;
-    }
-
-    .coop-card, .info-footer {
-      background: #141619;
-      border-radius: 18px;
-      padding: 20px;
-      margin-top: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.03);
-    }
-
-    .coop-badge {
-      color: #ff66cc;
-      font-weight: 600;
-      font-size: 15px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .coop-text, .info-footer p {
-      color: #94a3b8;
-      font-size: 13px;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-
-    .info-footer {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .info-footer p {
-      margin: 0 0 16px 0;
-    }
-
-    /* МЕНЮ НАВИГАЦИИ (ПЕРЕДЕЛАНО ПОД 3 СТРАНИЦЫ) */
+    /* НАВИГАЦИЯ */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -509,630 +283,54 @@
       z-index: 1000;
     }
 
-    .nav-item {
-      background: none;
-      border: none;
-      color: #64748b;
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      transition: color 0.3s ease;
-      flex: 1;
-    }
+    .nav-item { background: none; border: none; color: #64748b; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex: 1; }
+    .nav-item i { font-size: 18px; }
+    .nav-item.active { color: #ff66cc; text-shadow: 0 0 10px rgba(255, 102, 204, 0.2); }
 
-    .nav-item i {
-      font-size: 18px;
-      transition: transform 0.3s ease;
-    }
-
-    .nav-item.active {
-      color: #ff66cc;
-      text-shadow: 0 0 10px rgba(255, 102, 204, 0.2);
-    }
-
-    /* СТИЛИ ДЛЯ СТРАНИЦЫ ИГРЫ */
+    /* СТИЛИ ДЛЯ ОБНОВЛЕННОЙ АРКАДНОЙ ИГРЫ */
     .game-card {
       background: #141619;
       border-radius: 24px;
-      padding: 24px 20px;
-      text-align: center;
+      padding: 16px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.4);
       border: 1px solid rgba(255, 255, 255, 0.02);
-      margin-top: 10px;
+      margin-top: 5px;
+    }
+
+    /* Игровой экран */
+    .game-viewport {
       position: relative;
-      overflow: hidden;
-    }
-
-    .game-stats {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      background: rgba(255, 255, 255, 0.02);
-      padding: 12px 16px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .stat-box {
-      font-size: 14px;
-      font-weight: 600;
-      color: #94a3b8;
-    }
-
-    .stat-box span {
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 800;
-    }
-
-    /* Шкала сытости */
-    .progress-container {
-      margin-bottom: 30px;
-      text-align: left;
-    }
-
-    .progress-label {
-      font-size: 12px;
-      color: #ff66cc;
-      font-weight: 700;
-      margin-bottom: 6px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .progress-bar-bg {
       width: 100%;
-      height: 12px;
-      background: #0b0c0e;
-      border-radius: 10px;
+      height: 320px;
+      background: linear-gradient(180deg, #0f1115, #161920);
+      border-radius: 18px;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 102, 204, 0.15);
+      margin-bottom: 15px;
     }
 
-    .progress-bar-fill {
-      width: 70%;
-      height: 100%;
-      background: linear-gradient(90deg, #ff007f, #ff66cc);
-      border-radius: 10px;
-      transition: width 0.2s ease;
-      box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
-    }
-
-    /* Игровой кликабельный контейнер котика */
-    .game-click-area {
-      position: relative;
-      width: 160px;
-      height: 180px;
-      margin: 0 auto 25px auto;
-      cursor: pointer;
-    }
-
-    /* Увеличенный игровой котик */
-    .game-cat-body {
+    /* Падающие элементы */
+    .falling-item {
       position: absolute;
-      bottom: 0;
-      left: 25px;
-      width: 110px;
-      height: 130px;
-      background: linear-gradient(135deg, #6e5242 25%, #423127 25%, #423127 50%, #6e5242 50%, #6e5242 75%, #423127 75%);
-      background-size: 40px 40px;
-      border-radius: 50px 50px 30px 30px;
-      box-shadow: inset -10px -10px 0px rgba(0,0,0,0.2);
-      transition: transform 0.05s ease;
+      font-size: 26px;
+      user-select: none;
+      will-change: top;
     }
 
-    .game-cat-breast {
+    /* Персонаж котика в игре */
+    .game-player-cat {
       position: absolute;
-      bottom: 0;
-      left: 30px;
-      width: 50px;
-      height: 70px;
-      background: #fcfaf2;
-      border-radius: 50% 50% 30% 30%;
-    }
-
-    .game-cat-head {
-      position: absolute;
-      top: 10px;
-      left: 15px;
-      width: 130px;
-      height: 110px;
-      background: linear-gradient(to bottom, #6e5242, #543d31);
-      border-radius: 50%;
-      transition: transform 0.05s ease;
-    }
-
-    .game-cat-muzzle {
-      position: absolute;
-      bottom: 15px;
-      left: 35px;
+      bottom: 10px;
+      left: 50%;
       width: 60px;
-      height: 35px;
-      background: #fcfaf2;
-      border-radius: 20px;
-    }
-
-    .game-cat-nose {
-      position: absolute;
-      top: 6px;
-      left: 26px;
-      width: 8px;
-      height: 6px;
-      background: #ff94b8;
-      border-radius: 50%;
-    }
-
-    .game-cat-eye {
-      position: absolute;
-      top: 35px;
-      width: 18px;
-      height: 18px;
-      background: #241c18;
-      border-radius: 50%;
-    }
-    .game-cat-eye.left { left: 25px; }
-    .game-cat-eye.right { right: 25px; }
-    .game-cat-eye::after {
-      content: '';
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 6px;
-      height: 6px;
-      background: #fff;
-      border-radius: 50%;
-    }
-
-    .game-cat-ear {
-      position: absolute;
-      top: -15px;
-      width: 45px;
       height: 50px;
-      background: #423127;
-      border-radius: 30% 70% 30% 30%;
-    }
-    .game-cat-ear.left { left: 10px; transform: rotate(-15deg); }
-    .game-cat-ear.right { right: 10px; transform: rotate(15deg) scaleX(-1); }
-    .game-cat-ear::after {
-      content: '';
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      width: 22px;
-      height: 26px;
-      background: #ffb5cc;
-      border-radius: 30% 70% 30% 30%;
-    }
-
-    /* Лапка для тапа */
-    .game-cat-paw {
-      position: absolute;
-      top: -15px;
-      right: -10px;
-      width: 35px;
-      height: 60px;
       background: #6e5242;
-      border-radius: 20px;
-      transform-origin: bottom center;
-      box-shadow: -2px 4px 10px rgba(0,0,0,0.3);
-      transition: transform 0.1s ease;
+      border-radius: 20px 20px 10px 10px;
+      transform: translateX(-50%);
+      transition: left 0.1s ease-out;
     }
-    .game-cat-paw::after {
+    .game-player-cat::before, .game-player-cat::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 35px;
-      height: 22px;
-      background: #fcfaf2;
-      border-radius: 15px 15px 8px 8px;
-    }
-
-    /* Эффект нажатия (Сжатие котика) */
-    .game-click-area:active .game-cat-body {
-      transform: scaleY(0.85) scaleX(1.05);
-    }
-    .game-click-area:active .game-cat-head {
-      transform: translateY(12px);
-    }
-    .game-click-area:active .game-cat-paw {
-      transform: rotate(-35deg) translateY(5px);
-    }
-
-    /* Вылетающие сердечки */
-    .floating-heart {
-      position: absolute;
-      color: #ff007f;
-      font-size: 24px;
-      pointer-events: none;
-      animation: floatUp 0.8s ease-out forwards;
-      z-index: 100;
-    }
-
-    @keyframes floatUp {
-      0% { opacity: 1; transform: translateY(0) scale(0.8); }
-      100% { opacity: 0; transform: translateY(-100px) scale(1.3) rotate(15deg); }
-    }
-
-    .game-tip {
-      font-size: 13px;
-      color: #64748b;
-      line-height: 1.5;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="app-container">
-    
-    <!-- СТРАНИЦА 1: ЗАКАЗ -->
-    <div id="order-tab" class="tab-content active">
-      <div class="cat-welcome-container">
-        <div class="css-cat">
-          <div class="cat-ear left"></div>
-          <div class="cat-ear right"></div>
-          <div class="cat-body">
-            <div class="cat-breast"></div>
-          </div>
-          <div class="cat-head">
-            <div class="cat-eye left"></div>
-            <div class="cat-eye right"></div>
-            <div class="cat-muzzle">
-              <div class="cat-nose"></div>
-            </div>
-          </div>
-          <div class="cat-paw-waving"></div>
-        </div>
-        
-        <div class="cat-signboard">
-          <h4 id="welcome-title">Добрый день! 👋</h4>
-          <p>Ты можешь заказать у меня классный дизайн!</p>
-        </div>
-      </div>
-
-      <h2 class="page-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Выберите тариф</h2>
-      
-      <div class="tariffs-list">
-        <div class="tariff-wrapper selected" onclick="selectTariff('🌱 Бюджетный', this)">
-          <div class="tariff-card">
-            <div class="tariff-info">
-              <span class="tariff-name"><i class="fa-solid fa-seedling"></i> Бюджетный</span>
-              <span class="tariff-desc">Дешево, стильно, свежо — не отличить от премиум дизайна.</span>
-            </div>
-            <div class="tariff-price">
-              <span class="price-label">от</span>
-              <span class="price-value">590₽</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="tariff-wrapper" onclick="selectTariff('⚡ Средний', this)">
-          <div class="tariff-card">
-            <div class="tariff-info">
-              <span class="tariff-name"><i class="fa-solid fa-bolt"></i> Средний</span>
-              <span class="tariff-desc">Отличный вкус без переплаты — идеальный баланс цены.</span>
-            </div>
-            <div class="tariff-price">
-              <span class="price-label">от</span>
-              <span class="price-value">1090₽</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="tariff-wrapper" onclick="selectTariff('👑 Профи', this)">
-          <div class="tariff-card">
-            <div class="tariff-info">
-              <span class="tariff-name"><i class="fa-solid fa-crown"></i> Профи</span>
-              <span class="tariff-desc">Лучший результат без компромиссов.</span>
-            </div>
-            <div class="tariff-price">
-              <span class="price-label">от</span>
-              <span class="price-value">1590₽</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label><i class="fa-regular fa-calendar-days"></i> Желаемые сроки (например: 2 дня, срочно)</label>
-        <input type="text" id="deadline" class="form-control" placeholder="Введите сроки...">
-      </div>
-
-      <div class="form-group">
-        <label><i class="fa-regular fa-file-lines"></i> Краткое ТЗ / Что нужно сделать?</label>
-        <textarea id="task" class="form-control" rows="4" placeholder="Опишите вашу задачу подробно..."></textarea>
-      </div>
-
-      <div class="submit-btn-wrapper" onclick="sendOrderData()">
-        <button>Отправить заказ</button>
-      </div>
-    </div>
-
-    <!-- СТРАНИЦА 2: ИНФОРМАЦИЯ -->
-    <div id="info-tab" class="tab-content">
-      <h2 class="gradient-text"><i class="fa-solid fa-circle-info"></i> Информация</h2>
-
-      <div class="reviews-section">
-        <h3><i class="fa-regular fa-comments"></i> Отзывы покупателей</h3>
-        
-        <div class="reviews-list">
-          <div class="review-item-wrapper" onclick="toggleReview(this)">
-            <div class="review-item">
-              <div class="review-header">
-                <span class="reviewer-name">Александр (Ютубер)</span>
-                <div class="stars">⭐⭐⭐⭐⭐</div>
-              </div>
-              <div class="review-content">
-                Заказывал оформление для игрового YouTube-канала. Работа выполнена невероятно сочно, превьюшки кликаются на ура, баннер встал идеально. Рекомендую!
-              </div>
-            </div>
-          </div>
-          
-          <div class="review-item-wrapper" onclick="toggleReview(this)">
-            <div class="review-item">
-              <div class="review-header">
-                <span class="reviewer-name">Кристина (Маркетплейс)</span>
-                <div class="stars">⭐⭐⭐⭐⭐</div>
-              </div>
-              <div class="review-content">
-                Делали карточки товаров для Wildberries. Продажи выросли благодаря крутой инфографике. Всё чётко по ТЗ и сдали даже раньше срока!
-              </div>
-            </div>
-          </div>
-
-          <div class="review-item-wrapper" onclick="toggleReview(this)">
-            <div class="review-item">
-              <div class="review-header">
-                <span class="reviewer-name">Максим (Крипта)</span>
-                <div class="stars">⭐⭐⭐⭐⭐</div>
-              </div>
-              <div class="review-content">
-                Отличный дизайнер! Разработал брендинг для Telegram-канала с нуля. Фирменный стиль получился строгим, но при этом запоминающимся. Правки вносил мгновенно.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="coop-card">
-        <div class="coop-badge">
-          <i class="fa-solid fa-handshake"></i> Сотрудничество
-        </div>
-        <p class="coop-text">
-          Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше портфолио нашему менеджеру!
-        </p>
-        <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
-          <span>🚀 Стать частью команды</span>
-        </a>
-      </div>
-
-      <div class="info-footer">
-        <p>При возникновении любых вопросов:</p>
-        <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
-          <span>
-            <i class="fa-regular fa-comment-dots"></i> 
-            Связаться с менеджром 
-            <strong style="
-              font-family: 'Courier New', Courier, monospace; 
-              background: rgba(255, 102, 204, 0.12); 
-              color: #ff66cc;
-              padding: 2px 8px; 
-              border-radius: 6px; 
-              margin-left: 6px; 
-              font-size: 14px; 
-              letter-spacing: 0.5px;
-              display: inline-block;
-              vertical-align: middle;
-            ">@MartOkkks</strong>
-          </span>
-        </a>
-      </div>
-    </div>
-
-    <!-- СТРАНИЦА 3: ИГРА С КОТИКОМ -->
-    <div id="game-tab" class="tab-content">
-      <h2 class="gradient-text"><i class="fa-solid fa-gamepad"></i> Накорми Котика</h2>
-      
-      <div class="game-card">
-        <div class="game-stats">
-          <div class="stat-box">Уровень: <span id="cat-level">1</span></div>
-          <div class="stat-box">Всего кликов: <span id="cat-clicks">0</span></div>
-        </div>
-
-        <div class="progress-container">
-          <div class="progress-label">
-            <span>Сытость котика:</span>
-            <span id="satiety-percent">70%</span>
-          </div>
-          <div class="progress-bar-bg">
-            <div id="satiety-bar" class="progress-bar-fill" style="width: 70%;"></div>
-          </div>
-        </div>
-
-        <!-- Кликабельная зона с увеличенным кастомным CSS-котиком -->
-        <div class="game-click-area" id="cat-clicker" onclick="feedCat(event)">
-          <div class="game-cat-ear left"></div>
-          <div class="game-cat-ear right"></div>
-          <div class="game-cat-body">
-            <div class="game-cat-breast"></div>
-          </div>
-          <div class="game-cat-head">
-            <div class="game-cat-eye left"></div>
-            <div class="game-cat-eye right"></div>
-            <div class="game-cat-muzzle">
-              <div class="game-cat-nose"></div>
-            </div>
-          </div>
-          <div class="game-cat-paw"></div>
-        </div>
-
-        <p class="game-tip">
-          Кликай на котика, чтобы покормить его! Повышай уровень. <br>
-          <span style="color: #64748b; font-size: 11px;">Внимание: когда ты не в игре, котик постепенно проголодается!</span>
-        </p>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ОБНОВЛЕННОЕ МЕНЮ НАВИГАЦИИ (3 КНОПКИ) -->
-  <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchTab('order-tab', this)">
-      <i class="fa-solid fa-cart-shopping"></i>
-      <span>Заказ</span>
-    </button>
-    <button class="nav-item" onclick="switchTab('game-tab', this)">
-      <i class="fa-solid fa-cat"></i>
-      <span>Игра</span>
-    </button>
-    <button class="nav-item" onclick="switchTab('info-tab', this)">
-      <i class="fa-solid fa-circle-info"></i>
-      <span>Информация</span>
-    </button>
-  </nav>
-
-  <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-
-    // Функция динамического времени суток
-    function initWelcome() {
-      const now = new Date();
-      const hours = now.getHours();
-      let greeting = "Добрый день!";
-
-      if (hours >= 5 && hours < 12) greeting = "Доброе утро!";
-      else if (hours >= 12 && hours < 18) greeting = "Добрый день!";
-      else if (hours >= 18 && hours < 23) greeting = "Добрый вечер!";
-      else greeting = "Доброй ночи!";
-
-      const user = tg.initDataUnsafe?.user;
-      if (user && user.first_name) {
-        document.getElementById('welcome-title').innerText = `${greeting.replace('!', '')}, ${user.first_name}! 👋`;
-      } else {
-        document.getElementById('welcome-title').innerText = `${greeting} 👋`;
-      }
-    }
-    initWelcome();
-
-    // ЛОГИКА ТАРИФОВ И ВКЛАДОК
-    let selectedTariffValue = "🌱 Бюджетный";
-
-    function selectTariff(tariffName, wrapperElement) {
-      document.querySelectorAll('.tariff-wrapper').forEach(wrap => {
-        wrap.classList.remove('selected');
-      });
-      wrapperElement.classList.add('selected');
-      selectedTariffValue = tariffName;
-    }
-
-    function switchTab(tabId, button) {
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      document.getElementById(tabId).classList.add('active');
-      button.classList.add('active');
-    }
-
-    function toggleReview(element) {
-      const isExpanded = element.classList.contains('expanded');
-      document.querySelectorAll('.review-item-wrapper').forEach(item => {
-        item.classList.remove('expanded');
-      });
-      if (!isExpanded) {
-        element.classList.add('expanded');
-      }
-    }
-
-    // МЕХАНИКА ИГРЫ «НАКОРМИ КОТИКА»
-    let satiety = 70; 
-    let level = 1;
-    let totalClicks = 0;
-
-    function feedCat(event) {
-      totalClicks++;
-      satiety += 4; // При каждом тапе сытость растет на 4%
-      
-      if (satiety >= 100) {
-        satiety = 10; // Сброс при левелапе
-        level++;
-        // Эффект легкой вибрации Telegram при повышении уровня
-        if (tg.HapticFeedback) {
-          tg.HapticFeedback.notificationOccurred('success');
-        }
-      } else {
-        // Обычная легкая вибрация на каждый тап
-        if (tg.HapticFeedback) {
-          tg.HapticFeedback.impactOccurred('light');
-        }
-      }
-
-      updateGameUI();
-      createHeartEffect(event);
-    }
-
-    function updateGameUI() {
-      document.getElementById('cat-clicks').innerText = totalClicks;
-      document.getElementById('cat-level').innerText = level;
-      document.getElementById('satiety-percent').innerText = satiety + '%';
-      document.getElementById('satiety-bar').style.width = satiety + '%';
-    }
-
-    // Создание вылетающего сердечка над котиком в месте клика
-    function createHeartEffect(event) {
-      const clickArea = document.getElementById('cat-clicker');
-      const rect = clickArea.getBoundingClientRect();
-      
-      // Вычисляем координаты тапа относительно контейнера котика
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-
-      const heart = document.createElement('div');
-      heart.className = 'floating-heart';
-      heart.innerHTML = '❤️';
-      heart.style.left = x + 'px';
-      heart.style.top = y + 'px';
-
-      clickArea.appendChild(heart);
-
-      // Удаляем элемент после завершения анимации
-      setTimeout(() => {
-        heart.remove();
-      }, 800);
-    }
-
-    // Пассивное голодание котика (каждую секунду сытость падает на 1%)
-    setInterval(() => {
-      if (satiety > 0) {
-        satiety--;
-        updateGameUI();
-      }
-    }, 1000);
-
-    function sendOrderData() {
-      const deadline = document.getElementById('deadline').value.trim();
-      const task = document.getElementById('task').value.trim();
-
-      if (!deadline || !task) {
-        alert("Пожалуйста, заполните дедлайн и описание задачи!");
-        return;
-      }
-
-      const orderData = {
-        "tariff": selectedTariffValue,
-        "deadline": deadline,
-        "task": task
-      };
-
-      tg.sendData(JSON.stringify(orderData));
-      tg.close();
-    }
-  </script>
-</body>
-</html>
+      top: -8px;
+      width:
