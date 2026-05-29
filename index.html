@@ -22,23 +22,23 @@
 
     .app-container {
       max-width: 450px;
-      margin: 0 auto;
+      margin: 0 design auto;
       padding: 20px 15px;
       padding-bottom: 95px;
     }
 
-    /* ВИДЖЕТ С ВЫГЛЯДЫВАЮЩИМ CSS-КОТИКОМ (ТОЛЬКО ДЛЯ ПЕРВОЙ СТРАНИЦЫ) */
+    /* ВИДЖЕТ С ВЫГЛЯДЫВАЮЩИМ CSS-КОТИКОМ */
     .cat-welcome-container {
       position: relative;
       margin-top: 15px;
       margin-bottom: 30px;
-      padding-left: 80px; /* Место для детализированного котика */
+      padding-left: 80px; 
       min-height: 100px;
       display: flex;
       align-items: center;
     }
 
-    /* Контейнер котика (пропорции и пушистость вдохновлены image_f160fb.jpg) */
+    /* Контейнер котика */
     .css-cat {
       position: absolute;
       left: -5px;
@@ -49,7 +49,7 @@
       z-index: 10;
     }
 
-    /* Тело котика (полосатый окрас) */
+    /* Тело котика */
     .cat-body {
       position: absolute;
       bottom: 0;
@@ -62,7 +62,7 @@
       box-shadow: inset -5px -5px 0px rgba(0,0,0,0.2);
     }
 
-    /* Грудка котика (пушистая белая) */
+    /* Грудка котика */
     .cat-breast {
       position: absolute;
       bottom: 0;
@@ -104,7 +104,7 @@
       border-radius: 50%;
     }
 
-    /* Глазки (любопытные как на фото) */
+    /* Глазки */
     .cat-eye {
       position: absolute;
       top: 15px;
@@ -154,7 +154,7 @@
       border-radius: 30% 70% 30% 30%;
     }
 
-    /* Лапка, которая машет (как на фото image_f160fb.jpg тянется вверх) */
+    /* Лапка, которая машет */
     .cat-paw-waving {
       position: absolute;
       top: -12px;
@@ -167,7 +167,6 @@
       animation: catWave 1.8s ease-in-out infinite;
       box-shadow: -1px 2px 5px rgba(0,0,0,0.2);
     }
-    /* Белая подушечка лапки */
     .cat-paw-waving::after {
       content: '';
       position: absolute;
@@ -179,7 +178,6 @@
       border-radius: 8px 8px 4px 4px;
     }
 
-    /* Анимация приветственного махания лапкой */
     @keyframes catWave {
       0%, 100% { transform: rotate(0deg); }
       33% { transform: rotate(-25deg); }
@@ -361,423 +359,4 @@
 
     .form-group label, .reviews-section h3 {
       display: block;
-      font-size: 13px;
-      color: #94a3b8;
-      margin-bottom: 8px;
-      font-weight: 500;
-    }
-
-    .reviews-section h3 {
-      font-size: 15px;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .form-control {
-      width: 100%;
-      background: #141619;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 14px;
-      padding: 16px;
-      color: #ffffff;
-      font-size: 14px;
-      box-sizing: border-box;
-      outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .form-control:focus {
-      border-color: #ff007f;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.1);
-    }
-
-    .submit-btn-wrapper, .btn-animate {
-      position: relative;
-      padding: 2px;
-      border-radius: 16px;
-      background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f);
-      background-size: 300% 300%;
-      animation: gradientMovement 5s ease infinite;
-      cursor: pointer;
-      display: block;
-      text-decoration: none;
-      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
-    }
-
-    .submit-btn-wrapper button, .btn-animate span {
-      width: 100%;
-      background: #141619;
-      color: #ff66cc;
-      border: none;
-      border-radius: 14px;
-      padding: 16px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      box-sizing: border-box;
-      display: block;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-
-    .submit-btn-wrapper:hover, .btn-animate:hover {
-      transform: translateY(-2px) scale(1.01);
-      box-shadow: 0 8px 25px rgba(255, 0, 127, 0.25);
-    }
-
-    .submit-btn-wrapper:hover button, .btn-animate:hover span {
-      background: transparent;
-      color: #ffffff;
-    }
-
-    .review-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .stars {
-      letter-spacing: 2px;
-      font-size: 11px;
-      color: #ffcc00;
-    }
-
-    .review-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), padding 0.3s ease;
-      font-size: 13px;
-      color: #94a3b8;
-      line-height: 1.5;
-      padding: 0;
-    }
-
-    .review-item-wrapper.expanded .review-content {
-      max-height: 200px;
-      padding-top: 12px;
-      transition: max-height 0.3s ease-in-out, padding 0.3s ease;
-    }
-
-    .coop-card, .info-footer {
-      background: #141619;
-      border-radius: 18px;
-      padding: 20px;
-      margin-top: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.03);
-    }
-
-    .coop-badge {
-      color: #ff66cc;
-      font-weight: 600;
-      font-size: 15px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .coop-text, .info-footer p {
-      color: #94a3b8;
-      font-size: 13px;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-
-    .info-footer {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .info-footer p {
-      margin: 0 0 16px 0;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 450px;
-      background: #0d0e10;
-      display: flex;
-      justify-content: space-around;
-      padding: 14px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.03);
-      z-index: 1000;
-    }
-
-    .nav-item {
-      background: none;
-      border: none;
-      color: #64748b;
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-
-    .nav-item i {
-      font-size: 18px;
-      transition: transform 0.3s ease;
-    }
-
-    .nav-item.active {
-      color: #ff66cc;
-      text-shadow: 0 0 10px rgba(255, 102, 204, 0.2);
-    }
-  </style>
-</head>
-<body>
-
-  <div class="app-container">
-    
-    <!-- СТРАНИЦА 1: ЗАКАЗ -->
-    <div id="order-tab" class="tab-content active">
-      
-      <!-- КОТИК ТЕПЕРЬ НАХОДИТСЯ СТРОГО ЗДЕСЬ (НА ПЕРВОЙ СТРАНИЦЕ) -->
-      <div class="cat-welcome-container">
-        <div class="css-cat">
-          <div class="cat-ear left"></div>
-          <div class="cat-ear right"></div>
-          <div class="cat-body">
-            <div class="cat-breast"></div>
-          </div>
-          <div class="cat-head">
-            <div class="cat-eye left"></div>
-            <div class="cat-eye right"></div>
-            <div class="cat-muzzle">
-              <div class="cat-nose"></div>
-            </div>
-          </div>
-          <!-- Лапка, которая активно машет -->
-          <div class="cat-paw-waving"></div>
-        </div>
-        
-        <div class="cat-signboard">
-          <h4 id="welcome-title">Привет! 👋</h4>
-          <p>Ты можешь заказать у меня классный дизайн!</p>
-        </div>
-      </div>
-
-      <h2 class="page-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Выберите тариф</h2>
-      
-      <div class="tariffs-list">
-        <div class="tariff-wrapper selected" onclick="selectTariff('🌱 Бюджетный', this)">
-          <div class="tariff-card">
-            <div class="tariff-info">
-              <span class="tariff-name"><i class="fa-solid fa-seedling"></i> Бюджетный</span>
-              <span class="tariff-desc">Дешево, стильно, свежо — не отличить от премиум дизайна.</span>
-            </div>
-            <div class="tariff-price">
-              <span class="price-label">от</span>
-              <span class="price-value">590₽</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="tariff-wrapper" onclick="selectTariff('⚡ Средний', this)">
-          <div class="tariff-card">
-            <div class="tariff-info">
-              <span class="tariff-name"><i class="fa-solid fa-bolt"></i> Средний</span>
-              <span class="tariff-desc">Отличный вкус без переплаты — идеальный баланс цены.</span>
-            </div>
-            <div class="tariff-price">
-              <span class="price-label">от</span>
-              <span class="price-value">1090₽</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="tariff-wrapper" onclick="selectTariff('👑 Профи', this)">
-          <div class="tariff-card">
-            <div class="tariff-info">
-              <span class="tariff-name"><i class="fa-solid fa-crown"></i> Профи</span>
-              <span class="tariff-desc">Лучший результат без компромиссов.</span>
-            </div>
-            <div class="tariff-price">
-              <span class="price-label">от</span>
-              <span class="price-value">1590₽</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label><i class="fa-regular fa-calendar-days"></i> Желаемые сроки (например: 2 дня, срочно)</label>
-        <input type="text" id="deadline" class="form-control" placeholder="Введите сроки...">
-      </div>
-
-      <div class="form-group">
-        <label><i class="fa-regular fa-file-lines"></i> Краткое ТЗ / Что нужно сделать?</label>
-        <textarea id="task" class="form-control" rows="4" placeholder="Опишите вашу задачу подробно..."></textarea>
-      </div>
-
-      <div class="submit-btn-wrapper" onclick="sendOrderData()">
-        <button>Отправить заказ</button>
-      </div>
-    </div>
-
-    <!-- СТРАНИЦА 2: ИНФОРМАЦИЯ (ИГРА УБРАНА) -->
-    <div id="info-tab" class="tab-content">
-      <h2 class="gradient-text"><i class="fa-solid fa-circle-info"></i> Информация</h2>
-
-      <div class="reviews-section">
-        <h3><i class="fa-regular fa-comments"></i> Отзывы покупателей</h3>
-        
-        <div class="reviews-list">
-          <div class="review-item-wrapper" onclick="toggleReview(this)">
-            <div class="review-item">
-              <div class="review-header">
-                <span class="reviewer-name">Александр (Ютубер)</span>
-                <div class="stars">⭐⭐⭐⭐⭐</div>
-              </div>
-              <div class="review-content">
-                Заказывал оформление для игрового YouTube-канала. Работа выполнена невероятно сочно, превьюшки кликаются на ура, баннер встал идеально. Рекомендую!
-              </div>
-            </div>
-          </div>
-          
-          <div class="review-item-wrapper" onclick="toggleReview(this)">
-            <div class="review-item">
-              <div class="review-header">
-                <span class="reviewer-name">Кристина (Маркетплейс)</span>
-                <div class="stars">⭐⭐⭐⭐⭐</div>
-              </div>
-              <div class="review-content">
-                Делали карточки товаров для Wildberries. Продажи выросли благодаря крутой инфографике. Всё чётко по ТЗ и сдали даже раньше срока!
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="coop-card">
-        <div class="coop-badge">
-          <i class="fa-solid fa-handshake"></i> Сотрудничество
-        </div>
-        <p class="coop-text">
-          Хотите вступить в штат дизайнеров и получить постоянный поток клиентов? Отправьте Ваше портфолио нашему менеджеру!
-        </p>
-        <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
-          <span>🚀 Стать частью команды</span>
-        </a>
-      </div>
-
-      <div class="info-footer">
-        <p>При возникновении любых вопросов:</p>
-        <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
-          <span>
-            <i class="fa-regular fa-comment-dots"></i> 
-            Связаться с менеджером 
-            <strong style="
-              font-family: 'Courier New', Courier, monospace; 
-              background: rgba(255, 102, 204, 0.12); 
-              color: #ff66cc;
-              padding: 2px 8px; 
-              border-radius: 6px; 
-              margin-left: 6px; 
-              font-size: 14px; 
-              letter-spacing: 0.5px;
-              display: inline-block;
-              vertical-align: middle;
-            ">@MartOkkks</strong>
-          </span>
-        </a>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- МЕНЮ НАВИГАЦИИ -->
-  <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchTab('order-tab', this)">
-      <i class="fa-solid fa-cart-shopping"></i>
-      <span>Заказ</span>
-    </button>
-    <button class="nav-item" onclick="switchTab('info-tab', this)">
-      <i class="fa-solid fa-circle-info"></i>
-      <span>Информация</span>
-    </button>
-  </nav>
-
-  <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-
-    // Умное приветствие по времени суток с интеграцией Telegram имени
-    function initWelcome() {
-      const hours = new Date().getHours();
-      let greeting = "Привет";
-      if (hours >= 5 && hours < 12) greeting = "Доброе утро";
-      else if (hours >= 12 && hours < 18) greeting = "Добрый день";
-      else if (hours >= 18 && hours < 23) greeting = "Добрый evening";
-      else greeting = "Доброй ночи";
-
-      const user = tg.initDataUnsafe?.user;
-      if (user && user.first_name) {
-        document.getElementById('welcome-title').innerText = `${greeting}, ${user.first_name}! 👋`;
-      } else {
-        document.getElementById('welcome-title').innerText = `${greeting}! 👋`;
-      }
-    }
-    initWelcome();
-
-    // Логика тарифов и вкладок
-    let selectedTariffValue = "🌱 Бюджетный";
-
-    function selectTariff(tariffName, wrapperElement) {
-      document.querySelectorAll('.tariff-wrapper').forEach(wrap => {
-        wrap.classList.remove('selected');
-      });
-      wrapperElement.classList.add('selected');
-      selectedTariffValue = tariffName;
-    }
-
-    function switchTab(tabId, button) {
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      document.getElementById(tabId).classList.add('active');
-      button.classList.add('active');
-    }
-
-    function toggleReview(element) {
-      const isExpanded = element.classList.contains('expanded');
-      document.querySelectorAll('.review-item-wrapper').forEach(item => {
-        item.classList.remove('expanded');
-      });
-      if (!isExpanded) {
-        element.classList.add('expanded');
-      }
-    }
-
-    function sendOrderData() {
-      const deadline = document.getElementById('deadline').value.trim();
-      const task = document.getElementById('task').value.trim();
-
-      if (!deadline || !task) {
-        alert("Пожалуйста, заполните дедлайн и описание задачи!");
-        return;
-      }
-
-      const orderData = {
-        "tariff": selectedTariffValue,
-        "deadline": deadline,
-        "task": task
-      };
-
-      tg.sendData(JSON.stringify(orderData));
-      tg.close();
-    }
-  </script>
-</body>
-</html>
+      font-size: 13
