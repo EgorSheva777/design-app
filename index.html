@@ -8,9 +8,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
   <style>
-    /* ОБЩИЕ СТИЛИ (РОЗОВЫЙ НЕОН) */
+    /* ОБЩИЕ СТИЛИ (НЕЙТРАЛЬНЫЙ ТЕМНЫЙ + РОЗОВЫЕ АКЦЕНТЫ) */
     body {
-      background-color: #0f0a0e;
+      background-color: #0b0c0e; /* Строгий нейтральный темный фон */
       font-family: 'Segoe UI', Roboto, sans-serif;
       color: #ffffff;
       margin: 0;
@@ -26,7 +26,7 @@
       padding-bottom: 95px;
     }
 
-    /* АНИМАЦИЯ РОЗОВОГО ГРАДИЕНТА */
+    /* АНИМАЦИЯ СДЕРЖАННОГО ГРАДИЕНТА */
     @keyframes gradientMovement {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -46,14 +46,14 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ЗАГОЛОВКИ С РОЗОВЫМ ПЕРЕЛИВОМ */
+    /* ЗАГОЛОВКИ С ПЛАВНЫМ ПЕРЕЛИВОМ */
     .page-title, .gradient-text {
       text-align: center;
       font-size: 24px;
       font-weight: 800;
       margin-top: 5px;
       margin-bottom: 25px;
-      background: linear-gradient(-45deg, #ff007f, #ff66cc, #9900ff, #ff007f);
+      background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f);
       background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -76,30 +76,29 @@
       position: relative;
       padding: 2px;
       border-radius: 18px;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.03);
       transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
     }
 
-    /* Розовое свечение при наведении */
+    /* Мягкая подсветка при наведении */
     .tariff-wrapper:hover, .review-item-wrapper:hover {
-      background: linear-gradient(-45deg, rgba(216, 27, 96, 0.4), rgba(255, 102, 204, 0.4), rgba(153, 0, 255, 0.4));
-      background-size: 200% 200%;
-      animation: gradientMovement 3s linear infinite;
-      box-shadow: 0 6px 20px rgba(255, 0, 127, 0.1);
+      background: linear-gradient(-45deg, rgba(255, 0, 127, 0.3), rgba(112, 0, 255, 0.3));
+      box-shadow: 0 6px 20px rgba(255, 0, 127, 0.08);
       transform: translateY(-2px);
     }
 
-    /* Выбранный тариф в розовом стиле */
+    /* Активное выделение выбранного тарифа */
     .tariff-wrapper.selected {
-      background: linear-gradient(-45deg, #ff007f, #ff66cc, #9900ff, #ff007f);
+      background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f);
       background-size: 300% 300%;
       animation: gradientMovement 4s ease infinite;
-      box-shadow: 0 0 25px rgba(255, 0, 127, 0.25);
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.2);
       transform: translateY(-2px);
     }
 
+    /* Нейтральный графитовый цвет для внутренностей карточек */
     .tariff-card, .review-item {
-      background: #171015;
+      background: #141619; 
       border-radius: 16px;
       padding: 16px 18px;
       cursor: pointer;
@@ -131,9 +130,10 @@
     .tariff-name .fa-bolt { color: #ffcc00; }
     .tariff-name .fa-crown { color: #ff3b57; }
 
+    /* Спокойный серый текст для описаний */
     .tariff-desc {
       font-size: 12px;
-      color: #a6929e;
+      color: #94a3b8;
       line-height: 1.4;
     }
 
@@ -143,7 +143,7 @@
 
     .price-label {
       font-size: 10px;
-      color: #7c6a75;
+      color: #64748b;
       text-transform: uppercase;
       display: block;
       margin-bottom: 2px;
@@ -158,7 +158,7 @@
     
     .tariff-wrapper.selected .price-value {
       color: #ff66cc;
-      text-shadow: 0 0 10px rgba(255, 102, 204, 0.4);
+      text-shadow: 0 0 10px rgba(255, 102, 204, 0.3);
     }
 
     /* ПОЛЯ ВВОДА */
@@ -169,7 +169,7 @@
     .form-group label, .reviews-section h3 {
       display: block;
       font-size: 13px;
-      color: #a6929e;
+      color: #94a3b8;
       margin-bottom: 8px;
       font-weight: 500;
     }
@@ -182,22 +182,23 @@
       gap: 8px;
     }
 
+    /* Графитовое поле ввода */
     .form-control {
       width: 100%;
-      background: #171015;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: #141619;
+      border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 14px;
       padding: 16px;
       color: #ffffff;
       font-size: 14px;
       box-sizing: border-box;
       outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .form-control:focus {
       border-color: #ff007f;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.15);
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.1);
     }
 
     /* КНОПКИ ОФОРМЛЕНИЯ / СВЯЗИ */
@@ -205,7 +206,7 @@
       position: relative;
       padding: 2px;
       border-radius: 16px;
-      background: linear-gradient(-45deg, #ff007f, #ff66cc, #9900ff, #ff007f);
+      background: linear-gradient(-45deg, #ff007f, #ff66cc, #7000ff, #ff007f);
       background-size: 300% 300%;
       animation: gradientMovement 5s ease infinite;
       cursor: pointer;
@@ -216,7 +217,7 @@
 
     .submit-btn-wrapper button, .btn-animate span {
       width: 100%;
-      background: #171015;
+      background: #141619;
       color: #ff66cc;
       border: none;
       border-radius: 14px;
@@ -232,7 +233,7 @@
 
     .submit-btn-wrapper:hover, .btn-animate:hover {
       transform: translateY(-2px) scale(1.01);
-      box-shadow: 0 8px 25px rgba(255, 0, 127, 0.3);
+      box-shadow: 0 8px 25px rgba(255, 0, 127, 0.25);
     }
 
     .submit-btn-wrapper:hover button, .btn-animate:hover span {
@@ -259,7 +260,7 @@
       overflow: hidden;
       transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), padding 0.3s ease;
       font-size: 13px;
-      color: #a6929e;
+      color: #94a3b8;
       line-height: 1.5;
       padding: 0;
     }
@@ -272,16 +273,16 @@
 
     /* БЛОКИ СОТРУДНИЧЕСТВА И МЕНЕДЖЕРА */
     .coop-card, .info-footer {
-      background: #171015;
+      background: #141619;
       border-radius: 18px;
       padding: 20px;
       margin-top: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.03);
       transition: border-color 0.3s ease;
     }
 
     .coop-card:hover, .info-footer:hover {
-      border-color: rgba(255, 0, 127, 0.2);
+      border-color: rgba(255, 0, 127, 0.15);
     }
 
     .coop-badge {
@@ -295,7 +296,7 @@
     }
 
     .coop-text, .info-footer p {
-      color: #a6929e;
+      color: #94a3b8;
       font-size: 13px;
       line-height: 1.5;
       margin-bottom: 20px;
@@ -310,7 +311,7 @@
       margin: 0 0 16px 0;
     }
 
-    /* НИЖНЯЯ НАВИГАЦИЯ */
+    /* НИЖНЯЯ НАВИГАЦИЯ (СТРОГИЙ ТЕМНЫЙ) */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -318,18 +319,18 @@
       transform: translateX(-50%);
       width: 100%;
       max-width: 450px;
-      background: #140e13;
+      background: #0d0e10;
       display: flex;
       justify-content: space-around;
       padding: 14px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
       z-index: 1000;
     }
 
     .nav-item {
       background: none;
       border: none;
-      color: #7c6a75;
+      color: #64748b;
       font-size: 12px;
       display: flex;
       flex-direction: column;
@@ -346,7 +347,7 @@
 
     .nav-item.active {
       color: #ff66cc;
-      text-shadow: 0 0 10px rgba(255, 102, 204, 0.3);
+      text-shadow: 0 0 10px rgba(255, 102, 204, 0.2);
     }
 
     .nav-item:hover i {
@@ -413,7 +414,6 @@
         <textarea id="task" class="form-control" rows="4" placeholder="Опишите вашу задачу подробно..."></textarea>
       </div>
 
-      <!-- Кнопка заказа с розовым неоновым переливом -->
       <div class="submit-btn-wrapper" onclick="sendOrderData()">
         <button>Отправить заказ</button>
       </div>
@@ -478,7 +478,6 @@
         </a>
       </div>
 
-      <!-- КРАСИВЫЙ РОЗОВЫЙ ФУТЕР С МЕНЕДЖЕРОМ -->
       <div class="info-footer">
         <p>При возникновении любых вопросов:</p>
         <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
@@ -487,7 +486,7 @@
             Связаться с менеджером 
             <strong style="
               font-family: 'Courier New', Courier, monospace; 
-              background: rgba(255, 102, 204, 0.15); 
+              background: rgba(255, 102, 204, 0.12); 
               color: #ff66cc;
               padding: 2px 8px; 
               border-radius: 6px; 
