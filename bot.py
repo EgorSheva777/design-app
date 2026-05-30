@@ -1,4 +1,33 @@
 import os
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+class SimpleHTTPHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        # Отправляем успешный статус 200 ОК, чтобы Render видел, что приложение "живо"
+        self.send_response(200)
+        self.send_header("Content-type", "text/plain; charset=utf-8")
+        self.end_headers()
+        self.wfile.write("Бот успешно запущен и работает!".encode("utf-8"))
+
+    def log_message(self, format, *args):
+        # Отключаем лишний спам логов веб-сервера в консоль Render
+        return
+
+def run_health_check_server():
+    # Render автоматически передает нужный порт в переменную окружения PORT
+    port = int(os.environ.get("PORT", 8080))
+    server = HTTPServer(("0.0.0.0", port), SimpleHTTPHandler)
+    print(f"[Render Fix] Фоновый веб-сервер успешно запущен на порту {port}")
+    server.serve_forever()
+
+# Запускаем сервер в отдельном потоке (thread), чтобы он не блокировал работу самого Телеграм-бота
+threading.Thread(target=run_health_check_server, daemon=True).start()
+
+# =====================================================================
+# ДАЛЕЕ ВАШ СУЩЕСТВУЮЩИЙ КОД БОТА (например, import telebot, bot.infinity_polling() и т.д.)
+# =====================================================================
+import os
 import json
 import asyncio
 from aiogram import Bot, Dispatcher, F, types
