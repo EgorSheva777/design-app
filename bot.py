@@ -1,45 +1,18 @@
 import os
-import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
-
-class SimpleHTTPHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        # Отправляем успешный статус 200 ОК, чтобы Render видел, что приложение "живо"
-        self.send_response(200)
-        self.send_header("Content-type", "text/plain; charset=utf-8")
-        self.end_headers()
-        self.wfile.write("Бот успешно запущен и работает!".encode("utf-8"))
-
-    def log_message(self, format, *args):
-        # Отключаем лишний спам логов веб-сервера в консоль Render
-        return
-
-def run_health_check_server():
-    # Render автоматически передает нужный порт в переменную окружения PORT
-    port = int(os.environ.get("PORT", 8080))
-    server = HTTPServer(("0.0.0.0", port), SimpleHTTPHandler)
-    print(f"[Render Fix] Фоновый веб-сервер успешно запущен на порту {port}")
-    server.serve_forever()
-
-# Запускаем сервер в отдельном потоке (thread), чтобы он не блокировал работу самого Телеграм-бота
-threading.Thread(target=run_health_check_server, daemon=True).start()
-
-# =====================================================================
-# ДАЛЕЕ ВАШ СУЩЕСТВУЮЩИЙ КОД БОТА (например, import telebot, bot.infinity_polling() и т.д.)
-# =====================================================================
-import os
 import json
 import asyncio
+from aiohttp import web
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import CommandStart
 from aiogram.types import WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
 
-# 1. ВСТАВЬ СВОЙ ТОКЕН СЮДА (от @BotFather)
+# ==========================================
+# 1. ВСТАВЬ СВОЙ НОВЫЙ ТОКЕН СЮДА (от @BotFather)
 TOKEN = "8564511758:AAH2Ip789sQ5w_NzRhOKQWFrVIFk8mVsuXw"
 
-# 2. ВСТАВЬ ССЫЛКУ НА ТВОЙ САЙТ GITHUB PAGES СЮДА
-# Ссылка должна выглядеть так: https://твой_логин.github.io/название_репозитория/
+# 2. ССЫЛКА НА ТВОЙ САЙТ GITHUB PAGES СЮДА
 WEB_APP_URL = "https://egorsheva777.github.io/design-app/"
+# ==========================================
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -48,7 +21,7 @@ dp = Dispatcher()
 async def start(message: types.Message):
     # Создаем кнопку, которая открывает Mini App
     kb = [
-        [KeyboardButton(text="🎨 Заказать дизайн", web_app=WebAppInfo(url=WEB_APP_URL))]
+        [KeyboardButton(text="Заказать дизайн 🚀", web_app=WebAppInfo(url=WEB_APP_URL))]
     ]
     keyboard = ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
     
@@ -59,29 +32,54 @@ async def start(message: types.Message):
 
 @dp.message(F.web_app_data)
 async def handle_webapp_data(message: types.Message):
-    """Этот блок сработает, когда ты нажмешь 'Отправить заказ' в HTML"""
+    # Обработка данных, пришедших из Mini App
     try:
-        # Получаем данные из Mini App
         data = json.loads(message.web_app_data.data)
         
-        tariff = data.get("tariff", "Не выбран")
-        deadline = data.get("deadline", "Не указан")
-        task = data.get("task", "Нет описания")
-
-        text = (
-            "🚀 **Получен новый заказ!**\n\n"
-            f"👤 **От:** {message.from_user.full_name}\n"
-            f"💎 **Тариф:** {tariff}\n"
-            f"⏳ **Срок:** {deadline}\n"
-            f"📝 **Задание:** {task}"
-        )
-        
+        if data.get("order_type") == "Дизайн":
+            text = (
+                f"🎨 **Получен новый заказ на дизайн!**\n\n"
+                f"Тариф: `{data.get('tariff')}`\n"
+                f"Сроки: `{data.get('deadline')}`\n\n"
+                f"📝 **ТЗ:** {data.get('task')}"
+            )
+        else:
+            text = (
+                f"💼 **Получена заявка на бизнес-услугу!**\n\n"
+                f"Услуга: `{data.get('tariff')}`\n"
+                f"Проект: `{data.get('project_info')}`\n\n"
+                f"📝 **Описание:** {data.get('task')}"
+            )
+            
         await message.answer(text, parse_mode="Markdown")
-        
     except Exception as e:
-        await message.answer(f"Ошибка при получении данных: {e}")
+        await message.answer(f"Заявка принята! Скоро наш менеджер свяжется с вами для уточнения деталей. 👍")
 
+# ==========================================
+# АСИНХРОННЫЙ ВЕБ-СЕРВЕР ДЛЯ ОБХОДА ПОРТОВ RENDER
+# ==========================================
+async def handle_ping(request):
+    return web.Response(text="Bot is alive!")
+
+async def start_background_server():
+    app = web.Application()
+    app.router.add_get('/', handle_ping)
+    
+    # Render передает порт в переменной окружения PORT, по умолчанию берем 10000
+    port = int(os.environ.get("PORT", 10000))
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, '0.0.0.0', port)
+    await site.start()
+    print(f"[Render Fix] Асинхронный веб-сервер успешно запущен на порту {port}")
+
+# Главная точка входа
 async def main():
+    # Запускаем фоновый сервер, который будет отвечать хостингу Render на порту 10000
+    await start_background_server()
+    
+    # Запускаем поллинг бота Телеграм (оба процесса теперь работают одновременно!)
+    print("Бот успешно запущен и готов принимать сообщения...")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
