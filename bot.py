@@ -10,7 +10,7 @@ TOKEN = "ТВОЙ_ТОКЕН_БОТА"
 
 # 2. ВСТАВЬ ССЫЛКУ НА ТВОЙ САЙТ GITHUB PAGES СЮДА
 # Ссылка должна выглядеть так: https://твой_логин.github.io/название_репозитория/
-WEB_APP_URL = "https://твой_логин.github.io/название_репозитория/"
+WEB_APP_URL = "https://egorsheva777.github.io/design-app/"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
