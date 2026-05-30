@@ -6,7 +6,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
 
 # 1. ВСТАВЬ СВОЙ ТОКЕН СЮДА (от @BotFather)
-TOKEN = "ТВОЙ_ТОКЕН_БОТА"
+TOKEN = "8564511758:AAH2DP__xRoNMOgJtMvnk8cMT5ABwXKOSz4"
 
 # 2. ВСТАВЬ ССЫЛКУ НА ТВОЙ САЙТ GITHUB PAGES СЮДА
 # Ссылка должна выглядеть так: https://твой_логин.github.io/название_репозитория/
