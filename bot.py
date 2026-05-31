@@ -8,8 +8,9 @@ from aiogram.filters import CommandStart
 from aiogram.types import WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from aiogram.webhook.aiohttp_impl import SimpleRequestHandler, setup_application
 
-# Включаем логирование, чтобы видеть действия бота в консоли Render
+# Включаем логирование, чтобы детально видеть жизненный цикл бота на Render
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -17,17 +18,19 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ==========================================
-# КОНФИГУРАЦИЯ БОТА
+# КОНФИГУРАЦИЯ БОТА И СЕРВЕРА
 # ==========================================
-# Бот попробует взять токен из переменных окружения (Environment Variables) в Render.
-# Если вы их не настраивали, укажите ваш токен вместо заглушки ниже.
+# Бот автоматически возьмет токен из настроек Environment Variables в Render
 TOKEN = os.environ.get("BOT_TOKEN")
 if not TOKEN or TOKEN == "8564511758:AAH2Ip789sQ5w_NzRhOKQWFrVIFk8mVsuXw":
-    # ВСТАВЬТЕ ВАШ ТОКЕН СЮДА, ЕСЛИ НЕ ИСПОЛЬЗУЕТЕ ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ RENDER:
+    # Резервный токен (если переменные в панели Render не настроены)
     TOKEN = "8564511758:AAH2Ip789sQ5w_NzRhOKQWFrVIFk8mVsuXw" 
 
-# Ссылка на ваш сайт на GitHub Pages
+# Ссылка на ваше веб-приложение на GitHub Pages
 WEB_APP_URL = "https://egorsheva777.github.io/design-app/"
+
+# Render автоматически предоставляет эту переменную с вашим публичным адресом
+RENDER_EXTERNAL_URL = os.environ.get("RENDER_EXTERNAL_URL")
 
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN))
 dp = Dispatcher()
@@ -36,7 +39,6 @@ dp = Dispatcher()
 async def start(message: types.Message):
     logger.info(f"Получена команда /start от пользователя {message.from_user.id}")
     
-    # Кнопка для открытия веб-приложения Mini App
     kb = [
         [KeyboardButton(text="Заказать дизайн 🚀", web_app=WebAppInfo(url=WEB_APP_URL))]
     ]
@@ -73,43 +75,60 @@ async def handle_webapp_data(message: types.Message):
         logger.error(f"Ошибка парсинга данных Mini App: {e}")
         await message.answer(f"Заявка успешно принята! Наш менеджер свяжется с вами в ближайшее время. 👍")
 
-# ==========================================
-# ВЕБ-СЕРВЕР ДЛЯ ОБХОДА ПРОВЕРОК ПОРТОВ RENDER
-# ==========================================
-runner = None
-site = None
-
 async def handle_ping(request):
-    return web.Response(text="Бот работает стабильно!")
+    return web.Response(text="Бот и веб-сервер работают стабильно!")
 
-async def start_background_server():
-    global runner, site
-    app = web.Application()
-    app.router.add_get('/', handle_ping)
+async def on_startup(bot: Bot) -> None:
+    if RENDER_EXTERNAL_URL:
+        webhook_url = f"{RENDER_EXTERNAL_URL}/webhook"
+        logger.info(f"[Webhook Mode] Регистрируем вебхук на URL: {webhook_url}")
+        # drop_pending_updates=True мгновенно стирает все накопившиеся зависшие запросы
+        await bot.set_webhook(webhook_url, drop_pending_updates=True)
+    else:
+        logger.info("[Polling Mode] Локальный запуск. Очищаем вебхуки...")
+        await bot.delete_webhook(drop_pending_updates=True)
+
+def main():
+    # Регистрируем функцию, которая выполнится при старте бота
+    dp.startup.register(on_startup)
     
-    # Порт 10000 используется по умолчанию на бесплатном тарифе Render
     port = int(os.environ.get("PORT", 10000))
-    runner = web.AppRunner(app)
-    await runner.setup()
-    site = web.TCPSite(runner, '0.0.0.0', port)
-    await site.start()
-    logger.info(f"[Render Fix] Асинхронный веб-сервер успешно запущен на порту {port}")
 
-# Главная точка входа в программу
-async def main():
-    # Запускаем фоновый сервер для пинга со стороны Render
-    await start_background_server()
-    
-    # Принудительно очищаем очередь обновлений и сбрасываем старые вебхуки
-    logger.info("Сброс вебхуков и очистка зависших сообщений Telegram...")
-    await bot.delete_webhook(drop_pending_updates=True)
-    
-    # Запускаем прослушивание сообщений бота
-    logger.info("Запуск поллинга...")
-    await dp.start_polling(bot)
+    if RENDER_EXTERNAL_URL:
+        logger.info("[Render] Запуск сервера в режиме Webhook (без конфликтов портов и процессов)...")
+        app = web.Application()
+        app.router.add_get('/', handle_ping)
+
+        # Настраиваем автоматический обработчик входящих сообщений от Telegram по пути /webhook
+        webhook_requests_handler = SimpleRequestHandler(
+            dispatcher=dp,
+            bot=bot
+        )
+        webhook_requests_handler.register(app, path="/webhook")
+
+        # Привязываем контекст aiogram к приложению aiohttp
+        setup_application(app, dp, bot=bot)
+
+        # Запускаем единый веб-сервер, который держит порт и принимает сообщения
+        web.run_app(app, host='0.0.0.0', port=port)
+    else:
+        logger.info("[Local] Запуск в режиме Polling для локальной разработки...")
+        async def run_polling():
+            # Запускаем фоновый пинг-сервер, чтобы код вел себя идентично локально
+            app = web.Application()
+            app.router.add_get('/', handle_ping)
+            runner = web.AppRunner(app)
+            await runner.setup()
+            site = web.TCPSite(runner, '0.0.0.0', port)
+            await site.start()
+            
+            await bot.delete_webhook(drop_pending_updates=True)
+            await dp.start_polling(bot)
+
+        asyncio.run(run_polling())
 
 if __name__ == "__main__":
     try:
-        asyncio.run(main())
+        main()
     except (KeyboardInterrupt, SystemExit):
         logger.info("Бот остановлен пользователем")
