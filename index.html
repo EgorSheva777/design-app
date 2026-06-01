@@ -317,7 +317,7 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
-      max-width: 70%;
+      max-width: 75%;
     }
 
     .tariff-name, .reviewer-name {
@@ -354,7 +354,7 @@
     }
 
     .price-value {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 800;
       color: #ffffff;
       transition: color 0.3s ease;
@@ -363,20 +363,6 @@
     .tariff-wrapper.selected .price-value {
       color: #ff66cc;
       text-shadow: 0 0 10px rgba(255, 102, 204, 0.3);
-    }
-
-    /* СТИЛИ ДЛЯ ЗАЧЕРКНУТОЙ СТАРЕЙ ЦЕНЫ И СКИДКИ */
-    .old-price {
-      text-decoration: line-through;
-      color: #64748b;
-      font-size: 12px;
-      display: block;
-    }
-    .new-price {
-      color: #ff007f;
-      font-weight: 800;
-      font-size: 16px;
-      text-shadow: 0 0 8px rgba(255, 0, 127, 0.3);
     }
 
     /* ФОРМА ЗАКАЗА */
@@ -642,7 +628,7 @@
     }
 
     .progress-bar-fill {
-      width: 0%;
+      width: 70%;
       height: 100%;
       background: linear-gradient(90deg, #ff007f, #ff66cc);
       border-radius: 10px;
@@ -673,9 +659,6 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
       transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       z-index: 50;
-    }
-    .cat-bubble.active {
-      transform: translateX(-50%) scale(1);
     }
     .cat-bubble::after {
       content: '';
@@ -942,6 +925,7 @@
 
   <div class="app-container">
     
+    <!-- ТАБ: ЗАКАЗ ДИЗАЙНА -->
     <div id="order-tab" class="tab-content active">
       <div class="cat-welcome-container">
         <div class="css-cat">
@@ -962,7 +946,7 @@
         
         <div class="cat-signboard">
           <h4 class="welcome-title-text">Добрый день! 👋</h4>
-          <p id="discount-status-text">Ты можешь заказать у меня классный дизайн!</p>
+          <p>Ты можешь заказать у меня классный дизайн!</p>
         </div>
       </div>
 
@@ -977,7 +961,7 @@
             </div>
             <div class="tariff-price">
               <span class="price-label">от</span>
-              <span class="price-value" id="price-budget" data-base-price="590">590₽</span>
+              <span class="price-value">590₽</span>
             </div>
           </div>
         </div>
@@ -990,7 +974,7 @@
             </div>
             <div class="tariff-price">
               <span class="price-label">от</span>
-              <span class="price-value" id="price-medium" data-base-price="1090">1090₽</span>
+              <span class="price-value">1090₽</span>
             </div>
           </div>
         </div>
@@ -1003,7 +987,7 @@
             </div>
             <div class="tariff-price">
               <span class="price-label">от</span>
-              <span class="price-value" id="price-pro" data-base-price="1590">1590₽</span>
+              <span class="price-value">1590₽</span>
             </div>
           </div>
         </div>
@@ -1024,6 +1008,7 @@
       </div>
     </div>
 
+    <!-- ТАБ: ДРУГИЕ СФЕРЫ -->
     <div id="services-tab" class="tab-content">
       <div class="cat-welcome-container">
         <div class="css-cat">
@@ -1044,7 +1029,7 @@
         
         <div class="cat-signboard">
           <h4 class="welcome-title-text">Добрый день! 👋</h4>
-          <p id="discount-status-text-services">Решаю любые IT & Digital бизнес-задачи под ключ!</p>
+          <p>Решаю любые IT & Digital бизнес-задачи под ключ!</p>
         </div>
       </div>
 
@@ -1059,4 +1044,434 @@
             </div>
             <div class="tariff-price">
               <span class="price-label">от</span>
-              <span class="price-value" id="
+              <span class="price-value">2490₽</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tariff-wrapper" onclick="selectTariff('📱 Ведение соцсетей & SMM', this, 'service')">
+          <div class="tariff-card">
+            <div class="tariff-info">
+              <span class="tariff-name"><i class="fa-solid fa-hashtag"></i> Ведение соцсетей</span>
+              <span class="tariff-desc">Полный контент-план, постинг, оформление и удержание аудитории.</span>
+            </div>
+            <div class="tariff-price">
+              <span class="price-label">от</span>
+              <span class="price-value">1490₽</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tariff-wrapper" onclick="selectTariff('📈 Пошаговый план развития', this, 'service')">
+          <div class="tariff-card">
+            <div class="tariff-info">
+              <span class="tariff-name"><i class="fa-solid fa-map"></i> Стратегия & Медиа</span>
+              <span class="tariff-desc">Пошаговый план развития медийных страниц, групп, каналов и YouTube под ключ.</span>
+            </div>
+            <div class="tariff-price">
+              <span class="price-label">от</span>
+              <span class="price-value">990₽</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fa-solid fa-bullseye"></i> Ссылка на ваш проект / канал / ТЗ</label>
+        <input type="text" id="service-project" class="form-control" placeholder="Вставьте ссылку или инфо...">
+      </div>
+
+      <div class="form-group">
+        <label><i class="fa-regular fa-comment-dots"></i> Опишите ваши пожелания и цели</label>
+        <textarea id="service-task" class="form-control" rows="4" placeholder="Какого бота нужно сделать или какую группу развить..."></textarea>
+      </div>
+
+      <div class="submit-btn-wrapper" onclick="sendOrderData('service')">
+        <button>Отправить заявку</button>
+      </div>
+    </div>
+
+    <!-- ТАБ: ИНФОРМАЦИЯ -->
+    <div id="info-tab" class="tab-content">
+      <h2 class="gradient-text"><i class="fa-solid fa-circle-info"></i> Информация</h2>
+
+      <div class="reviews-section">
+        <h3><i class="fa-regular fa-comments"></i> Отзывы покупателей</h3>
+        
+        <div class="reviews-list">
+          <div class="review-item-wrapper" onclick="toggleReview(this)">
+            <div class="review-item">
+              <div class="review-header">
+                <span class="reviewer-name">Александр (Ютубер)</span>
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+              </div>
+              <div class="review-content">
+                Заказывал оформление для игрового YouTube-канала. Работа выполнена невероятно сочно, превьюшки кликаются на ура, баннер встал идеально. Рекомендую!
+              </div>
+            </div>
+          </div>
+          
+          <div class="review-item-wrapper" onclick="toggleReview(this)">
+            <div class="review-item">
+              <div class="review-header">
+                <span class="reviewer-name">Кристина (Маркетплейс)</span>
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+              </div>
+              <div class="review-content">
+                Делали карточки товаров для Wildberries. Продажи выросли благодаря крутой инфографике. Всё чётко по ТЗ и сдали даже раньше срока!
+              </div>
+            </div>
+          </div>
+
+          <div class="review-item-wrapper" onclick="toggleReview(this)">
+            <div class="review-item">
+              <div class="review-header">
+                <span class="reviewer-name">Максим (Крипта)</span>
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+              </div>
+              <div class="review-content">
+                Отличный бизнес-партнер! Разработали ТГ-бота и упаковали фирменный стиль канала с нуля. Подписчики растут, бот автоматизировал продажи на все 100%.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="coop-card">
+        <div class="coop-badge">
+          <i class="fa-solid fa-handshake"></i> Сотрудничество
+        </div>
+        <p class="coop-text">
+          Хотите вступить в штат дизайнеров/разработчиков и получить постоянный поток клиентов? Отправьте Ваше портфолио нашему менеджеру!
+        </p>
+        <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
+          <span>🚀 Стать частью команды</span>
+        </a>
+      </div>
+
+      <div class="info-footer">
+        <p>При возникновении любых вопросов:</p>
+        <a href="https://t.me/MartOkkks" class="btn-animate" target="_blank">
+          <span>
+            <i class="fa-regular fa-comment-dots"></i> 
+            Связаться с менеджером 
+            <strong style="
+              font-family: 'Courier New', Courier, monospace; 
+              background: rgba(255, 102, 204, 0.12); 
+              color: #ff66cc;
+              padding: 2px 8px; 
+              border-radius: 6px; 
+              margin-left: 6px; 
+              font-size: 14px; 
+              letter-spacing: 0.5px;
+              display: inline-block;
+              vertical-align: middle;
+            ">@MartOkkks</strong>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ТАБ: ИГРА -->
+    <div id="game-tab" class="tab-content">
+      <h2 class="gradient-text"><i class="fa-solid fa-gamepad"></i> Безумный Клик-Мяу</h2>
+      
+      <div class="game-card">
+        <div class="game-stats">
+          <div class="stat-box">Уровень: <span id="cat-level">1</span></div>
+          <div id="combo-badge">Combo x1</div>
+          <div class="stat-box">Всего кликов: <span id="cat-clicks">0</span></div>
+        </div>
+
+        <div class="progress-container">
+          <div class="progress-label">
+            <span>Сытость котика:</span>
+            <span id="satiety-percent">70%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="satiety-bar" class="progress-bar-fill" style="width: 70%;"></div>
+          </div>
+        </div>
+
+        <div class="game-click-area" id="cat-clicker" onclick="feedCatDynamic(event)">
+          <div class="cat-bubble" id="cat-dialog">Муррр?</div>
+          
+          <div class="game-cat-ear left"></div>
+          <div class="game-cat-ear right"></div>
+          <div class="game-cat-body">
+            <div class="game-cat-breast"></div>
+          </div>
+          <div class="game-cat-head">
+            <div class="game-cat-eye left"></div>
+            <div class="game-cat-eye right"></div>
+            <div class="game-cat-muzzle">
+              <div class="game-cat-nose"></div>
+            </div>
+          </div>
+          <div class="game-cat-paw"></div>
+        </div>
+
+        <p class="game-tip">
+          Кликай быстрее, чтобы активировать **Комбо-Множитель**! 🔥<br>
+          <span style="color: #ff66cc; font-size: 12px; font-weight: bold;">Шанс на критический кусь рыбы (x3)! 🐟</span>
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- НИЖНЕЕ МЕНЮ НАВИГАЦИИ -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('order-tab', this)">
+      <i class="fa-solid fa-palette"></i>
+      <span>Дизайн</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('services-tab', this)">
+      <i class="fa-solid fa-cubes"></i>
+      <span>Услуги</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('info-tab', this)">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Инфо</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('game-tab', this)">
+      <i class="fa-solid fa-cat"></i>
+      <span>Игра</span>
+    </button>
+  </nav>
+
+  <!-- КРАСИВОЕ МОДАЛЬНОЕ ОКНО ИЗ СКРИНШОТА -->
+  <div id="custom-modal" class="modal-overlay" onclick="closeModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div id="modal-icon-container" class="modal-icon-circle">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h3 id="modal-title-text" class="modal-title">Заявка отправлена!</h3>
+      <p id="modal-desc-text" class="modal-text">Наш менеджер уже изучает ТЗ и скоро свяжется с вами.</p>
+      <button class="modal-btn" onclick="closeModal()">Отлично</button>
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    if (tg) {
+      tg.expand();
+    }
+
+    // Функция приветствия по времени суток
+    function initWelcome() {
+      const now = new Date();
+      const hours = now.getHours();
+      let greeting = "Добрый день!";
+
+      if (hours >= 5 && hours < 12) greeting = "Доброе утро!";
+      else if (hours >= 12 && hours < 18) greeting = "Добрый день!";
+      else if (hours >= 18 && hours < 23) greeting = "Добрый вечер!";
+      else greeting = "Доброй ночи!";
+
+      const user = tg.initDataUnsafe?.user;
+      document.querySelectorAll('.welcome-title-text').forEach(el => {
+        if (user && user.first_name) {
+          el.innerText = `${greeting.replace('!', '')}, ${user.first_name}! 👋`;
+        } else {
+          el.innerText = `${greeting} 👋`;
+        }
+      });
+    }
+    initWelcome();
+
+    // ТАРИФЫ И ТАБЫ
+    let selectedDesignValue = "🌱 Бюджетный";
+    let selectedServiceValue = "🤖 Разработка ТГ-ботов";
+
+    function selectTariff(tariffName, wrapperElement, type) {
+      const selector = type === 'design' ? '#order-tab .tariff-wrapper' : '#services-tab .tariff-wrapper';
+      document.querySelectorAll(selector).forEach(wrap => wrap.classList.remove('selected'));
+      wrapperElement.classList.add('selected');
+      
+      if (type === 'design') {
+        selectedDesignValue = tariffName;
+      } else {
+        selectedServiceValue = tariffName;
+      }
+    }
+
+    function switchTab(tabId, button) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      button.classList.add('active');
+    }
+
+    function toggleReview(element) {
+      const isExpanded = element.classList.contains('expanded');
+      document.querySelectorAll('.review-item-wrapper').forEach(item => item.classList.remove('expanded'));
+      if (!isExpanded) {
+        element.classList.add('expanded');
+      }
+    }
+
+    // Функции кастомного модального окна
+    function showCustomModal(title, text, type = 'success') {
+      const modal = document.getElementById('custom-modal');
+      const iconContainer = document.getElementById('modal-icon-container');
+      const titleElement = document.getElementById('modal-title-text');
+      const descElement = document.getElementById('modal-desc-text');
+
+      titleElement.innerText = title;
+      descElement.innerText = text;
+
+      if (type === 'error') {
+        iconContainer.style.background = '#ff3b30';
+        iconContainer.style.boxShadow = '0 0 20px rgba(255, 59, 48, 0.4)';
+        iconContainer.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
+      } else {
+        iconContainer.style.background = '#ff66cc';
+        iconContainer.style.boxShadow = '0 0 20px rgba(255, 102, 204, 0.4)';
+        iconContainer.innerHTML = '<i class="fa-solid fa-check"></i>';
+      }
+
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('custom-modal').classList.remove('active');
+    }
+
+    // Отправка данных формы в бота Telegram
+    function sendOrderData(type) {
+      let data = {};
+      
+      if (type === 'design') {
+        const deadline = document.getElementById('deadline').value.trim();
+        const task = document.getElementById('task').value.trim();
+
+        if (!task) {
+          showCustomModal('Заполните ТЗ!', 'Пожалуйста, опишите краткое ТЗ вашей задачи, чтобы мы могли рассчитать заказ.', 'error');
+          return;
+        }
+
+        data = {
+          order_type: 'Дизайн',
+          tariff: selectedDesignValue,
+          deadline: deadline || 'Не указано',
+          task: task
+        };
+      } else {
+        const project = document.getElementById('service-project').value.trim();
+        const task = document.getElementById('service-task').value.trim();
+
+        if (!task) {
+          showCustomModal('Заполните описание!', 'Пожалуйста, опишите детали вашей бизнес-задачи.', 'error');
+          return;
+        }
+
+        data = {
+          order_type: 'Бизнес-Услуга',
+          tariff: selectedServiceValue,
+          project_info: project || 'Не указано',
+          task: task
+        };
+      }
+
+      if (tg) {
+        tg.sendData(JSON.stringify(data));
+        showCustomModal('Заявка отправлена!', 'Наш менеджер уже изучает ТЗ и скоро свяжется с вами.', 'success');
+      } else {
+        showCustomModal('Заявка отправлена! (Тест)', 'Данные успешно сгенерированы вне Telegram: ' + JSON.stringify(data), 'success');
+      }
+    }
+
+    // ЛОГИКА ИГРЫ «БЕЗУМНЫЙ КЛИК-МЯУ»
+    let satiety = 70; 
+    let level = 1;
+    let totalClicks = 0;
+    let lastClickTime = 0;
+    let comboCount = 0;
+    let comboMultiplier = 1;
+    let bubbleTimeout;
+
+    const catPhrases = ["Муррр!", "Дай рыбов!", "Кусь!", "Тыкай сильнее!", "Ещё!", "Мяу!", "Ням-ням!", "Кайф..."];
+
+    function feedCatDynamic(event) {
+      const now = Date.now();
+      totalClicks++;
+      
+      if (now - lastClickTime < 400) {
+        comboCount++;
+        if (comboCount > 25) {
+          comboMultiplier = 5;
+          document.getElementById('combo-badge').innerText = 'Combo x5 🔥';
+        } else if (comboCount > 15) {
+          comboMultiplier = 3;
+          document.getElementById('combo-badge').innerText = 'Combo x3 ✨';
+        } else if (comboCount > 5) {
+          comboMultiplier = 2;
+          document.getElementById('combo-badge').innerText = 'Combo x2 ⚡';
+        }
+        if (comboCount > 5) {
+          document.getElementById('combo-badge').style.display = 'inline-block';
+        }
+      } else {
+        comboCount = 1;
+        comboMultiplier = 1;
+        document.getElementById('combo-badge').style.display = 'none';
+      }
+      lastClickTime = now;
+
+      // Обновление сытости котика
+      satiety = Math.min(100, satiety + (1 * comboMultiplier));
+      document.getElementById('satiety-bar').style.width = satiety + '%';
+      document.getElementById('satiety-percent').innerText = satiety + '%';
+      document.getElementById('cat-clicks').innerText = totalClicks;
+
+      // Шанс критического куся
+      const isCrit = Math.random() < 0.15;
+      if (isCrit) {
+        satiety = Math.min(100, satiety + 10);
+        createParticle(event.clientX, event.clientY, '🐟');
+      } else {
+        createParticle(event.clientX, event.clientY, '❤️');
+      }
+
+      // Случайные фразы
+      if (totalClicks % 6 === 0) {
+        const dialog = document.getElementById('cat-dialog');
+        dialog.innerText = catPhrases[Math.floor(Math.random() * catPhrases.length)];
+        dialog.style.transform = 'translateX(-50%) scale(1)';
+        
+        clearTimeout(bubbleTimeout);
+        bubbleTimeout = setTimeout(() => {
+          dialog.style.transform = 'translateX(-50%) scale(0)';
+        }, 1200);
+      }
+
+      if (satiety >= 100) {
+        level++;
+        satiety = 30;
+        document.getElementById('cat-level').innerText = level;
+        showCustomModal('Новый уровень! 🎉', 'Ваш котик вырос и теперь на ' + level + ' уровне! Мяу!', 'success');
+      }
+    }
+
+    // Создание вылетающих частиц
+    function createParticle(x, y, char) {
+      const particle = document.createElement('div');
+      particle.className = 'floating-particle';
+      particle.innerText = char;
+      particle.style.left = (x - 12) + 'px';
+      particle.style.top = (y - 12) + 'px';
+      
+      const randomX = (Math.random() * 80 - 40) + 'px';
+      const randomRot = (Math.random() * 60 - 30) + 'deg';
+      particle.style.setProperty('--random-x', randomX);
+      particle.style.setProperty('--random-rot', randomRot);
+
+      document.body.appendChild(particle);
+      setTimeout(() => particle.remove(), 700);
+    }
+  </script>
+</body>
+</html>
+
+
