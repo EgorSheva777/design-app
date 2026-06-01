@@ -11,9 +11,9 @@ from aiogram.enums import ParseMode
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
-TOKEN = os.environ.get("8564511758:AAGQGhRP-uSNtguy0aYXWTwP-7BWh9Arkrs")
-if not TOKEN or TOKEN == "8564511758:AAGQGhRP-uSNtguy0aYXWTwP-7BWh9Arkrs":
-    TOKEN = "8564511758:AAGQGhRP-uSNtguy0aYXWTwP-7BWh9Arkrs" 
+TOKEN = os.environ.get("8564511758:AAH68oJGosToTveyfhS6r-jkAclG7gOI6t0")
+if not TOKEN or TOKEN == "8564511758:AAH68oJGosToTveyfhS6r-jkAclG7gOI6t0":
+    TOKEN = "8564511758:AAH68oJGosToTveyfhS6r-jkAclG7gOI6t0" 
 
 WEB_APP_URL = "https://egorsheva777.github.io/design-app/"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL")
