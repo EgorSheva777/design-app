@@ -11,9 +11,8 @@ from aiogram.enums import ParseMode
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
-TOKEN = os.environ.get("8564511758:AAH68oJGosToTveyfhS6r-jkAclG7gOI6t0")
-if not TOKEN or TOKEN == "8564511758:AAH68oJGosToTveyfhS6r-jkAclG7gOI6t0":
-    TOKEN = "8564511758:AAH68oJGosToTveyfhS6r-jkAclG7gOI6t0" 
+# Сюда вставляешь ОДИН раз новый чистый токен из BotFather
+TOKEN = "8564511758:AAH68oJGosToTveyfhS6r-jkAclG7gOI6t0"
 
 WEB_APP_URL = "https://egorsheva777.github.io/design-app/"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL")
@@ -64,4 +63,11 @@ async def on_shutdown(app):
 def main():
     app = web.Application()
     app.router.add_post('/webhook', handle_webhook)
-    app
+    app.router.add_get('/', handle_ping)
+    app.on_startup.append(on_startup)
+    app.on_cleanup.append(on_shutdown)
+    port = int(os.environ.get("PORT", 10000))
+    web.run_app(app, host='0.0.0.0', port=port)
+
+if __name__ == "__main__":
+    main()
