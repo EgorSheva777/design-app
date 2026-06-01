@@ -11,8 +11,8 @@ from aiogram.enums import ParseMode
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
-# Сюда вставляешь ОДИН раз новый чистый токен из BotFather
-TOKEN = "8564511758:AAH68oJGosToTveyfhS6r-jkAclG7gOI6t0"
+# ЗАМЕНИ ТЕКСТ В КАВЫЧКАХ НА СВОЙ НОВЫЙ ТОКЕН:
+TOKEN = "8564511758:AAGCFWDIb1pURsyIwoDZRGoBxXnCbXSz0B4"
 
 WEB_APP_URL = "https://egorsheva777.github.io/design-app/"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL")
