@@ -2,6 +2,7 @@ import os
 import json
 import logging
 import asyncio
+from aiohttp import web
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import CommandStart, or_f
 from aiogram.types import WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
@@ -11,7 +12,6 @@ from aiogram.enums import ParseMode
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
-# ТВОЙ ТОКЕН И ССЫЛКА НА МИНИ-АПП
 TOKEN = "8564511758:AAGCFWDIb1pURsyIwoDZRGoBxXnCbXSz0B4"
 WEB_APP_URL = "https://egorsheva777.github.io/design-app/"
 
@@ -20,7 +20,6 @@ dp = Dispatcher()
 
 TEXT_WELCOME = "Привет! Чтобы заказать дизайн, просто нажми на кнопку «Заказать дизайн 🚀» ниже 👇"
 
-# 1. Главный экран: срабатывает и на /start, и на любой текст
 @dp.message(or_f(CommandStart(), F.text))
 async def welcome_and_start(message: types.Message):
     logger.info(f"Запрос от {message.from_user.id}")
@@ -28,7 +27,6 @@ async def welcome_and_start(message: types.Message):
     keyboard = ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
     await message.answer(TEXT_WELCOME, reply_markup=keyboard)
 
-# 2. Обработка заказов из Mini App (твоя логика полностью сохранена)
 @dp.message(F.web_app_data)
 async def handle_webapp_data(message: types.Message):
     try:
@@ -42,12 +40,28 @@ async def handle_webapp_data(message: types.Message):
         logger.error(f"Ошибка обработки данных: {e}")
         await message.answer("Заявка принята! Скоро свяжемся. 👍")
 
-# 3. Запуск в режиме пуллинга (без вебхуков и портов)
+# Заглушка для Render, чтобы он не ругался на порты и думал, что это сайт
+async def handle_ping(request):
+    return web.Response(text="Bot is alive and pulling!")
+
+async def run_web_server():
+    app = web.Application()
+    app.router.add_get('/', handle_ping)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    port = int(os.environ.get("PORT", 10000))
+    site = web.TCPSite(runner, '0.0.0.0', port)
+    await site.start()
+    logger.info(f"Микро-сервер для обмана Render запущен на порту {port}")
+
 async def main():
-    logger.info("Удаляем старый вебхук...")
+    # Запускаем фоновый веб-сервер для бесплатного тарифа Render
+    await run_web_server()
+    
+    # Сносим старые вебхуки, переходим на пуллинг
     await bot.delete_webhook(drop_pending_updates=True)
     
-    logger.info("Ставим кнопку Меню...")
+    # Ставим кнопку меню
     try:
         await bot.set_chat_menu_button(
             menu_button=types.MenuButtonWebApp(text="Заказать дизайн 🎨", web_app=WebAppInfo(url=WEB_APP_URL))
