@@ -20,6 +20,7 @@ dp = Dispatcher()
 
 TEXT_WELCOME = "Привет! Чтобы заказать дизайн, просто нажми на кнопку «Заказать дизайн 🚀» ниже 👇"
 
+# 1. Главный экран: большая нижняя кнопка остаётся на месте
 @dp.message(or_f(CommandStart(), F.text))
 async def welcome_and_start(message: types.Message):
     logger.info(f"Запрос от {message.from_user.id}")
@@ -27,6 +28,7 @@ async def welcome_and_start(message: types.Message):
     keyboard = ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
     await message.answer(TEXT_WELCOME, reply_markup=keyboard)
 
+# 2. Обработка заказов из Mini App
 @dp.message(F.web_app_data)
 async def handle_webapp_data(message: types.Message):
     try:
@@ -40,7 +42,7 @@ async def handle_webapp_data(message: types.Message):
         logger.error(f"Ошибка обработки данных: {e}")
         await message.answer("Заявка принята! Скоро свяжемся. 👍")
 
-# Заглушка для Render, чтобы он не ругался на порты и думал, что это сайт
+# Заглушка для Render
 async def handle_ping(request):
     return web.Response(text="Bot is alive and pulling!")
 
@@ -52,24 +54,19 @@ async def run_web_server():
     port = int(os.environ.get("PORT", 10000))
     site = web.TCPSite(runner, '0.0.0.0', port)
     await site.start()
-    logger.info(f"Микро-сервер для обмана Render запущен на порту {port}")
 
 async def main():
-    # Запускаем фоновый веб-сервер для бесплатного тарифа Render
     await run_web_server()
-    
-    # Сносим старые вебхуки, переходим на пуллинг
     await bot.delete_webhook(drop_pending_updates=True)
     
-    # Ставим кнопку меню
+    # ВОЗВРАЩАЕМ СТАНДАРТНОЕ МЕНЮ ТЕЛЕГРАМА (Убираем синюю кнопку)
     try:
-        await bot.set_chat_menu_button(
-            menu_button=types.MenuButtonWebApp(text="Заказать дизайн 🎨", web_app=WebAppInfo(url=WEB_APP_URL))
-        )
+        await bot.set_chat_menu_button(menu_button=types.MenuButtonDefault())
+        logger.info("Синяя кнопка меню успешно сброшена.")
     except Exception as e:
-        logger.error(f"Не удалось поставить кнопку меню: {e}")
+        logger.error(f"Не удалось сбросить кнопку меню: {e}")
         
-    logger.info("Бот успешно запущен в режиме Long Polling!")
+    logger.info("Бот успешно запущен!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
