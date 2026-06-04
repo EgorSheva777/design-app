@@ -3,7 +3,7 @@ import json
 import logging
 import asyncio
 from aiogram import Bot, Dispatcher, F, types
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, or_f
 from aiogram.types import WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
@@ -11,7 +11,7 @@ from aiogram.enums import ParseMode
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
-# ТВОЙ ТОКЕН И ССЫЛКИ
+# ТВОЙ ТОКЕН И ССЫЛКА НА МИНИ-АПП
 TOKEN = "8564511758:AAGCFWDIb1pURsyIwoDZRGoBxXnCbXSz0B4"
 WEB_APP_URL = "https://egorsheva777.github.io/design-app/"
 
@@ -20,17 +20,15 @@ dp = Dispatcher()
 
 TEXT_WELCOME = "Привет! Чтобы заказать дизайн, просто нажми на кнопку «Заказать дизайн 🚀» ниже 👇"
 
-# 1. ХЕНДЛЕР НА ЛЮБОЕ СООБЩЕНИЕ ИЛИ СТАРТ (Показывает кнопку)
+# 1. Главный экран: срабатывает и на /start, и на любой текст
 @dp.message(or_f(CommandStart(), F.text))
 async def welcome_and_start(message: types.Message):
     logger.info(f"Запрос от {message.from_user.id}")
-    
     kb = [[KeyboardButton(text="Заказать дизайн 🚀", web_app=WebAppInfo(url=WEB_APP_URL))]]
     keyboard = ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
-    
     await message.answer(TEXT_WELCOME, reply_markup=keyboard)
 
-# 2. ОБРАБОТКА ДАННЫХ ИЗ МИНИ-АПП (Твоя логика заказов полностью сохранена!)
+# 2. Обработка заказов из Mini App (твоя логика полностью сохранена)
 @dp.message(F.web_app_data)
 async def handle_webapp_data(message: types.Message):
     try:
@@ -44,22 +42,20 @@ async def handle_webapp_data(message: types.Message):
         logger.error(f"Ошибка обработки данных: {e}")
         await message.answer("Заявка принята! Скоро свяжемся. 👍")
 
-# Используем вспомогательную функцию для фильтра или импортируем ее
-from aiogram.filters import or_f
-
-# 3. ГЛАВНЫЙ ЗАПУСК ЧЕРЕЗ POLLING (БЕЗ ПОРТОВ)
+# 3. Запуск в режиме пуллинга (без вебхуков и портов)
 async def main():
-    print("Бот успешно переведен на Long Polling! На Render ничего не упадет.")
-    
-    # Сбрасываем старые вебхуки, которые вешали сервер
+    logger.info("Удаляем старый вебхук...")
     await bot.delete_webhook(drop_pending_updates=True)
     
-    # Меняем кнопку "Меню" в углу ТГ, чтобы она ВСЕГДА открывала твой дизайн-апп
-    await bot.set_chat_menu_button(
-        menu_button=types.MenuButtonWebApp(text="Заказать дизайн 🎨", web_app=WebAppInfo(url=WEB_APP_URL))
-    )
-    
-    # Запускаем бесконечный опрос
+    logger.info("Ставим кнопку Меню...")
+    try:
+        await bot.set_chat_menu_button(
+            menu_button=types.MenuButtonWebApp(text="Заказать дизайн 🎨", web_app=WebAppInfo(url=WEB_APP_URL))
+        )
+    except Exception as e:
+        logger.error(f"Не удалось поставить кнопку меню: {e}")
+        
+    logger.info("Бот успешно запущен в режиме Long Polling!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
